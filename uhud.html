@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uhud Savaşı - İnteraktif Rehber</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Myriad Pro', Arial, sans-serif;
+            background-image: url('https://i.imgur.com/VYVgcd7.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100%;
+        }
+        .tree-line {
+            background: linear-gradient(90deg, #6B7280 0%, #9CA3AF 100%);
+            height: 3px;
+            border-radius: 2px;
+        }
+        .branch-animation {
+            animation: slideIn 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-transition {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(107, 114, 128, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-full bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 text-white font-sans">
+    
+    <!-- Ana Sayfa -->
+    <div id="mainPage" class="page-transition min-h-full p-8">
+        <div class="max-w-6xl mx-auto">
+            <!-- Başlık -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                    UHUD SAVAŞI
+                </h1>
+                <p class="text-xl text-purple-200">İslam Tarihinin Önemli Dönüm Noktası</p>
+                <div class="w-32 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Ağaç Yapısı -->
+            <div class="flex flex-col items-center space-y-8">
+                <!-- Ana Kök -->
+                <div class="bg-gradient-to-r from-gray-600 to-gray-700 p-6 rounded-2xl shadow-2xl border border-gray-400">
+                    <h2 class="text-2xl font-bold text-center">UHUD SAVAŞI REHBERİ</h2>
+                </div>
+
+                <!-- Ana Çizgi -->
+                <div class="tree-line w-1 h-16"></div>
+
+                <!-- Dallar -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-5xl">
+                    
+                    <!-- Genel Bilgiler -->
+                    <div class="branch-animation" style="animation-delay: 0.1s">
+                        <div class="tree-line w-full h-1 mb-4"></div>
+                        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 rounded-xl shadow-xl hover-lift cursor-pointer border border-emerald-400" onclick="showPage('generalInfo')">
+                            <div class="text-center">
+                                <h3 class="text-lg font-bold mb-2">GENEL BİLGİLER</h3>
+                                <p class="text-sm text-emerald-100">Savaşın temel bilgileri ve kronolojisi</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Orduların Güzergahları -->
+                    <div class="branch-animation" style="animation-delay: 0.2s">
+                        <div class="tree-line w-full h-1 mb-4"></div>
+                        <div class="bg-gradient-to-br from-blue-500 to-cyan-600 p-6 rounded-xl shadow-xl hover-lift cursor-pointer border border-blue-400" onclick="showPage('routes')">
+                            <div class="text-center">
+                                <h3 class="text-lg font-bold mb-2">ORDULARIN GÜZERGAHLARI</h3>
+                                <div class="text-sm text-blue-100">Savaş öncesi hareketler ve konuşlanma</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Savaşın Sebepleri -->
+                    <div class="branch-animation" style="animation-delay: 0.3s">
+                        <div class="tree-line w-full h-1 mb-4"></div>
+                        <div class="bg-gradient-to-br from-orange-500 to-red-600 p-6 rounded-xl shadow-xl hover-lift cursor-pointer border border-orange-400" onclick="showPage('causes')">
+                            <div class="text-center">
+                                <h3 class="text-lg font-bold mb-2">SAVAŞIN SEBEPLERİ</h3>
+                                <p class="text-sm text-orange-100">Çatışmaya yol açan olaylar ve nedenler</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Savaşın Sonuçları -->
+                    <div class="branch-animation" style="animation-delay: 0.4s">
+                        <div class="tree-line w-full h-1 mb-4"></div>
+                        <div class="bg-gradient-to-br from-pink-500 to-purple-600 p-6 rounded-xl shadow-xl hover-lift cursor-pointer border border-pink-400" onclick="showPage('results')">
+                            <div class="text-center">
+                                <h3 class="text-lg font-bold mb-2">SAVAŞIN SONUÇLARI</h3>
+                                <p class="text-sm text-pink-100">Savaşın etkileri ve sonuçları</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alt Bilgi -->
+            <div class="text-center mt-16 text-gray-300">
+                <p class="text-sm">İncelemek istediğiniz konuya tıklayın</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Genel Bilgiler Sayfası -->
+    <div id="generalInfo" class="page-transition min-h-full p-8 hidden">
+        <div class="max-w-4xl mx-auto">
+            <button onclick="showPage('mainPage')" class="mb-6 bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                ← Ana Sayfaya Dön
+            </button>
+            
+            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-8 rounded-2xl shadow-2xl">
+                <h1 class="text-4xl font-bold mb-6 flex items-center gap-3">
+                    UHUD SAVAŞI - GENEL BİLGİLER
+                </h1>
+                
+                <div class="space-y-6 text-lg leading-relaxed">
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Tarih ve Yer</h3>
+                        <p><strong>Tarih:</strong> 3 Şevval 3 (23 Mart 625)</p>
+                        <p><strong>Yer:</strong> Uhud Dağı, Medine yakınları</p>
+                        <p><strong>Süre:</strong> Bir günlük çarpışma</p>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Savaşan Taraflar</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-green-300 mb-2">Müslüman Ordusu</h4>
+                                <p>• Komutan: Hz. Muhammed (s.a.v)</p>
+                                <p>• Asker Sayısı: 700 kişi</p>
+                                <p>• Okçu Birliği: 50 kişi</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-red-300 mb-2">Mekkeli Ordusu</h4>
+                                <p>• Komutan: Ebu Süfyan</p>
+                                <p>• Asker Sayısı: 3000 kişi</p>
+                                <p>• Süvari Birliği: 200 at</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Savaşın Genel Seyri</h3>
+                        <ul class="space-y-2">
+                            <li>• Müslümanlar başlangıçta üstünlük sağladı</li>
+                            <li>• Okçuların mevzilerini terk etmesi durumu değiştirdi</li>
+                            <li>• Halid bin Velid'in süvari saldırısı</li>
+                            <li>• Hz. Muhammed'in yaralanması</li>
+                            <li>• Savaşın belirsiz sonuçla bitmesi</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Önemli Şahsiyetler</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <p><strong>Hz. Hamza:</strong> Hz. Muhammed'in amcası, şehit oldu</p>
+                                <p><strong>Abdullah bin Cübeyir:</strong> Okçu birliği komutanı</p>
+                            </div>
+                            <div>
+                                <p><strong>Halid bin Velid:</strong> Mekkeli süvari komutanı</p>
+                                <p><strong>Hind bint Utbe:</strong> Ebu Süfyan'ın eşi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orduların Güzergahları Sayfası -->
+    <div id="routes" class="page-transition min-h-full p-8 hidden">
+        <div class="max-w-4xl mx-auto">
+            <button onclick="showPage('mainPage')" class="mb-6 bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                ← Ana Sayfaya Dön
+            </button>
+            
+            <div class="bg-gradient-to-br from-blue-500 to-cyan-600 p-8 rounded-2xl shadow-2xl">
+                <h1 class="text-4xl font-bold mb-6 flex items-center gap-3">
+                    ORDULARIN GÜZERGAHLARI
+                </h1>
+                
+                <div class="space-y-6 text-lg leading-relaxed">
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Mekkeli Ordunun Hareketi</h3>
+                        <ul class="space-y-3">
+                            <li><strong>Başlangıç:</strong> Mekke'den hareket (3000 kişilik ordu)</li>
+                            <li><strong>Güzergah:</strong> Mekke → Medine yolu → Uhud Dağı</li>
+                            <li><strong>Konaklama:</strong> Medine yakınlarında kamp kurma</li>
+                            <li><strong>Strateji:</strong> Uhud Dağı'nın kuzey yamacında konuşlanma</li>
+                            <li><strong>Amaç:</strong> Müslümanları açık arazide savaşa zorlamak</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Müslüman Ordunun Hareketi</h3>
+                        <ul class="space-y-3">
+                            <li><strong>Başlangıç:</strong> Medine'den hareket (700 kişi)</li>
+                            <li><strong>Güzergah:</strong> Medine → Uhud Dağı (kısa mesafe)</li>
+                            <li><strong>Konum Seçimi:</strong> Uhud Dağı'nın güney yamacı</li>
+                            <li><strong>Strateji:</strong> Dağı arkada bırakarak savunma pozisyonu</li>
+                            <li><strong>Okçu Yerleşimi:</strong> Ayneyn Tepesi'nde 50 okçu</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Stratejik Konumlar</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-green-300 mb-2">Müslüman Pozisyonları</h4>
+                                <p>• <strong>Ana Ordu:</strong> Uhud Dağı eteği</p>
+                                <p>• <strong>Okçular:</strong> Ayneyn Tepesi</p>
+                                <p>• <strong>Avantaj:</strong> Dağ desteği, yüksek konum</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-red-300 mb-2">Mekkeli Pozisyonları</h4>
+                                <p>• <strong>Ana Ordu:</strong> Düz arazi</p>
+                                <p>• <strong>Süvariler:</strong> Kanatlar</p>
+                                <p>• <strong>Avantaj:</strong> Sayısal üstünlük, süvari</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Kritik Hareket</h3>
+                        <p class="mb-4">Savaşın kaderini değiştiren hareket, okçuların Ayneyn Tepesi'ni terk etmesi oldu:</p>
+                        <ul class="space-y-2">
+                            <li>• Müslümanlar galip gelince okçular ganimet toplamak için tepeden indi</li>
+                            <li>• Halid bin Velid bu fırsatı değerlendirdi</li>
+                            <li>• Süvari birliğiyle boşalan tepeden saldırdı</li>
+                            <li>• Müslüman ordusunu arkadan kuşattı</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Savaşın Sebepleri Sayfası -->
+    <div id="causes" class="page-transition min-h-full p-8 hidden">
+        <div class="max-w-4xl mx-auto">
+            <button onclick="showPage('mainPage')" class="mb-6 bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                ← Ana Sayfaya Dön
+            </button>
+            
+            <div class="bg-gradient-to-br from-orange-500 to-red-600 p-8 rounded-2xl shadow-2xl">
+                <h1 class="text-4xl font-bold mb-6 flex items-center gap-3">
+                    SAVAŞIN SEBEPLERİ
+                </h1>
+                
+                <div class="space-y-6 text-lg leading-relaxed">
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Bedir Savaşı'nın Etkisi</h3>
+                        <ul class="space-y-3">
+                            <li><strong>Prestij Kaybı:</strong> Mekkeliler Bedir'de ağır yenilgi aldı</li>
+                            <li><strong>Ekonomik Kayıp:</strong> Ticaret kervanları ve malları kaybedildi</li>
+                            <li><strong>Liderlik Sorunu:</strong> Önemli liderler öldürüldü</li>
+                            <li><strong>İntikam Arzusu:</strong> Ölen yakınları için intikam alma isteği</li>
+                            <li><strong>Güç Dengesi:</strong> Arabistan'daki güç dengesinin değişmesi</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Ekonomik Sebepler</h3>
+                        <ul class="space-y-3">
+                            <li><strong>Ticaret Yolları:</strong> Müslümanların ticaret yollarını kontrol etmesi</li>
+                            <li><strong>Kervan Saldırıları:</strong> Müslümanların Mekkeli kervanlara saldırması</li>
+                            <li><strong>Ekonomik Abluka:</strong> Mekke'nin ekonomik gücünün zayıflaması</li>
+                            <li><strong>Gelir Kaybı:</strong> Ticaret gelirlerinin azalması</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Siyasi ve Sosyal Sebepler</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-green-300 mb-2">Mekke Açısından</h4>
+                                <p>• Liderlik otoritesinin sarsılması</p>
+                                <p>• Kabile ittifaklarının zayıflaması</p>
+                                <p>• Dini otoritenin sorgulanması</p>
+                                <p>• Genç neslin etkilenmesi</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-blue-300 mb-2">Medine Açısından</h4>
+                                <p>• İslam'ın yayılma hızı</p>
+                                <p>• Yeni ittifaklar kurulması</p>
+                                <p>• Bölgesel güç olma</p>
+                                <p>• Dini misyonun genişlemesi</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Kişisel Motivasyonlar</h3>
+                        <ul class="space-y-3">
+                            <li><strong>Hind bint Utbe:</strong> Bedir'de ölen babası Utbe için intikam</li>
+                            <li><strong>Ebu Süfyan:</strong> Liderlik prestijini geri kazanma</li>
+                            <li><strong>Halid bin Velid:</strong> Askeri ününü kanıtlama</li>
+                            <li><strong>Kureyş Liderleri:</strong> Eski düzeni geri getirme</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Doğrudan Tetikleyici</h3>
+                        <p class="mb-4">Savaşın doğrudan sebebi olan olaylar:</p>
+                        <ul class="space-y-2">
+                            <li>• Mekkelilerin büyük bir ordu toplaması</li>
+                            <li>• Medine'ye doğru yürüyüş başlatması</li>
+                            <li>• Müslümanların savunma kararı alması</li>
+                            <li>• Her iki tarafın da geri adım atmaması</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Savaşın Sonuçları Sayfası -->
+    <div id="results" class="page-transition min-h-full p-8 hidden">
+        <div class="max-w-4xl mx-auto">
+            <button onclick="showPage('mainPage')" class="mb-6 bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                ← Ana Sayfaya Dön
+            </button>
+            
+            <div class="bg-gradient-to-br from-pink-500 to-purple-600 p-8 rounded-2xl shadow-2xl">
+                <h1 class="text-4xl font-bold mb-6 flex items-center gap-3">
+                    SAVAŞIN SONUÇLARI
+                </h1>
+                
+                <div class="space-y-6 text-lg leading-relaxed">
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Askeri Sonuçlar</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-green-300 mb-2">Müslüman Kayıpları</h4>
+                                <p>• Şehit: 70 kişi</p>
+                                <p>• Yaralı: Hz. Muhammed dahil çok sayıda</p>
+                                <p>• Önemli kayıp: Hz. Hamza</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-red-300 mb-2">Mekkeli Kayıpları</h4>
+                                <p>• Ölü: 20-23 kişi</p>
+                                <p>• Yaralı: Az sayıda</p>
+                                <p>• Hedefine ulaşamama</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Dini ve Manevi Sonuçlar</h3>
+                        <ul class="space-y-3">
+                            <li><strong>İman Testi:</strong> Müslümanların imanı sınandı</li>
+                            <li><strong>Sabır Dersi:</strong> Zor zamanlarda sabretme öğretisi</li>
+                            <li><strong>Birlik Vurgusu:</strong> Disiplin ve itaatin önemi anlaşıldı</li>
+                            <li><strong>Şehitlik Kavramı:</strong> Şehitliğin değeri pekişti</li>
+                            <li><strong>Kur'an Ayetleri:</strong> Savaşla ilgili ayetler nazil oldu</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Siyasi Sonuçlar</h3>
+                        <ul class="space-y-3">
+                            <li><strong>Güç Dengesi:</strong> Ne Mekke ne de Medine kesin üstünlük sağladı</li>
+                            <li><strong>Prestij:</strong> Mekkeliler kısmen prestij kazandı</li>
+                            <li><strong>İttifaklar:</strong> Bölgedeki kabileler taraf değiştirmeye başladı</li>
+                            <li><strong>Diplomasi:</strong> Her iki taraf da yeni stratejiler geliştirdi</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Öğretici Dersler</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-blue-300 mb-2">Askeri Dersler</h4>
+                                <p>• Disiplinin önemi</p>
+                                <p>• Komuta birliğinin gerekliliği</p>
+                                <p>• Stratejik pozisyonları koruma</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-green-300 mb-2">Manevi Dersler</h4>
+                                <p>• Ganimet hırsının zararları</p>
+                                <p>• Sabır ve sebatın değeri</p>
+                                <p>• Allah'a güvenin önemi</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Uzun Vadeli Etkiler</h3>
+                        <ul class="space-y-3">
+                            <li><strong>Hendek Savaşı:</strong> Mekkelilerin daha büyük ittifak kurmasına yol açtı</li>
+                            <li><strong>Askeri Gelişim:</strong> Müslümanların askeri taktiklerini geliştirmesi</li>
+                            <li><strong>Toplumsal Olgunluk:</strong> Müslüman toplumunun olgunlaşması</li>
+                            <li><strong>İslam'ın Yayılması:</strong> Zorluklara rağmen İslam'ın yayılmaya devam etmesi</li>
+                            <li><strong>Tarihsel Ders:</strong> Gelecek nesiller için önemli dersler</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/10 p-6 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-300">Günümüze Mesajlar</h3>
+                        <ul class="space-y-2">
+                            <li>• Başarı ve başarısızlık Allah'tandır</li>
+                            <li>• Disiplin ve birlik her zaman önemlidir</li>
+                            <li>• Zorluklardan ders çıkarmak gerekir</li>
+                            <li>• Sabır ve sebat her zaman mükafatlandırılır</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Tüm sayfaları gizle
+            const pages = ['mainPage', 'generalInfo', 'routes', 'causes', 'results'];
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
+            
+            // İstenen sayfayı göster
+            document.getElementById(pageId).classList.remove('hidden');
+            
+            // Sayfanın en üstüne kaydır
+            window.scrollTo(0, 0);
+        }
+
+        // Sayfa yüklendiğinde animasyonları başlat
+        window.addEventListener('load', function() {
+            const branches = document.querySelectorAll('.branch-animation');
+            branches.forEach((branch, index) => {
+                setTimeout(() => {
+                    branch.style.animationDelay = (index * 0.1) + 's';
+                }, 100);
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98c61ae7672826ad',t:'MTc2MDA5OTE3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
