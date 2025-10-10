@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veda Haccı - Ünite Değerlendirme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Myriad+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Myriad Pro', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #a8e6a3 0%, #81c784 100%);
+            min-height: 100%;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: calc(100% - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .page {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            flex: 1;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .page.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #e8f4f8;
+        }
+        
+        .course-title {
+            font-size: 18px;
+            color: #5a6c7d;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+        
+        .unit-title {
+            font-size: 24px;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .assessment-title {
+            font-size: 20px;
+            color: #34495e;
+            font-weight: 500;
+        }
+        
+        .start-button {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 40px auto;
+            display: block;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.4);
+        }
+        
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 35, 126, 0.6);
+            background: #0d47a1;
+        }
+        
+        .question-container {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #74b9ff;
+        }
+        
+        .question-number {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            color: #34495e;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #74b9ff;
+        }
+        
+        .option input {
+            margin: 0;
+        }
+        
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 15px;
+            color: #2c3e50;
+        }
+        
+        .fill-blank-input {
+            border: none;
+            border-bottom: 2px solid #74b9ff;
+            background: transparent;
+            padding: 5px 10px;
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 500;
+            min-width: 150px;
+            margin: 0 5px;
+        }
+        
+        .fill-blank-input:focus {
+            outline: none;
+            border-bottom-color: #0984e3;
+        }
+        
+        .check-button {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .check-button.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .check-button:hover.enabled {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.4);
+            background: #0d47a1;
+        }
+        
+        .feedback {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e8f4f8;
+        }
+        
+        .nav-button {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .nav-button.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .nav-button:hover.enabled {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.4);
+            background: #0d47a1;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #74b9ff, #0984e3);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .results-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            position: relative;
+        }
+        
+        .score-text {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .retry-button {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.4);
+        }
+        
+        .retry-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 35, 126, 0.6);
+            background: #0d47a1;
+        }
+        
+        .intro-content {
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .page {
+                padding: 20px;
+            }
+            
+            .unit-title {
+                font-size: 20px;
+            }
+            
+            .question-text {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sayfa 1: Giriş -->
+        <div class="page active" id="page1">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="intro-content">
+                <div class="header">
+                    <div class="course-title">Peygamberimizin Hayatı Dersi (12.Sınıf)</div>
+                    <div class="unit-title">3. ÜNİTE: PEYGAMBERİMİZİN HAYATINDA<br>ÖNEMLİ BİR HADİSE: VEDA HACCI</div>
+                    <div class="assessment-title">Ünite Değerlendirme Soruları</div>
+                </div>
+                <button class="start-button" onclick="generateQuestions(); nextPage()">BAŞLA</button>
+            </div>
+        </div>
+
+        <!-- Sayfa 2: Doğru-Yanlış Soruları -->
+        <div class="page" id="page2">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="header">
+                <h2 style="color: #2c3e50; margin: 0;">Doğru - Yanlış Soruları</h2>
+            </div>
+            
+            <div class="question-container">
+                <div class="question-number">Soru 1:</div>
+                <div class="question-text">Hz. Peygamber'in Veda Haccı, İslam tarihindeki ilk hac ibadetidir.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q1" value="true" id="q1_true">
+                        <label for="q1_true">Doğru</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" value="false" id="q1_false">
+                        <label for="q1_false">Yanlış</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkAnswer(1, 'false')">Kontrol Et</button>
+                <div class="feedback" id="feedback1"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 2:</div>
+                <div class="question-text">Veda Haccı sırasında Hz. Peygamber sadece Arafat'ta hutbe irat etmiştir.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q2" value="true" id="q2_true">
+                        <label for="q2_true">Doğru</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" value="false" id="q2_false">
+                        <label for="q2_false">Yanlış</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkAnswer(2, 'false')">Kontrol Et</button>
+                <div class="feedback" id="feedback2"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 3:</div>
+                <div class="question-text">Veda Hutbesi'nde can ve mal dokunulmazlığı vurgulanmıştır.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q3" value="true" id="q3_true">
+                        <label for="q3_true">Doğru</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" value="false" id="q3_false">
+                        <label for="q3_false">Yanlış</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkAnswer(3, 'true')">Kontrol Et</button>
+                <div class="feedback" id="feedback3"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 4:</div>
+                <div class="question-text">Veda Haccı, Hz. Peygamber'in hayatındaki son önemli hadiselerden biridir.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q4" value="true" id="q4_true">
+                        <label for="q4_true">Doğru</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" value="false" id="q4_false">
+                        <label for="q4_false">Yanlış</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkAnswer(4, 'true')">Kontrol Et</button>
+                <div class="feedback" id="feedback4"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 5:</div>
+                <div class="question-text">Veda Hutbesi'ndeki mesajlar sadece o dönemdeki Müslümanlara yönelikti.</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q5" value="true" id="q5_true">
+                        <label for="q5_true">Doğru</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" value="false" id="q5_false">
+                        <label for="q5_false">Yanlış</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkAnswer(5, 'false')">Kontrol Et</button>
+                <div class="feedback" id="feedback5"></div>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button" onclick="prevPage()">Önceki</button>
+                <button class="nav-button" id="nextBtn2" onclick="nextPage()">Sonraki</button>
+            </div>
+        </div>
+
+        <!-- Sayfa 3: Boşluk Doldurma -->
+        <div class="page" id="page3">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="header">
+                <h2 style="color: #2c3e50; margin: 0;">Boşluk Doldurma Soruları</h2>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 6:</div>
+                <div class="question-text">
+                    Hz. Peygamber'in Veda Haccı <input type="text" class="fill-blank-input" id="q6" placeholder="..."> yılında gerçekleşmiştir.
+                </div>
+                <button class="check-button" onclick="checkFillBlank(6, '10')">Kontrol Et</button>
+                <div class="feedback" id="feedback6"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 7:</div>
+                <div class="question-text">
+                    Veda Haccı'na yaklaşık <input type="text" class="fill-blank-input" id="q7" placeholder="..."> bin Müslüman katılmıştır.
+                </div>
+                <button class="check-button" onclick="checkFillBlank(7, '100')">Kontrol Et</button>
+                <div class="feedback" id="feedback7"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 8:</div>
+                <div class="question-text">
+                    Hz. Peygamber Veda Hutbesi'ni <input type="text" class="fill-blank-input" id="q8" placeholder="..."> Dağı'nda irat etmiştir.
+                </div>
+                <button class="check-button" onclick="checkFillBlank(8, 'Arafat')">Kontrol Et</button>
+                <div class="feedback" id="feedback8"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 9:</div>
+                <div class="question-text">
+                    Veda Hutbesi'nde kadın haklarına özel önem verilmiş ve <input type="text" class="fill-blank-input" id="q9" placeholder="..."> hakkında önemli açıklamalar yapılmıştır.
+                </div>
+                <button class="check-button" onclick="checkFillBlank(9, 'kadınlar')">Kontrol Et</button>
+                <div class="feedback" id="feedback9"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 10:</div>
+                <div class="question-text">
+                    Hz. Peygamber Veda Hutbesi'nde <input type="text" class="fill-blank-input" id="q10" placeholder="..."> ve <input type="text" class="fill-blank-input" id="q10b" placeholder="..."> dokunulmazlığını vurgulamıştır.
+                </div>
+                <button class="check-button" onclick="checkFillBlank(10, 'can|mal')">Kontrol Et</button>
+                <div class="feedback" id="feedback10"></div>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button enabled" onclick="prevPage()">Önceki</button>
+                <button class="nav-button" id="nextBtn3" onclick="nextPage()">Sonraki</button>
+            </div>
+        </div>
+
+        <!-- Sayfa 4: Çoktan Seçmeli -->
+        <div class="page" id="page4">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="header">
+                <h2 style="color: #2c3e50; margin: 0;">Çoktan Seçmeli Sorular</h2>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 11:</div>
+                <div class="question-text">Veda Haccı'nın "Veda" olarak isimlendirilmesinin temel sebebi nedir?</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q11" value="a" id="q11_a">
+                        <label for="q11_a">A) İlk hac olması</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11" value="b" id="q11_b">
+                        <label for="q11_b">B) En kalabalık hac olması</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11" value="c" id="q11_c">
+                        <label for="q11_c">C) Hz. Peygamber'in son haccı olması</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11" value="d" id="q11_d">
+                        <label for="q11_d">D) En uzun süren hac olması</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11" value="e" id="q11_e">
+                        <label for="q11_e">E) Medine'den yapılan ilk hac olması</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkMultiple(11, 'c')">Kontrol Et</button>
+                <div class="feedback" id="feedback11"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 12:</div>
+                <div class="question-text">Veda Hutbesi'nde vurgulanan evrensel mesajlardan biri aşağıdakilerden hangisidir?</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q12" value="a" id="q12_a">
+                        <label for="q12_a">A) Ekonomik işbirliği kuralları</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12" value="b" id="q12_b">
+                        <label for="q12_b">B) İnsan hakları ve eşitlik</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12" value="c" id="q12_c">
+                        <label for="q12_c">C) Savaş ve çatışma</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12" value="d" id="q12_d">
+                        <label for="q12_d">D) Ticaret kuralları</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12" value="e" id="q12_e">
+                        <label for="q12_e">E) Siyasi örgütlenme</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkMultiple(12, 'b')">Kontrol Et</button>
+                <div class="feedback" id="feedback12"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 13:</div>
+                <div class="question-text">Hz. Peygamber Veda Haccı sırasında hutbelerini hangi yerlerde irat etmiştir?</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q13" value="a" id="q13_a">
+                        <label for="q13_a">A) Sadece Arafat'ta</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13" value="b" id="q13_b">
+                        <label for="q13_b">B) Arafat, Müzdelife ve Mina'da</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13" value="c" id="q13_c">
+                        <label for="q13_c">C) Sadece Mina'da</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13" value="d" id="q13_d">
+                        <label for="q13_d">D) Sadece Müzdelife'de</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13" value="e" id="q13_e">
+                        <label for="q13_e">E) Mekke'de</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkMultiple(13, 'b')">Kontrol Et</button>
+                <div class="feedback" id="feedback13"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 14:</div>
+                <div class="question-text">Veda Hutbesi'ndeki "Aranızda bir Arap'ın Arap olmayana, Arap olmayanın Arap'a üstünlüğü yoktur" sözü neyi vurgular?</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q14" value="a" id="q14_a">
+                        <label for="q14_a">A) Dil birliği</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14" value="b" id="q14_b">
+                        <label for="q14_b">B) Coğrafi yakınlık</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14" value="c" id="q14_c">
+                        <label for="q14_c">C) İnsan eşitliği ve kardeşlik</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14" value="d" id="q14_d">
+                        <label for="q14_d">D) Ekonomik işbirliği</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14" value="e" id="q14_e">
+                        <label for="q14_e">E) Kültürel benzerlik</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkMultiple(14, 'c')">Kontrol Et</button>
+                <div class="feedback" id="feedback14"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Soru 15:</div>
+                <div class="question-text">Veda Hutbesi'nin günümüze etkisi açısından en önemli özelliği nedir?</div>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q15" value="a" id="q15_a">
+                        <label for="q15_a">A) Sadece dini konuları ele alması</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q15" value="b" id="q15_b">
+                        <label for="q15_b">B) Evrensel ve zamansız mesajlar içermesi</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q15" value="c" id="q15_c">
+                        <label for="q15_c">C) Kısa olması</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q15" value="d" id="q15_d">
+                        <label for="q15_d">D) Sadece erkeklere hitap etmesi</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q15" value="e" id="q15_e">
+                        <label for="q15_e">E) Sadece o dönem için geçerli olması</label>
+                    </div>
+                </div>
+                <button class="check-button" onclick="checkMultiple(15, 'b')">Kontrol Et</button>
+                <div class="feedback" id="feedback15"></div>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button enabled" onclick="prevPage()">Önceki</button>
+                <button class="nav-button" id="nextBtn4" onclick="nextPage()">Sonraki</button>
+            </div>
+        </div>
+
+        <!-- Sayfa 5: Sonuç -->
+        <div class="page" id="page5">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="results-container">
+                <h2 style="color: #2c3e50; margin-bottom: 30px;">Değerlendirme Tamamlandı!</h2>
+                <div class="score-circle" id="scoreCircle">
+                    <span id="scorePercentage">0%</span>
+                </div>
+                <div class="score-text" id="scoreText">Başarı Oranınız</div>
+                <div style="margin-bottom: 30px; font-size: 16px; color: #5a6c7d; line-height: 1.6;">
+                    <p id="resultMessage"></p>
+                </div>
+                <button class="retry-button" onclick="restartQuiz()">Yeniden Dene</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 5;
+        let answers = {};
+        let checkedQuestions = new Set();
+        let questionData = {
+            trueFalse: [
+                {q: "Hz. Peygamber'in Veda Haccı, İslam tarihindeki ilk hac ibadetidir.", a: "false"},
+                {q: "Veda Haccı sırasında Hz. Peygamber sadece Arafat'ta hutbe irat etmiştir.", a: "false"},
+                {q: "Veda Hutbesi'nde can ve mal dokunulmazlığı vurgulanmıştır.", a: "true"},
+                {q: "Veda Haccı, Hz. Peygamber'in hayatındaki son önemli hadiselerden biridir.", a: "true"},
+                {q: "Veda Hutbesi'ndeki mesajlar sadece o dönemdeki Müslümanlara yönelikti.", a: "false"}
+            ],
+            fillBlank: [
+                {q: "Veda Haccı Hicri takvime göre <input type='text' class='fill-blank-input' id='q6' placeholder='...'> yılında gerçekleşmiştir.", a: "10"},
+                {q: "Veda Haccı'na yaklaşık <input type='text' class='fill-blank-input' id='q7' placeholder='...'> bin Müslüman katılmıştır.", a: "100"},
+                {q: "Hz. Peygamber Veda Hutbesi'ni <input type='text' class='fill-blank-input' id='q8' placeholder='...'> Dağı'nda irat etmiştir.", a: "Arafat"},
+                {q: "Veda Hutbesi'nde kadın haklarına özel önem verilmiş ve <input type='text' class='fill-blank-input' id='q9' placeholder='...'> hakkında önemli açıklamalar yapılmıştır.", a: "kadınlar"},
+                {q: "Hz. Peygamber Veda Hutbesi'nde <input type='text' class='fill-blank-input' id='q10' placeholder='...'> ve <input type='text' class='fill-blank-input' id='q10b' placeholder='...'> dokunulmazlığını vurgulamıştır.", a: "can|mal"}
+            ],
+            multiple: [
+                {q: "Veda Haccı'nın \"Veda\" olarak isimlendirilmesinin temel sebebi nedir?", 
+                 options: ["A) İlk hac olması", "B) En kalabalık hac olması", "C) Hz. Peygamber'in son haccı olması", "D) En uzun süren hac olması", "E) Medine'den yapılan ilk hac olması"], 
+                 a: "c"},
+                {q: "Veda Hutbesi'nde vurgulanan evrensel mesajlardan biri aşağıdakilerden hangisidir?", 
+                 options: ["A) Sadece ticaret kuralları", "B) İnsan hakları ve eşitlik", "C) Savaş ve çatışma", "D) Ticaret kuralları", "E) Siyasi örgütlenme"], 
+                 a: "b"},
+                {q: "Hz. Peygamber Veda Haccı sırasında hutbelerini hangi yerlerde irat etmiştir?", 
+                 options: ["A) Sadece Arafat'ta", "B) Arafat, Müzdelife ve Mina'da", "C) Sadece Mina'da", "D) Sadece Müzdelife'de", "E) Mekke'de"], 
+                 a: "b"},
+                {q: "Veda Hutbesi'ndeki \"Aranızda bir Arap'ın Arap olmayana, Arap olmayanın Arap'a üstünlüğü yoktur\" sözü neyi vurgular?", 
+                 options: ["A) Dil birliği", "B) Coğrafi yakınlık", "C) İnsan eşitliği ve kardeşlik", "D) Ekonomik işbirliği", "E) Kültürel benzerlik"], 
+                 a: "c"},
+                {q: "Veda Hutbesi'nin günümüze etkisi açısından en önemli özelliği nedir?", 
+                 options: ["A) Sadece dini konuları ele alması", "B) Evrensel ve zamansız mesajlar içermesi", "C) Kısa olması", "D) Sadece erkeklere hitap etmesi", "E) Sadece o dönem için geçerli olması"], 
+                 a: "b"}
+            ]
+        };
+        
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+        
+        let currentQuestionAnswers = {};
+        
+        function generateQuestions() {
+            // Soruları karıştır
+            const shuffledTrueFalse = shuffleArray(questionData.trueFalse);
+            const shuffledFillBlank = shuffleArray(questionData.fillBlank);
+            const shuffledMultiple = shuffleArray(questionData.multiple);
+            
+            // Cevapları sakla
+            currentQuestionAnswers = {};
+            
+            // Doğru-Yanlış sorularını oluştur
+            const trueFalseContainer = document.querySelector('#page2');
+            const tfQuestions = trueFalseContainer.querySelectorAll('.question-container');
+            shuffledTrueFalse.forEach((item, index) => {
+                const container = tfQuestions[index];
+                container.querySelector('.question-text').textContent = item.q;
+                container.querySelector('.check-button').setAttribute('onclick', `checkAnswer(${index + 1}, '${item.a}')`);
+                currentQuestionAnswers[index + 1] = item.a;
+            });
+            
+            // Boşluk doldurma sorularını oluştur
+            const fillBlankContainer = document.querySelector('#page3');
+            const fbQuestions = fillBlankContainer.querySelectorAll('.question-container');
+            shuffledFillBlank.forEach((item, index) => {
+                const container = fbQuestions[index];
+                const questionNum = index + 6;
+                
+                // HTML'i güncelle ve ID'leri düzelt
+                let questionHTML = item.q;
+                if (item.a.includes('|')) {
+                    questionHTML = questionHTML.replace(/id='q\d+'/g, `id='q${questionNum}'`).replace(/id='q\d+b'/g, `id='q${questionNum}b'`);
+                } else {
+                    questionHTML = questionHTML.replace(/id='q\d+'/g, `id='q${questionNum}'`);
+                }
+                
+                container.querySelector('.question-text').innerHTML = questionHTML;
+                container.querySelector('.check-button').setAttribute('onclick', `checkFillBlank(${questionNum}, '${item.a}')`);
+                currentQuestionAnswers[questionNum] = item.a;
+            });
+            
+            // Çoktan seçmeli sorularını oluştur
+            const multipleContainer = document.querySelector('#page4');
+            const mcQuestions = multipleContainer.querySelectorAll('.question-container');
+            shuffledMultiple.forEach((item, index) => {
+                const container = mcQuestions[index];
+                container.querySelector('.question-text').textContent = item.q;
+                const options = container.querySelectorAll('.option label');
+                item.options.forEach((option, optIndex) => {
+                    options[optIndex].textContent = option;
+                });
+                container.querySelector('.check-button').setAttribute('onclick', `checkMultiple(${index + 11}, '${item.a}')`);
+                currentQuestionAnswers[index + 11] = item.a;
+            });
+        }
+        
+        function updateProgress() {
+            const progress = ((currentPage - 1) / (totalPages - 1)) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+        
+        function nextPage() {
+            if (currentPage < totalPages) {
+                // Sayfa 2, 3, 4 için tüm soruların kontrol edilip edilmediğini kontrol et
+                if (currentPage >= 2 && currentPage <= 4) {
+                    const questionsPerPage = 5;
+                    const startQ = (currentPage - 2) * questionsPerPage + 1;
+                    const endQ = startQ + questionsPerPage - 1;
+                    
+                    let allChecked = true;
+                    for (let i = startQ; i <= endQ; i++) {
+                        if (!checkedQuestions.has(i)) {
+                            allChecked = false;
+                            break;
+                        }
+                    }
+                    
+                    if (!allChecked) {
+                        alert('Lütfen tüm soruları yanıtlayıp kontrol edin!');
+                        return;
+                    }
+                }
+                
+                document.getElementById('page' + currentPage).classList.remove('active');
+                currentPage++;
+                document.getElementById('page' + currentPage).classList.add('active');
+                updateProgress();
+                
+                // Sayfa 3'e geçildiğinde event listener'ları yeniden kur
+                if (currentPage === 3) {
+                    setTimeout(() => {
+                        setupEventListeners();
+                        // Boşluk doldurma butonlarının durumunu kontrol et
+                        document.querySelectorAll('#page3 .question-container').forEach(container => {
+                            const inputs = container.querySelectorAll('.fill-blank-input');
+                            const checkButton = container.querySelector('.check-button');
+                            let allFilled = true;
+                            inputs.forEach(input => {
+                                if (!input.value.trim()) allFilled = false;
+                            });
+                            if (allFilled) {
+                                checkButton.classList.add('enabled');
+                            }
+                        });
+                    }, 150);
+                }
+                
+                if (currentPage === 5) {
+                    showResults();
+                }
+            }
+        }
+        
+        function prevPage() {
+            if (currentPage > 1) {
+                document.getElementById('page' + currentPage).classList.remove('active');
+                currentPage--;
+                document.getElementById('page' + currentPage).classList.add('active');
+                updateProgress();
+            }
+        }
+        
+        function checkAnswer(questionNum, correctAnswer) {
+            const selectedAnswer = document.querySelector(`input[name="q${questionNum}"]:checked`);
+            if (!selectedAnswer) {
+                alert('Lütfen bir seçenek işaretleyin!');
+                return;
+            }
+            
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const isCorrect = selectedAnswer.value === correctAnswer;
+            
+            answers[questionNum] = isCorrect;
+            checkedQuestions.add(questionNum);
+            
+            if (isCorrect) {
+                feedback.textContent = '✓ Doğru cevap!';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = '✗ Yanlış cevap. Doğru cevap: ' + (correctAnswer === 'true' ? 'Doğru' : 'Yanlış');
+                feedback.className = 'feedback incorrect';
+            }
+            feedback.style.display = 'block';
+            
+            // Kontrol et butonunu devre dışı bırak
+            event.target.style.display = 'none';
+            
+            updateNavigationButtons();
+        }
+        
+        function checkFillBlank(questionNum, correctAnswer) {
+            let userAnswer;
+            let actualCorrectAnswer = currentQuestionAnswers[questionNum] || correctAnswer;
+            
+            if (actualCorrectAnswer.includes('|')) {
+                // İki boşluklu soru (soru 10 gibi)
+                const input1 = document.getElementById(`q${questionNum}`);
+                const input2 = document.getElementById(`q${questionNum}b`);
+                
+                if (!input1 || !input2) {
+                    alert('Lütfen boşlukları doldurun!');
+                    return;
+                }
+                
+                const answer1 = input1.value.trim();
+                const answer2 = input2.value.trim();
+                userAnswer = answer1 + '|' + answer2;
+                
+                if (!answer1 || !answer2) {
+                    alert('Lütfen her iki boşluğu da doldurun!');
+                    return;
+                }
+            } else {
+                // Tek boşluklu soru
+                const input = document.getElementById(`q${questionNum}`);
+                if (!input) {
+                    alert('Lütfen boşluğu doldurun!');
+                    return;
+                }
+                
+                userAnswer = input.value.trim();
+                if (!userAnswer) {
+                    alert('Lütfen boşluğu doldurun!');
+                    return;
+                }
+            }
+            
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            let isCorrect = false;
+            
+            // Cevap kontrolü - büyük/küçük harf duyarsız ve sözel cevapları kabul eden karşılaştırma
+            if (actualCorrectAnswer.includes('|')) {
+                const correctParts = actualCorrectAnswer.toLowerCase().split('|');
+                const userParts = userAnswer.toLowerCase().split('|');
+                isCorrect = (userParts[0] === correctParts[0] && userParts[1] === correctParts[1]) ||
+                           (userParts[0] === correctParts[1] && userParts[1] === correctParts[0]);
+            } else {
+                const userLower = userAnswer.toLowerCase().trim();
+                const correctLower = actualCorrectAnswer.toLowerCase();
+                
+                // Sayısal cevaplar için alternatif kabul et
+                if (correctLower === '10') {
+                    isCorrect = userLower === '10' || userLower === 'on' || userLower === 'onuncu';
+                } else if (correctLower === '100') {
+                    isCorrect = userLower === '100' || userLower === 'yüz' || userLower === 'bin' || userLower === 'yüzbin';
+                } else if (correctLower === 'kadınlar') {
+                    // "kadınlar" kelimesi için tüm büyük/küçük harf kombinasyonlarını kabul et
+                    // Türkçe karakterleri normalize et ve karşılaştır
+                    const normalizeText = (text) => {
+                        return text.toLowerCase()
+                                  .replace(/[İI]/g, 'i')
+                                  .replace(/[ıI]/g, 'i')
+                                  .replace(/[Ğğ]/g, 'g')
+                                  .replace(/[Üü]/g, 'u')
+                                  .replace(/[Şş]/g, 's')
+                                  .replace(/[Çç]/g, 'c')
+                                  .replace(/[Öö]/g, 'o');
+                    };
+                    
+                    const normalizedUser = normalizeText(userAnswer);
+                    const normalizedCorrect = normalizeText('kadınlar');
+                    isCorrect = normalizedUser === normalizedCorrect;
+                } else {
+                    isCorrect = userLower === correctLower;
+                }
+            }
+            
+            answers[questionNum] = isCorrect;
+            checkedQuestions.add(questionNum);
+            
+            if (isCorrect) {
+                feedback.textContent = '✓ Doğru cevap!';
+                feedback.className = 'feedback correct';
+            } else {
+                let correctText = actualCorrectAnswer;
+                if (actualCorrectAnswer.includes('|')) {
+                    correctText = actualCorrectAnswer.replace('|', ' ve ');
+                }
+                feedback.textContent = '✗ Yanlış cevap. Doğru cevap: ' + correctText;
+                feedback.className = 'feedback incorrect';
+            }
+            feedback.style.display = 'block';
+            
+            // Kontrol et butonunu devre dışı bırak
+            event.target.style.display = 'none';
+            
+            updateNavigationButtons();
+        }
+        
+        function checkMultiple(questionNum, correctAnswer) {
+            const selectedAnswer = document.querySelector(`input[name="q${questionNum}"]:checked`);
+            if (!selectedAnswer) {
+                alert('Lütfen bir seçenek işaretleyin!');
+                return;
+            }
+            
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const isCorrect = selectedAnswer.value === correctAnswer;
+            
+            answers[questionNum] = isCorrect;
+            checkedQuestions.add(questionNum);
+            
+            if (isCorrect) {
+                feedback.textContent = '✓ Doğru cevap!';
+                feedback.className = 'feedback correct';
+            } else {
+                const correctOption = document.querySelector(`input[name="q${questionNum}"][value="${correctAnswer}"]`).nextElementSibling.textContent;
+                feedback.textContent = '✗ Yanlış cevap. Doğru cevap: ' + correctOption;
+                feedback.className = 'feedback incorrect';
+            }
+            feedback.style.display = 'block';
+            
+            // Kontrol et butonunu devre dışı bırak
+            event.target.style.display = 'none';
+            
+            updateNavigationButtons();
+        }
+        
+        function updateNavigationButtons() {
+            // Her sayfadaki soruların kontrol edilip edilmediğini kontrol et
+            if (currentPage === 2) {
+                const allChecked = [1,2,3,4,5].every(q => checkedQuestions.has(q));
+                const nextBtn = document.getElementById('nextBtn2');
+                if (allChecked) {
+                    nextBtn.classList.add('enabled');
+                } else {
+                    nextBtn.classList.remove('enabled');
+                }
+            } else if (currentPage === 3) {
+                const allChecked = [6,7,8,9,10].every(q => checkedQuestions.has(q));
+                const nextBtn = document.getElementById('nextBtn3');
+                if (allChecked) {
+                    nextBtn.classList.add('enabled');
+                } else {
+                    nextBtn.classList.remove('enabled');
+                }
+            } else if (currentPage === 4) {
+                const allChecked = [11,12,13,14,15].every(q => checkedQuestions.has(q));
+                const nextBtn = document.getElementById('nextBtn4');
+                if (allChecked) {
+                    nextBtn.classList.add('enabled');
+                } else {
+                    nextBtn.classList.remove('enabled');
+                }
+            }
+        }
+        
+        function showResults() {
+            const totalQuestions = 15;
+            const correctAnswers = Object.values(answers).filter(answer => answer === true).length;
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            document.getElementById('scorePercentage').textContent = percentage + '%';
+            
+            const scoreCircle = document.getElementById('scoreCircle');
+            const resultMessage = document.getElementById('resultMessage');
+            
+            if (percentage === 100) {
+                scoreCircle.style.background = '#27ae60';
+                resultMessage.innerHTML = '<strong>TEBRİKLER!</strong><br>Bütün soruları doğru cevapladınız! Veda Haccı konusunda mükemmel bir performans sergilediniz.';
+            } else if (percentage >= 85) {
+                scoreCircle.style.background = '#27ae60';
+                resultMessage.textContent = 'Mükemmel! Veda Haccı konusunu çok iyi öğrenmişsiniz. Tebrikler!';
+            } else if (percentage >= 70) {
+                scoreCircle.style.background = '#3498db';
+                resultMessage.textContent = 'İyi! Konuyu genel olarak kavramışsınız. Birkaç noktayı tekrar gözden geçirebilirsiniz.';
+            } else if (percentage >= 50) {
+                scoreCircle.style.background = '#f39c12';
+                resultMessage.textContent = 'Orta seviye. Veda Haccı konusunu tekrar çalışmanızı öneririz.';
+            } else {
+                scoreCircle.style.background = '#e74c3c';
+                resultMessage.textContent = 'Konuyu daha detaylı çalışmanız gerekiyor. Ders notlarınızı tekrar gözden geçirin.';
+            }
+            
+            document.getElementById('scoreText').textContent = `${correctAnswers}/${totalQuestions} doğru cevap`;
+        }
+        
+        function restartQuiz() {
+            currentPage = 1;
+            answers = {};
+            checkedQuestions = new Set();
+            
+            // Soruları yeniden karıştır
+            generateQuestions();
+            
+            // Tüm sayfaları gizle
+            for (let i = 1; i <= totalPages; i++) {
+                document.getElementById('page' + i).classList.remove('active');
+            }
+            
+            // İlk sayfayı göster
+            document.getElementById('page1').classList.add('active');
+            
+            // Tüm form elemanlarını sıfırla
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+            
+            document.querySelectorAll('input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+            
+            // Feedback'leri gizle
+            document.querySelectorAll('.feedback').forEach(feedback => {
+                feedback.style.display = 'none';
+            });
+            
+            // Kontrol et butonlarını tekrar göster
+            document.querySelectorAll('.check-button').forEach(button => {
+                button.style.display = 'inline-block';
+                button.classList.remove('enabled');
+            });
+            
+            // Navigation butonlarını sıfırla
+            document.querySelectorAll('.nav-button').forEach(button => {
+                if (button.textContent === 'Sonraki') {
+                    button.classList.remove('enabled');
+                }
+            });
+            
+            // Event listener'ları yeniden kur
+            setupEventListeners();
+            
+            updateProgress();
+        }
+        
+        function setupEventListeners() {
+            // Radio butonları için
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const questionNum = this.name.substring(1);
+                    const checkButton = this.closest('.question-container').querySelector('.check-button');
+                    checkButton.classList.add('enabled');
+                });
+            });
+            
+            // Text inputları için event listener ekle - daha güvenilir yaklaşım
+            const addInputListeners = () => {
+                document.querySelectorAll('.fill-blank-input').forEach(input => {
+                    // Önceki listener'ları temizle
+                    input.removeEventListener('input', handleInputChange);
+                    input.removeEventListener('keyup', handleInputChange);
+                    
+                    // Yeni listener'ları ekle
+                    input.addEventListener('input', handleInputChange);
+                    input.addEventListener('keyup', handleInputChange);
+                });
+            };
+            
+            const handleInputChange = function() {
+                const questionContainer = this.closest('.question-container');
+                if (!questionContainer) return;
+                
+                const checkButton = questionContainer.querySelector('.check-button');
+                const allInputs = questionContainer.querySelectorAll('.fill-blank-input');
+                
+                // Tüm inputların dolu olup olmadığını kontrol et
+                let allFilled = true;
+                allInputs.forEach(inp => {
+                    if (!inp.value.trim()) {
+                        allFilled = false;
+                    }
+                });
+                
+                if (allFilled) {
+                    checkButton.classList.add('enabled');
+                } else {
+                    checkButton.classList.remove('enabled');
+                }
+            };
+            
+            // Hemen listener'ları ekle
+            addInputListeners();
+            
+            // Sayfa değişikliklerinde de listener'ları yeniden ekle
+            setTimeout(addInputListeners, 200);
+        }
+        
+        // Sayfa yüklendiğinde input değişikliklerini dinle
+        document.addEventListener('DOMContentLoaded', function() {
+            // İlk yüklemede soruları karıştır
+            generateQuestions();
+            // Event listener'ları kur
+            setupEventListeners();
+            updateProgress();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98c6c07602fd26ad',t:'MTc2MDEwNTk1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
