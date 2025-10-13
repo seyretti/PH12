@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hz. Aişe Doğru-Yanlış Oyunu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            box-sizing: border-box;
+            font-family: 'Myriad Pro', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-image: url('https://i.imgur.com/CESqC1B.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100%;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(34, 139, 34, 0.75) 0%, rgba(46, 125, 50, 0.75) 50%, rgba(27, 94, 32, 0.75) 100%);
+            z-index: -1;
+        }
+        html, body {
+            height: 100%;
+        }
+        .question-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-answer {
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        .btn-answer:hover {
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+        .correct-answer {
+            background: #059669 !important;
+            border-color: #047857 !important;
+        }
+        .wrong-answer {
+            background: #dc2626 !important;
+            border-color: #b91c1c !important;
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .academic-header {
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl">
+        <!-- Header -->
+        <div class="text-center mb-8 academic-header">
+            <h1 class="text-3xl font-bold text-white mb-3">Hz. Aişe (r.a.) Bilgi Değerlendirme Testi</h1>
+            <p class="text-white/90 text-base font-medium">Peygamberimizin Hayatı 12.Sınıf</p>
+            <p class="text-white/70 text-sm mt-1">Lütfen her soruyu dikkatle okuyarak doğru veya yanlış seçeneğini işaretleyiniz.</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progressSection" class="bg-white/20 rounded-full h-3 mb-6">
+            <div id="progressBar" class="progress-bar bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full" style="width: 20%"></div>
+        </div>
+
+        <!-- Score Display -->
+        <div id="scoreSection" class="flex justify-between items-center mb-6">
+            <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
+                <span class="text-white font-semibold">Soru: <span id="currentQuestion">1</span>/5</span>
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
+                <span class="text-white font-semibold">Puan: <span id="score">0</span></span>
+            </div>
+        </div>
+
+        <!-- Question Card -->
+        <div id="questionCard" class="question-card bg-white rounded-lg p-8 mb-6">
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Soru <span id="questionNumber">1</span></span>
+                    <span class="text-sm font-medium text-gray-600">Her doğru cevap: 10 puan</span>
+                </div>
+                <h2 id="questionText" class="text-xl font-semibold text-gray-800 leading-relaxed">
+                    Hz. Aişe, Hz. Muhammed'in (s.a.v.) en genç eşiydi.
+                </h2>
+            </div>
+
+            <div class="flex gap-4 justify-center">
+                <button id="trueBtn" class="btn-answer bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-md text-base">
+                    DOĞRU
+                </button>
+                <button id="falseBtn" class="btn-answer bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-md text-base">
+                    YANLIŞ
+                </button>
+            </div>
+        </div>
+
+        <!-- Feedback Area -->
+        <div id="feedback" class="hidden bg-white/95 backdrop-blur-sm rounded-lg p-6 mb-6 border border-gray-200">
+            <div id="feedbackContent">
+                <div id="feedbackText" class="text-lg font-semibold mb-3"></div>
+                <div id="explanation" class="text-gray-700 text-base leading-relaxed"></div>
+            </div>
+        </div>
+
+        <!-- Next Button -->
+        <div id="navigationButtons" class="text-center">
+            <button id="prevBtn" class="hidden bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-md text-base btn-answer mr-4">
+                Önceki Soru
+            </button>
+            <button id="nextBtn" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-md text-base btn-answer">
+                Sonraki Soru
+            </button>
+        </div>
+
+        <!-- Final Results -->
+        <div id="results" class="hidden bg-white rounded-lg p-8">
+            <div class="text-center border-b border-gray-200 pb-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Test Sonucu</h2>
+                <p class="text-gray-600">Hz. Aişe (r.a.) Bilgi Değerlendirme Testi</p>
+            </div>
+            
+            <div class="space-y-4 mb-8">
+                <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="font-medium text-gray-700">Toplam Puan:</span>
+                    <span id="finalScore" class="text-xl font-bold text-blue-600"></span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="font-medium text-gray-700">Doğru Cevap Oranı:</span>
+                    <span id="correctRatio" class="text-lg font-semibold text-gray-800"></span>
+                </div>
+                <div class="flex justify-between items-center py-2">
+                    <span class="font-medium text-gray-700">Başarı Durumu:</span>
+                    <span id="performance" class="font-semibold"></span>
+                </div>
+            </div>
+            
+            <div id="perfectScore" class="hidden bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                <div class="text-center">
+                    <div class="text-green-600 font-bold text-lg mb-2">Tebrikler!</div>
+                    <p class="text-green-800 font-medium">Soruların tamamına doğru cevap verdiniz!</p>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button id="restartBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-md text-base btn-answer">
+                    Yeniden Çöz
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Hz. Aişe, Hz. Muhammed'in (s.a.v.) en genç eşiydi.",
+                answer: true,
+                explanation: "Doğru! Hz. Aişe, Peygamber Efendimizin eşleri arasında en gençti ve 18 yaşında vefat etti."
+            },
+            {
+                question: "Hz. Aişe'nin babası Hz. Ebu Bekir'dir.",
+                answer: true,
+                explanation: "Doğru! Hz. Aişe, İslam'ın ilk halifesi Hz. Ebu Bekir'in kızıdır."
+            },
+            {
+                question: "Hz. Aişe hiç hadis rivayet etmemiştir.",
+                answer: false,
+                explanation: "Yanlış! Hz. Aişe, 2210 hadis rivayet etmiş ve sahabe arasında en çok hadis rivayet eden kişilerden biridir."
+            },
+            {
+                question: "Hz. Aişe'ye 'Müminlerin Annesi' denilirdi.",
+                answer: true,
+                explanation: "Doğru! Peygamber Efendimizin tüm eşlerine 'Ümmühâtü'l-Müminîn' (Müminlerin Anneleri) denilirdi."
+            },
+            {
+                question: "Hz. Aişe, Hz. Muhammed'den (s.a.v.) sonra 47 yıl yaşamıştır.",
+                answer: true,
+                explanation: "Doğru! Hz. Aişe, Peygamber Efendimizin vefatından sonra 47 yıl daha yaşamış ve 67 yaşında vefat etmiştir."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let gameEnded = false;
+
+        const questionText = document.getElementById('questionText');
+        const trueBtn = document.getElementById('trueBtn');
+        const falseBtn = document.getElementById('falseBtn');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedbackText');
+        const explanation = document.getElementById('explanation');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const currentQuestionSpan = document.getElementById('currentQuestion');
+        const questionNumber = document.getElementById('questionNumber');
+        const scoreSpan = document.getElementById('score');
+        const progressBar = document.getElementById('progressBar');
+        const results = document.getElementById('results');
+        const questionCard = document.getElementById('questionCard');
+        const finalScore = document.getElementById('finalScore');
+        const correctRatio = document.getElementById('correctRatio');
+        const performance = document.getElementById('performance');
+        const perfectScore = document.getElementById('perfectScore');
+        const restartBtn = document.getElementById('restartBtn');
+        const navigationButtons = document.getElementById('navigationButtons');
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const question = questions[currentQuestionIndex];
+            questionText.textContent = question.question;
+            currentQuestionSpan.textContent = currentQuestionIndex + 1;
+            questionNumber.textContent = currentQuestionIndex + 1;
+            
+            // Update progress bar
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = progress + '%';
+
+            // Reset buttons
+            trueBtn.className = "btn-answer bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-md text-base";
+            falseBtn.className = "btn-answer bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-md text-base";
+            
+            // Enable buttons
+            trueBtn.disabled = false;
+            falseBtn.disabled = false;
+            
+            // Hide feedback and navigation buttons
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            prevBtn.classList.add('hidden');
+            
+            // Show navigation buttons based on question index
+            updateNavigationButtons();
+        }
+
+        function checkAnswer(userAnswer) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = userAnswer === question.answer;
+            
+            // Disable buttons
+            trueBtn.disabled = true;
+            falseBtn.disabled = true;
+
+            if (isCorrect) {
+                score += 10; // Her doğru cevap 10 puan
+                scoreSpan.textContent = score;
+                feedbackText.textContent = 'Doğru Cevap';
+                feedbackText.className = 'text-lg font-semibold mb-3 text-green-600';
+                
+                // Highlight correct button
+                if (userAnswer) {
+                    trueBtn.className += ' correct-answer';
+                } else {
+                    falseBtn.className += ' correct-answer';
+                }
+            } else {
+                feedbackText.textContent = 'Yanlış Cevap';
+                feedbackText.className = 'text-lg font-semibold mb-3 text-red-600';
+                
+                // Highlight wrong button
+                if (userAnswer) {
+                    trueBtn.className += ' wrong-answer';
+                } else {
+                    falseBtn.className += ' wrong-answer';
+                }
+            }
+
+            explanation.textContent = question.explanation;
+            feedback.classList.remove('hidden');
+            
+            // Show next button for all questions (including last one)
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtn.textContent = 'Sonraki Soru';
+            } else {
+                nextBtn.textContent = 'Sonuçları Gör';
+            }
+            nextBtn.classList.remove('hidden');
+        }
+
+        function updateNavigationButtons() {
+            // Show previous button if not on first question
+            if (currentQuestionIndex > 0) {
+                prevBtn.classList.remove('hidden');
+            } else {
+                prevBtn.classList.add('hidden');
+            }
+            
+            // Show next button if not on last question
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                // Son soru, sonuçları göster
+                showResults();
+            }
+        }
+        
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            questionCard.classList.add('hidden');
+            navigationButtons.classList.add('hidden');
+            document.getElementById('progressSection').classList.add('hidden');
+            document.getElementById('scoreSection').classList.add('hidden');
+            results.classList.remove('hidden');
+            
+            const correctAnswers = score / 10;
+            const totalQuestions = questions.length;
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            finalScore.textContent = `${score} puan`;
+            correctRatio.textContent = `${correctAnswers}/${totalQuestions} (%${percentage})`;
+            
+            let performanceText = '';
+            let performanceClass = '';
+            
+            if (correctAnswers === totalQuestions) {
+                performanceText = 'Mükemmel';
+                performanceClass = 'text-green-600';
+                perfectScore.classList.remove('hidden');
+            } else if (correctAnswers >= 4) {
+                performanceText = 'İyi';
+                performanceClass = 'text-blue-600';
+            } else if (correctAnswers >= 3) {
+                performanceText = 'Orta';
+                performanceClass = 'text-yellow-600';
+            } else {
+                performanceText = 'Geliştirilmeli';
+                performanceClass = 'text-red-600';
+            }
+            
+            performance.textContent = performanceText;
+            performance.className = `font-semibold ${performanceClass}`;
+        }
+
+        function restartGame() {
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreSpan.textContent = '0';
+            results.classList.add('hidden');
+            perfectScore.classList.add('hidden');
+            questionCard.classList.remove('hidden');
+            navigationButtons.classList.remove('hidden');
+            document.getElementById('progressSection').classList.remove('hidden');
+            document.getElementById('scoreSection').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        // Event listeners
+        trueBtn.addEventListener('click', () => checkAnswer(true));
+        falseBtn.addEventListener('click', () => checkAnswer(false));
+        nextBtn.addEventListener('click', nextQuestion);
+        prevBtn.addEventListener('click', prevQuestion);
+        restartBtn.addEventListener('click', restartGame);
+
+
+        // Initialize game
+        loadQuestion();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98dfd9e9859526ad',t:'MTc2MDM2OTE0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
