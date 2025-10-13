@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. Ünite Kontrol Noktası</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Myriad Pro', Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-green-50 min-h-full font-sans">
+    <div class="max-w-4xl mx-auto p-6">
+        <!-- Başlık -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-green-800 mb-2">1. ÜNİTE KONTROL NOKTASI</h1>
+            <p class="text-green-600 text-lg">Aşağıdaki ifadelerin doğru veya yanlış olduğunu belirleyiniz</p>
+        </div>
+
+        <!-- Sorular -->
+        <div class="space-y-4 mb-8">
+            <!-- Sorular JavaScript ile dinamik olarak yüklenecek -->
+        </div>
+
+        <!-- Butonlar -->
+        <div class="flex justify-center gap-4 mb-6">
+            <button onclick="kontrolEt()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+                Kontrol Et
+            </button>
+            <button onclick="yenidenDene()" class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+                Yeniden Dene
+            </button>
+        </div>
+
+        <!-- Sonuç Alanı -->
+        <div id="sonuc" class="hidden bg-white rounded-lg p-6 shadow-lg border border-green-200">
+            <div id="sonucIcerik"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sorular ve doğru cevapları
+        const sorular = [
+            {
+                harf: 'a',
+                metin: 'Kudüs\'ün kutsal bir şehir olması ile büyük devletlerin burada hâkimiyet kurmaya çalışması arasında doğrudan bir ilişki bulunmaktadır.',
+                dogruCevap: 'true'
+            },
+            {
+                harf: 'b',
+                metin: 'Mescid-i Aksa, sadece İslam tarihi açısından değil, Hz. Peygamber\'in hayatındaki İsra ve Miraç hadiseleri kapsamında da büyük bir öneme sahiptir.',
+                dogruCevap: 'true'
+            },
+            {
+                harf: 'c',
+                metin: 'İslam öncesi dönemde Müslümanların ilk kıblesi Mescid-i Aksa iken, Mekke\'nin fethinden sonra bu durum Mescid-i Haram olarak kalıcılaşmıştır.',
+                dogruCevap: 'false'
+            },
+            {
+                harf: 'd',
+                metin: 'Kudüs, tarih boyunca farklı devletlerin hâkimiyetine girmiş, ancak Osmanlı Devleti döneminde en uzun ve barışçıl yönetimlerden birini tecrübe etmiştir.',
+                dogruCevap: 'true'
+            },
+            {
+                harf: 'e',
+                metin: 'Yahudiler, Hristiyanlar ve Müslümanlar için kutsal bir şehir olması, Kudüs\'ün büyük devletler arasında sürekli bir hakimiyet mücadelesine sahne olmasının temel nedenidir.',
+                dogruCevap: 'true'
+            },
+            {
+                harf: 'f',
+                metin: 'Hz. İbrahim\'den itibaren birçok peygamberin tevhit mücadelesine sahne olan Kudüs\'te, sadece Yahudi ve Hristiyan peygamberlerin hayatı incelenmelidir.',
+                dogruCevap: 'false'
+            },
+            {
+                harf: 'g',
+                metin: 'Müslüman devletler, tarih boyunca Mescid-i Haram\'a ve Mescid-i Nebevi\'ye büyük özen göstermiş ve bu mekânlarla ilgili çalışmalar yapmıştır.',
+                dogruCevap: 'true'
+            },
+            {
+                harf: 'h',
+                metin: 'Müslümanların Mekke\'nin fethine kadar geçen süreçte Mescid-i Haram\'ı kıble olarak kullanması, Mescid-i Aksa\'nın önemsizleşmesine yol açmıştır.',
+                dogruCevap: 'false'
+            },
+            {
+                harf: 'i',
+                metin: 'Kudüs\'ü ele geçirme amaçlı Haçlı Seferleri, şehrin tarih boyunca farklı güçlerin egemenliğine girdiğini gösteren önemli olaylardandır.',
+                dogruCevap: 'true'
+            },
+            {
+                harf: 'j',
+                metin: 'Müslümanların kıblesi olan Mescid-i Haram\'ın üstlendiği rol, Mekke\'nin fethinden sonra sona ermiştir.',
+                dogruCevap: 'false'
+            }
+        ];
+
+        let karisikSorular = [...sorular];
+
+        function sorulariKaristir() {
+            for (let i = karisikSorular.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [karisikSorular[i], karisikSorular[j]] = [karisikSorular[j], karisikSorular[i]];
+            }
+        }
+
+        function sorulariGoster() {
+            const soruAlani = document.querySelector('.space-y-4');
+            soruAlani.innerHTML = '';
+            
+            const harfler = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+            
+            karisikSorular.forEach((soru, index) => {
+                const soruDiv = document.createElement('div');
+                soruDiv.className = 'bg-white rounded-lg p-4 shadow-sm border border-green-200';
+                soruDiv.innerHTML = `
+                    <p class="text-gray-800 mb-3"><strong>${harfler[index]})</strong> ${soru.metin}</p>
+                    <div class="flex gap-4">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="q${index + 1}" value="true" class="mr-2 text-green-600">
+                            <span class="text-green-700 font-bold text-lg">DOĞRU</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="q${index + 1}" value="false" class="mr-2 text-red-600">
+                            <span class="text-red-700 font-bold text-lg">YANLIŞ</span>
+                        </label>
+                    </div>
+                `;
+                soruAlani.appendChild(soruDiv);
+            });
+        }
+
+        function kontrolEt() {
+            let dogruSayisi = 0;
+            let yanlisSayisi = 0;
+            let toplamSoru = 10;
+
+            // Her soruyu kontrol et
+            for (let i = 1; i <= toplamSoru; i++) {
+                const seciliCevap = document.querySelector(`input[name="q${i}"]:checked`);
+                if (seciliCevap) {
+                    if (seciliCevap.value === karisikSorular[i-1].dogruCevap) {
+                        dogruSayisi++;
+                    } else {
+                        yanlisSayisi++;
+                    }
+                } else {
+                    yanlisSayisi++; // Cevaplanmayan sorular yanlış sayılır
+                }
+            }
+
+            const basariYuzdesi = Math.round((dogruSayisi / toplamSoru) * 100);
+            
+            // Dönüt mesajını belirle
+            let donut = '';
+            if (basariYuzdesi === 100) {
+                donut = 'Tebrikler! Hepsi doğru! Mükemmel bir performans sergiledınız.';
+            } else if (basariYuzdesi >= 80) {
+                donut = 'Çok başarılı! Konuyu çok iyi kavramışsınız.';
+            } else if (basariYuzdesi >= 60) {
+                donut = 'İyi bir performans! Biraz daha çalışarak daha da iyileştirebilirsiniz.';
+            } else if (basariYuzdesi >= 40) {
+                donut = 'Konuyu tekrar gözden geçirmeniz faydalı olacaktır.';
+            } else {
+                donut = 'Konuyu daha detaylı çalışmanız gerekiyor. Pes etmeyin!';
+            }
+
+            // Sonucu göster
+            document.getElementById('sonucIcerik').innerHTML = `
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold text-green-800 mb-4">Sonuçlarınız</h3>
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        <div class="bg-green-100 p-4 rounded-lg">
+                            <div class="text-2xl font-bold text-green-700">${dogruSayisi}</div>
+                            <div class="text-green-600">Doğru</div>
+                        </div>
+                        <div class="bg-red-100 p-4 rounded-lg">
+                            <div class="text-2xl font-bold text-red-700">${yanlisSayisi}</div>
+                            <div class="text-red-600">Yanlış</div>
+                        </div>
+                        <div class="bg-blue-100 p-4 rounded-lg">
+                            <div class="text-2xl font-bold text-blue-700">%${basariYuzdesi}</div>
+                            <div class="text-blue-600">Başarı</div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-lg text-gray-800">${donut}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('sonuc').classList.remove('hidden');
+            document.getElementById('sonuc').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function yenidenDene() {
+            // Soruları karıştır
+            sorulariKaristir();
+            
+            // Soruları yeniden göster
+            sorulariGoster();
+            
+            // Sonuç alanını gizle
+            document.getElementById('sonuc').classList.add('hidden');
+            
+            // Sayfanın başına git
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Sayfa yüklendiğinde soruları karıştır ve göster
+        window.onload = function() {
+            sorulariKaristir();
+            sorulariGoster();
+        };
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98dcc63076bb26ad',t:'MTc2MDMzNjg3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
