@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uhud Savaşı - Navigasyonlu Sunu (Final)</title>
+    
+    <style>
+        /* Yeşil Tonlar ve Yazı Tipi Tanımlamaları */
+        :root {
+            --color-primary: #2ecc71;       /* Ana Yeşil */
+            --color-secondary: #27ae60;     /* Orta Yeşil */
+            --color-dark: #1e8449;          /* Koyu Yeşil */
+            --color-gradient-end: #23a059;  /* Başlık Gradient Sonu */
+            --color-accent-yellow: #f1c40f; /* Sarı Vurgu */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --base-font-size: 16px; /* Referans siteye en yakın boyut */
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: #f7fff7; 
+            color: #333; 
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-size: var(--base-font-size); /* Tüm metinler 16px */
+        }
+
+        .presentation-container {
+            width: 90%;
+            max-width: 850px; 
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); 
+            overflow: hidden;
+        }
+
+        /* Başlık Alanı */
+        .presentation-header {
+            background: linear-gradient(180deg, var(--color-secondary) 0%, var(--color-gradient-end) 100%);
+            color: white;
+            padding: 25px; 
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.4); 
+        }
+
+        .presentation-header h1 {
+            margin: 0;
+            font-size: 2.2em; /* Ana başlık boyutu sabit kaldı */
+            font-family: var(--font-family); 
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); 
+        }
+        .presentation-header p {
+            font-family: var(--font-family); 
+            margin-top: 5px;
+            opacity: 0.9;
+            font-size: 1em; /* 16px */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Ana İçerik ve Menü Düzeni */
+        .main-content-wrapper {
+            display: flex;
+            min-height: 500px; 
+        }
+
+        /* Sol Menü (Sekmeler) */
+        .tab-menu {
+            display: flex;
+            flex-direction: column; 
+            width: 250px; 
+            background-color: var(--color-primary); 
+            padding: 15px; 
+            gap: 8px; 
+        }
+
+        .tab-button {
+            padding: 12px 15px; 
+            cursor: pointer;
+            background: var(--color-secondary); 
+            color: white;
+            border: none;
+            text-align: left;
+            font-size: 1em; /* 16px */
+            font-weight: bold; /* Bold kaldı */
+            transition: background-color 0.3s, transform 0.2s;
+            border-radius: 6px; 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); 
+            font-family: var(--font-family); 
+        }
+
+        .tab-button:hover {
+            background-color: var(--color-dark); 
+            transform: translateY(-1px); 
+        }
+
+        .tab-button.active {
+            background-color: white; 
+            color: var(--color-dark); 
+            border-left: 5px solid var(--color-accent-yellow); 
+            padding-left: 10px; 
+            font-weight: bold; /* Bold kaldı */
+            transform: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Sağ İçerik Alanı */
+        .tab-content {
+            flex-grow: 1;
+            padding: 30px; 
+            background-color: white;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+            font-family: var(--font-family); 
+        }
+
+        .content-section.active {
+            display: flex; 
+            flex-direction: column;
+            justify-content: space-between; 
+            height: 100%;
+        }
+
+        .content-body {
+            flex-grow: 1;
+        }
+
+        .content-section h2 {
+            color: var(--color-dark); 
+            border-bottom: 2px solid #e9ecef; 
+            padding-bottom: 10px;
+            font-size: 1.2em; /* İçerik başlıkları için 19.2px (16px'in 1.2 katı) */
+            margin-top: 0;
+            font-family: var(--font-family); 
+        }
+
+        .content-section p {
+            line-height: 1.6; 
+            margin-bottom: 15px;
+            font-family: var(--font-family);
+            text-shadow: none; 
+            font-size: 1em; /* 16px */
+        }
+
+        .key-point {
+            background-color: #e6ffe6; 
+            padding: 15px;
+            border-left: 4px solid var(--color-primary); 
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-family: var(--font-family); 
+            text-shadow: none; 
+            font-size: 1em; /* 16px */
+        }
+        
+        /* Navigasyon Butonları */
+        .navigation-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6; 
+        }
+
+        .nav-btn {
+            padding: 8px 15px; 
+            border: none;
+            border-radius: 4px; 
+            font-weight: bold; /* Bold kaldı */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: var(--font-family);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            
+            font-size: 1em; /* 16px */
+            line-height: 1;
+            display: flex; 
+            align-items: center;
+        }
+        
+        .nav-btn span.arrow {
+            display: none; 
+        }
+
+        .nav-btn.prev {
+            background-color: #f39c12; 
+            color: white;
+        }
+        .nav-btn.prev:hover {
+            background-color: #e67e22;
+        }
+
+        .nav-btn.next {
+            background-color: var(--color-primary); 
+            color: white;
+        }
+        .nav-btn.next:hover {
+            background-color: var(--color-dark);
+        }
+        
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            color: #666;
+            box-shadow: none;
+        }
+
+        /* Mobil Uyumluluk */
+        @media (max-width: 768px) {
+            .presentation-container {
+                max-width: 100%;
+            }
+            body {
+                padding: 10px;
+                font-size: 14px; /* Mobil cihazlarda genel font boyutunu biraz küçülttük */
+            }
+            .main-content-wrapper {
+                flex-direction: column;
+                min-height: auto;
+            }
+            .tab-menu {
+                width: 100%;
+                flex-direction: row; 
+                flex-wrap: wrap;
+                justify-content: space-evenly;
+                padding: 10px;
+                gap: 5px;
+            }
+            .tab-button {
+                flex-basis: auto;
+                flex-grow: 1;
+                margin: 5px 0;
+                font-size: 1em; 
+            }
+            .tab-button.active {
+                border-bottom: 3px solid var(--color-accent-yellow); 
+                border-left: none;
+                padding-left: 15px;
+            }
+            .tab-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <div class="presentation-header">
+            <h1>UHUD SAVAŞI (M. 625)</h1>
+            <p>Sebepleri, Gelişimi ve Sonuçları</p>
+        </div>
+
+        <div class="main-content-wrapper">
+            
+            <div class="tab-menu" id="tabMenu">
+                <button class="tab-button active" data-index="0" onclick="openTab(event, 'Giris')">1. Giriş ve Sebepler</button>
+                <button class="tab-button" data-index="1" onclick="openTab(event, 'Hazirlik')">2. Hazırlık ve Düzen</button>
+                <button class="tab-button" data-index="2" onclick="openTab(event, 'Baslangic')">3. Savaşın Başlangıcı</button>
+                <button class="tab-button" data-index="3" onclick="openTab(event, 'Donus')">4. Dönüş Noktası (Okçular)</button>
+                <button class="tab-button" data-index="4" onclick="openTab(event, 'Bitisi')">5. Savaşın Sonu ve Kayıplar</button>
+                <button class="tab-button" data-index="5" onclick="openTab(event, 'Onem')">6. Önemi ve Dersler</button>
+            </div>
+
+            <div class="tab-content" id="tabContent">
+                
+                <div id="Giris" class="content-section active" data-index="0">
+                    <div class="content-body">
+                        <h2>1. Giriş ve Sebepler</h2>
+                        <p>Uhud Savaşı, Hicret'in 3. yılında (M. 625) Müslümanlar ile Mekkeli müşrikler arasında gerçekleşen ikinci büyük meydan savaşıdır. Savaş, Medine'nin kuzeyindeki Uhud Dağı eteklerinde gerçekleşmiştir.</p>
+                        <div class="key-point">
+                            **Temel Sebep:** Mekkelilerin **Bedir**'deki ağır yenilgisinin intikamını almak ve Müslümanların Medine'deki gücüne son vermek, böylece ticaret yollarının güvenliğini sağlamaktır.
+                        </div>
+                        <p>Müslüman ordusunun Medine içinde kalma teklifine rağmen, gençler Medine dışında savaşılmasını istemiş ve Hz. Peygamber bu karara uymuştur.</p>
+                    </div>
+                    <div class="navigation-buttons">
+                        <span></span>
+                        <button class="nav-btn next" onclick="navigateTab(1)">İLERİ</button>
+                    </div>
+                </div>
+
+                <div id="Hazirlik" class="content-section" data-index="1">
+                    <div class="content-body">
+                        <h2>2. Hazırlık ve Düzen</h2>
+                        <p>Müşrik ordusu yaklaşık **3000** kişiden oluşuyordu. Komutanlığını Ebu Süfyan yaparken, süvari birliğinin başında Halid b. Velid bulunuyordu. Müslüman ordusu ise **700** kişiydi (Abdullah b. Übeyy 300 kişiyle geri çekildi).</p>
+                        <p>Hz. Peygamber, ordunun arka kanadını korumak için hayati bir strateji uyguladı:</p>
+                        <div class="key-point">
+                            **Stratejik Emir:** **Ayneyn Tepesi**'ne (**Okçular Tepesi**) 50 okçuyu yerleştirdi ve komutanlarına, "Bizim kazanmamız ya da yenilmemiz fark etmez, buradan ayrılmayın! Kanatları koruyun!" emrini verdi.
+                        </div>
+                    </div>
+                    <div class="navigation-buttons">
+                        <button class="nav-btn prev" onclick="navigateTab(-1)">GERİ</button>
+                        <button class="nav-btn next" onclick="navigateTab(1)">İLERİ</button>
+                    </div>
+                </div>
+
+                <div id="Baslangic" class="content-section" data-index="2">
+                    <div class="content-body">
+                        <h2>3. Savaşın Başlangıcı</h2>
+                        <p>Savaş, Bedir'de olduğu gibi yine **Müslümanların üstünlüğüyle** başladı. Müşrikler kaçmaya, ordu malzemeleri bırakılıp dağılmaya başladı. İlk aşamada zafer kesinlikle Müslümanların lehine göründü.</p>
+                        <div class="key-point">
+                            Savaşın ilk anlarında Hz. Hamza ve Hz. Ali gibi kahraman sahabeler, müşrik saflarının dağılmasında kilit rol oynadı. Bu erken başarı, okçuların dikkatini dağıttı.
+                        </div>
+                    </div>
+                    <div class="navigation-buttons">
+                        <button class="nav-btn prev" onclick="navigateTab(-1)">GERİ</button>
+                        <button class="nav-btn next" onclick="navigateTab(1)">İLERİ</button>
+                    </div>
+                </div>
+
+                <div id="Donus" class="content-section" data-index="3">
+                    <div class="content-body">
+                        <h2>4. Dönüş Noktası (Okçular Tepesi)</h2>
+                        <p>Savaşın kazanıldığını ve **ganimet** toplama zamanının geldiğini düşünen okçuların çoğu, komutanları Abdullah b. Cübeyr'in (r.a) kesin yasağına rağmen yerlerini terk etti. Yalnızca 10 kişi emre itaat etti.</p>
+                        <div class="key-point">
+                            **Savaşın Dönüşü:** Okçuların boşalttığı bu stratejik tepeyi gören **Halid b. Velid**, süvari birliğiyle hızla Müslüman ordusunun arkasına sarkarak ansızın saldırdı ve savaşın seyrini felakete çevirdi.
+                        </div>
+                    </div>
+                    <div class="navigation-buttons">
+                        <button class="nav-btn prev" onclick="navigateTab(-1)">GERİ</button>
+                        <button class="nav-btn next" onclick="navigateTab(1)">İLERİ</button>
+                    </div>
+                </div>
+
+                <div id="Bitisi" class="content-section" data-index="4">
+                    <div class="content-body">
+                        <h2>5. Savaşın Sonu ve Kayıplar</h2>
+                        <p>Çift taraflı saldırıya maruz kalan Müslümanlar büyük bir kargaşa yaşadı. Bu kargaşada **Hz. Hamza** başta olmak üzere **70 kadar sahabe** şehit oldu. Hz. Peygamber de bu çatışmalar sırasında yaralandı.</p>
+                        <div class="key-point">
+                            Müşrikler kesin bir zafer kazanamadan Mekke'ye geri döndü. Savaşın sonucu, Müslümanlar için ağır bir kayıp ve disiplinsizlik sonucu kaybedilen zafer olarak değerlendirilir.
+                        </div>
+                    </div>
+                    <div class="navigation-buttons">
+                        <button class="nav-btn prev" onclick="navigateTab(-1)">GERİ</button>
+                        <button class="nav-btn next" onclick="navigateTab(1)">İLERİ</button>
+                    </div>
+                </div>
+                
+                <div id="Onem" class="content-section" data-index="5">
+                    <div class="content-body">
+                        <h2>6. Önemi ve Dersler</h2>
+                        <p>Uhud Savaşı, Müslüman toplumuna, savaşın en kritik anında dahi liderin emrine **itaatin** ve askerî **disiplinin** vazgeçilmez olduğunu acı bir şekilde öğretmiştir.</p>
+                        <div class="key-point">
+                            **Temel Öğrenim:** Disiplinsizlik ve geçici dünya malına (ganimete) yönelme hırsının, en kesin zaferi bile kaybettirebileceği tecrübe edilmiştir. Bu, Kur'an ve Sünnet'e bağlılığın önemini pekiştiren bir olaydır.
+                        </div>
+                    </div>
+                    <div class="navigation-buttons">
+                        <button class="nav-btn prev" onclick="navigateTab(-1)">GERİ</button>
+                        <span></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tabs = [
+            { id: 'Giris', name: '1. Giriş ve Sebepler' },
+            { id: 'Hazirlik', name: '2. Hazırlık ve Düzen' },
+            { id: 'Baslangic', name: '3. Savaşın Başlangıcı' },
+            { id: 'Donus', name: '4. Dönüş Noktası (Okçular)' },
+            { id: 'Bitisi', name: '5. Savaşın Sonu ve Kayıplar' },
+            { id: 'Onem', name: '6. Önemi ve Dersler' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            openTab(null, 'Giris');
+        });
+
+        function openTab(evt, tabId) {
+            let i, tabcontent, tablinks;
+            
+            const currentIndex = tabs.findIndex(tab => tab.id === tabId);
+
+            // 1. Tüm içerik sekme alanlarını gizle
+            tabcontent = document.getElementsByClassName("content-section");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove('active');
+            }
+
+            // 2. Tüm sekme butonlarından 'active' sınıfını kaldır
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove('active');
+            }
+
+            // 3. Geçerli sekme içeriğini göster
+            document.getElementById(tabId).classList.add('active');
+
+            // 4. Tıklanan butonu aktif olarak işaretle
+            if (evt) {
+                evt.currentTarget.classList.add('active');
+            } else {
+                document.querySelector(`.tab-button[data-index="${currentIndex}"]`).classList.add('active');
+            }
+        }
+
+        function navigateTab(direction) {
+            const currentActiveContent = document.querySelector('.content-section.active');
+            let currentIndex = parseInt(currentActiveContent.getAttribute('data-index'));
+            
+            let nextIndex = currentIndex + direction;
+
+            if (nextIndex >= 0 && nextIndex < tabs.length) {
+                const nextTabId = tabs[nextIndex].id;
+                openTab(null, nextTabId);
+            }
+        }
+    </script>
+</body>
+</html>
