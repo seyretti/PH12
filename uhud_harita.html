@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uhud Savaşı Etkileşimli İnceleme (Son Link Düzeltmesi)</title>
+    <title>Uhud Savaşı Etkileşimli İnceleme (Mobil Uyumlu)</title>
     <style>
         /* Genel Tasarım Renkleri */
         :root {
@@ -11,7 +11,7 @@
             --link-bg: #e0e0e0; 
         }
 
-        /* YENİ KRİTİK DÜZELTME: BODY VE HTML AYARLARI */
+        /* BODY VE HTML AYARLARI */
         html, body {
             height: 100%; 
             margin: 0;
@@ -36,7 +36,11 @@
             background-color: #ffffff;
         }
 
-        /* Sol Sütun: Harita Alanı */
+        /* ---------------------------------------------------- */
+        /* BİLGİSAYAR DÜZENİ (Varsayılan) */
+        /* ---------------------------------------------------- */
+
+        /* Sol Sütun: Harita Alanı (Bilgisayar: %50) */
         .map-area {
             flex: 0 0 50%; 
             position: relative;
@@ -53,26 +57,6 @@
             object-position: center;
         }
 
-        /* Hotspot Stili */
-        .hotspot {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            background-color: rgba(255, 100, 0, 0.9); 
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
-            cursor: pointer;
-            transition: transform 0.2s;
-            z-index: 10;
-        }
-        .hotspot:hover { transform: scale(1.4); background-color: #ff6600; }
-        .hotspot[data-target="ayneyn"] { top: 35%; left: 20%; }
-        .hotspot[data-target="musliman_merkez"] { top: 48%; left: 45%; }
-        .hotspot[data-target="kureys_sag"] { top: 38%; left: 77%; }
-        .hotspot[data-target="kureys_merkez"] { top: 59%; left: 55%; }
-        .hotspot[data-target="kureys_sol"] { top: 60%; left: 26%; }
-
         /* Sağ Sütun: İçerik Alanı (Flexbox) */
         .content-area {
             flex: 1; 
@@ -86,12 +70,9 @@
         .content-area h1 {
             color: var(--primary-color);
             text-align: center;
-            
-            /* Başlık Çerçevesi ve Gölge */
             border: 2px solid var(--primary-color);
             border-radius: 8px;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            
             padding: 10px 5px; 
             margin-top: 5px; 
             margin-bottom: 20px; 
@@ -168,21 +149,12 @@
             font-size: 1.4em; 
             margin-top: 0; 
         }
-        .detail-box ul {
-            padding-left: 15px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
-        .detail-box li {
-            margin-bottom: 5px;
-        }
-
-        /* Ana Sayfaya Dönüş İkonu (Resim için düzenlendi) */
+        
+        /* Ana Sayfaya Dönüş İkonu */
         .back-to-home-icon-img { 
             display: inline-block; 
             margin-top: 15px;
             cursor: pointer;
-            text-decoration: none;
             transition: box-shadow 0.2s;
             padding: 5px; 
             border-radius: 5px;
@@ -200,9 +172,45 @@
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); 
         }
         
-        /* İkonu sağa yaslamak için kapsayıcı */
         .detail-box .icon-wrapper {
             text-align: right; 
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* MOBİL UYUM (EĞER EKRAN GENİŞLİĞİ 768px'TEN AZ İSE) */
+        /* ---------------------------------------------------- */
+        @media (max-width: 768px) {
+            body {
+                /* Mobil cihazlarda dikey ortalamayı kaldırıp en üste başla */
+                align-items: flex-start;
+                padding-top: 10px;
+            }
+
+            .main-wrapper {
+                /* Sütunları alt alta yığ */
+                flex-direction: column;
+                max-width: 95%; /* Yanlardan hafif boşluk bırak */
+                height: auto; /* Yüksekliği içeriğe göre ayarla */
+                min-height: auto;
+                margin: 0 auto 20px auto; /* Alttan biraz boşluk bırak */
+            }
+
+            .map-area {
+                /* Harita tam genişlikte olsun ve belli bir yükseklik alsın */
+                flex: none;
+                width: 100%;
+                height: 300px; /* Görselin yüksekliğini sabitler */
+            }
+
+            .content-area {
+                /* İçerik de tam genişlikte olsun */
+                width: 100%;
+                border-left: none; /* Sütun ayrımını kaldır */
+                border-top: 1px solid #ddd; /* Haritadan ayır */
+            }
+
+            /* Hotspot pozisyonları, görselin yüksekliği sabitlendiği için korunabilir. */
         }
     </style>
 </head>
