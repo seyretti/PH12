@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uhud Savaşı Etkileşimli İnceleme (Son Link Düzeltmesi)</title>
+    <style>
+        /* Genel Tasarım Renkleri */
+        :root {
+            --primary-color: #006400; /* Koyu Yeşil (DarkGreen) */
+            --link-bg: #e0e0e0; 
+        }
+
+        /* YENİ KRİTİK DÜZELTME: BODY VE HTML AYARLARI */
+        html, body {
+            height: 100%; 
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5; 
+        }
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        .main-wrapper {
+            display: flex;
+            max-width: 1200px; 
+            height: 90vh; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        /* Sol Sütun: Harita Alanı */
+        .map-area {
+            flex: 0 0 50%; 
+            position: relative;
+            background-color: #fff;
+            padding: 0; 
+            height: 100%; 
+        }
+
+        .map-area img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            object-position: center;
+        }
+
+        /* Hotspot Stili */
+        .hotspot {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: rgba(255, 100, 0, 0.9); 
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+        .hotspot:hover { transform: scale(1.4); background-color: #ff6600; }
+        .hotspot[data-target="ayneyn"] { top: 35%; left: 20%; }
+        .hotspot[data-target="musliman_merkez"] { top: 48%; left: 45%; }
+        .hotspot[data-target="kureys_sag"] { top: 38%; left: 77%; }
+        .hotspot[data-target="kureys_merkez"] { top: 59%; left: 55%; }
+        .hotspot[data-target="kureys_sol"] { top: 60%; left: 26%; }
+
+        /* Sağ Sütun: İçerik Alanı (Flexbox) */
+        .content-area {
+            flex: 1; 
+            padding: 10px 20px 20px 20px; 
+            border-left: 1px solid #ddd;
+            display: flex; 
+            flex-direction: column;
+            overflow-y: hidden; 
+        }
+        
+        .content-area h1 {
+            color: var(--primary-color);
+            text-align: center;
+            
+            /* Başlık Çerçevesi ve Gölge */
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            
+            padding: 10px 5px; 
+            margin-top: 5px; 
+            margin-bottom: 20px; 
+            font-size: 2.2em; 
+            flex-shrink: 0; 
+        }
+        
+        /* Giriş Cümlesi Stili */
+        .instruction {
+            text-align: center;
+            padding: 10px;
+            font-size: 1em;
+            color: white; 
+            background-color: var(--primary-color); 
+            border-radius: 5px;
+            margin-bottom: 20px; 
+            flex-shrink: 0; 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+        }
+
+        /* Bilgi Kapsayıcısı - Kalan alanı kaplar */
+        #info-container {
+            flex-grow: 1; 
+            padding-top: 15px; 
+            overflow-y: auto; 
+        }
+        
+        /* İçeriklerin geçişi */
+        .info-content {
+            display: none;
+            padding: 0; 
+            border: none; 
+            background-color: transparent;
+        }
+        
+        .info-content.active {
+            display: block;
+        }
+        
+        /* Ana Menü Başlıkları Stili */
+        .menu-link {
+            display: block;
+            padding: 12px 15px;
+            margin-bottom: 6px; 
+            background-color: var(--link-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+            transition: background-color 0.2s;
+            border-left: 5px solid transparent;
+        }
+        
+        .menu-link:hover {
+            background-color: #d0d0d0;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        /* Alt Bilgi Kutularının Stili */
+        .detail-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #fcfcfc;
+            font-size: 11pt; 
+        }
+
+        /* Bilgi Başlıkları */
+        .detail-box h3 {
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            font-size: 1.4em; 
+            margin-top: 0; 
+        }
+        .detail-box ul {
+            padding-left: 15px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .detail-box li {
+            margin-bottom: 5px;
+        }
+
+        /* Ana Sayfaya Dönüş İkonu (Resim için düzenlendi) */
+        .back-to-home-icon-img { 
+            display: inline-block; 
+            margin-top: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: box-shadow 0.2s;
+            padding: 5px; 
+            border-radius: 5px;
+            vertical-align: middle; 
+        }
+        
+        .back-to-home-icon-img img {
+            width: 30px; 
+            height: 30px; 
+            display: block; 
+        }
+
+        /* İkon Animasyonu */
+        .back-to-home-icon-img:hover {
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); 
+        }
+        
+        /* İkonu sağa yaslamak için kapsayıcı */
+        .detail-box .icon-wrapper {
+            text-align: right; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="map-area">
+        <img src="uhud.jpg" alt="Uhud Savaşı Haritası">
+        
+        <div class="hotspot" data-target="ayneyn" title="Okçular Tepesi"></div>
+        <div class="hotspot" data-target="musliman_merkez" title="Müslüman Merkez"></div>
+        <div class="hotspot" data-target="kureys_sag" title="Halid bin Velid Süvarileri"></div>
+        <div class="hotspot" data-target="kureys_merkez" title="Kureyş Merkez"></div>
+        <div class="hotspot" data-target="kureys_sol" title="Kureyş Sol Kanat"></div>
+    </div>
+
+    <div class="content-area">
+        
+        <p class="instruction">Uhud Savaşı hakkında önemli bilgilere ulaşmak için harita ve bilgi panelindeki ilgili alanın üzerine tıklayabilirsiniz.</p>
+        
+        <h1>UHUD SAVAŞI</h1>
+        
+        <div id="info-container">
+            
+            <div id="default-info" class="info-content active">
+                
+                <div class="menu-link" data-target="ayneyn">Aynayn Tepesi (Okçular)</div>
+                <div class="menu-link" data-target="musliman_merkez">Müslüman Merkez Kuvvetler</div>
+                <div class="menu-link" data-target="kureys_sag">Halid bin Velid Süvarileri</div>
+                <div class="menu-link" data-target="kureys_merkez">Kureyş Merkez Kuvvetler</div>
+                <div class="menu-link" data-target="kureys_sol">Kureyş Sol Kanat</div>
+                <div class="menu-link" data-target="ozet">Savaşın Genel Özeti</div>
+            </div>
+
+            <div id="ayneyn" class="info-content">
+                <div class="detail-box">
+                    <h3>Aynayn Tepesi (Okçular Tepesi)</h3>
+                    <ul>
+                        <li><strong>Komutan:</strong> Abdullah bin Cübeyr (r.a.) ve 50 okçu.</li>
+                        <li><strong>Önemi:</strong> Stratejik bir geçidi kontrol ederek Müslüman ordusunun arkasını güvenceye alıyordu.</li>
+                        <li><strong>Dönüm Noktası:</strong> Okçuların emre uymayıp tepeyi terk etmesi, Halid bin Velid'e kritik bir saldırı fırsatı verdi.</li>
+                    </ul>
+                    <div class="icon-wrapper">
+                        <a href="#" class="back-to-home-icon-img" data-target="default-info" title="Ana Sayfa">
+                            <img src="https://i.imgur.com/2R6sBqF.png" alt="Ana Sayfa İkonu">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="musliman_merkez" class="info-content">
+                <div class="detail-box">
+                    <h3>Müslüman Merkez Kuvvetler (Hz. Muhammed s.a.v.)</h3>
+                    <ul>
+                        <li><strong>Komutan:</strong> Hz. Muhammed (s.a.v.)</li>
+                        <li><strong>Konumu:</strong> Uhud Dağı'na yaslanmış ana kuvvet.</li>
+                        <li><strong>Savaşın Seyri:</strong> Başarılı bir başlangıçtan sonra, arkadan gelen saldırıyla büyük kayıplar vererek dağılma tehlikesi yaşadı.</li>
+                    </ul>
+                    <div class="icon-wrapper">
+                        <a href="#" class="back-to-home-icon-img" data-target="default-info" title="Ana Sayfa">
+                            <img src="https://i.imgur.com/2R6sBqF.png" alt="Ana Sayfa İkonu">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="kureys_sag" class="info-content">
+                <div class="detail-box">
+                    <h3>Sağ Kanat Süvarileri (Halid bin Velid)</h3>
+                    <ul>
+                        <li><strong>Komutan:</strong> Halid bin Velid.</li>
+                        <li><strong>Taktik:</strong> Boşalan Okçular Tepesi'ni kullanarak Müslüman ordusunu arkadan çembere aldı.</li>
+                        <li><strong>Sonuç:</strong> Savaşın kaderini değiştiren ana taktik hamle oldu.</li>
+                    </ul>
+                    <div class="icon-wrapper">
+                        <a href="#" class="back-to-home-icon-img" data-target="default-info" title="Ana Sayfa">
+                            <img src="https://i.imgur.com/2R6sBqF.png" alt="Ana Sayfa İkonu">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="kureys_merkez" class="info-content">
+                <div class="detail-box">
+                    <h3>Merkez Kuvvetler (Ebu Süfyan)</h3>
+                    <ul>
+                        <li><strong>Komutan:</strong> Ebu Süfyan (Kureyş Başkomutanı.)</li>
+                        <li><strong>Savaşın Seyri:</strong> İlk başta zor durumda kaldı, ancak Halid bin Velid'in hamlesiyle toparlanıp zafer kazandı.</li>
+                    </ul>
+                    <div class="icon-wrapper">
+                        <a href="#" class="back-to-home-icon-img" data-target="default-info" title="Ana Sayfa">
+                            <img src="https://i.imgur.com/2R6sBqF.png" alt="Ana Sayfa İkonu">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="kureys_sol" class="info-content">
+                <div class="detail-box">
+                    <h3>Sol Kanat Süvarileri (İkrime bin Ebi Cehil)</h3>
+                    <ul>
+                        <li><strong>Komutan:</strong> İkrime bin Ebi Cehil.</li>
+                        <li><strong>Rolü:</strong> Müslüman sol kanadına karşı saldırı başlattı.</li>
+                    </ul>
+                    <div class="icon-wrapper">
+                        <a href="#" class="back-to-home-icon-img" data-target="default-info" title="Ana Sayfa">
+                            <img src="https://i.imgur.com/2R6sBqF.png" alt="Ana Sayfa İkonu">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ozet" class="info-content">
+                <div class="detail-box">
+                    <h3>Savaşın Genel Özeti</h3>
+                    <ul>
+                        <li><strong>Sebebi:</strong> Bedir Savaşı'nın intikamı.</li>
+                        <li><strong>Taktik Hata:</strong> Okçuların tepeyi terk etmesi.</li>
+                        <li><strong>Sonuç:</strong> Müslümanlar için ağır bir mağlubiyet, ancak Kureyş Medine'yi ele geçiremedi.</li>
+                    </ul>
+                    <div class="icon-wrapper">
+                        <a href="#" class="back-to-home-icon-img" data-target="default-info" title="Ana Sayfa">
+                            <img src="https://i.imgur.com/2R6sBqF.png" alt="Ana Sayfa İkonu">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const triggers = document.querySelectorAll('.hotspot, .menu-link'); 
+        const homeIcons = document.querySelectorAll('.back-to-home-icon-img'); 
+        const infoContents = document.querySelectorAll('.info-content');
+        const defaultInfo = document.getElementById('default-info');
+
+        // Bilgi gösterme fonksiyonu
+        function showInfo(targetId) {
+            
+            // Tüm içerikleri gizle
+            infoContents.forEach(content => {
+                content.classList.remove('active'); 
+            });
+
+            // Hedef içeriği bul ve göster
+            const targetContent = document.getElementById(targetId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        }
+        
+        // 1. Tetikleyicilere Tıklama İşlemi (Hotspotlar ve Menü)
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const targetId = trigger.getAttribute('data-target');
+                showInfo(targetId);
+            });
+        });
+        
+        // 2. Ana Sayfaya Dönüş İkonu İşlemi
+        homeIcons.forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                showInfo('default-info');
+            });
+        });
+
+        // Başlangıçta defaultInfo'nun görünür olduğundan emin ol
+        defaultInfo.classList.add('active');
+    });
+</script>
+
+</body>
+</html>
