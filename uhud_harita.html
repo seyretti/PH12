@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uhud Savaşı Etkileşimli İnceleme (Mobil Hotspot ve Buton Düzeltmesi)</title>
+    <title>Uhud Savaşı Etkileşimli İnceleme (Mobil Hotspot GARANTİ)</title>
     <style>
         /* Genel Tasarım Renkleri */
         :root {
@@ -53,7 +53,7 @@
             display: block;
             width: 100%;
             height: 100%;
-            object-fit: cover; 
+            object-fit: cover; /* Tam kaplama (PC) */
             object-position: center;
         }
 
@@ -139,8 +139,6 @@
             border-left: 5px solid transparent;
         }
         
-        .menu-link:hover { background-color: #d0d0d0; border-left: 5px solid var(--primary-color); }
-        
         /* Alt Bilgi Kutularının Stili */
         .detail-box {
             border: 1px solid #ddd;
@@ -150,15 +148,9 @@
             font-size: 11pt; 
         }
 
-        /* Bilgi Başlıkları */
-        .detail-box h3 { color: var(--primary-color); border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 1.4em; margin-top: 0; }
-        .detail-box ul { padding-left: 15px; margin-top: 5px; margin-bottom: 5px; }
-        .detail-box li { margin-bottom: 5px; }
-
         /* Ana Sayfaya Dönüş İkonu (Resim için düzenlendi) */
         .back-to-home-icon-img { display: inline-block; margin-top: 15px; cursor: pointer; transition: box-shadow 0.2s; padding: 5px; border-radius: 5px; vertical-align: middle; }
         .back-to-home-icon-img img { width: 30px; height: 30px; display: block; }
-        .back-to-home-icon-img:hover { box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); }
         .detail-box .icon-wrapper { text-align: right; }
 
 
@@ -168,53 +160,64 @@
         @media (max-width: 768px) {
             body {
                 align-items: flex-start;
-                padding-top: 0; /* Boşluğu kaldır */
+                padding-top: 0; 
             }
 
             .main-wrapper {
                 flex-direction: column;
-                max-width: 100%; /* Tam genişlik kullan */
+                max-width: 100%; 
                 height: auto; 
                 min-height: auto;
-                margin: 0; /* Kenar boşluklarını sıfırla */
-                border-radius: 0; /* Köşe yuvarlaklığını kaldır */
-                box-shadow: none; /* Gölgeyi kaldır */
+                margin: 0; 
+                border-radius: 0; 
+                box-shadow: none; 
             }
 
             .map-area {
+                /* YENİ: Harita yüksekliği artırıldı */
                 flex: none;
                 width: 100%;
-                height: 250px; /* Görselin yüksekliğini biraz azalt */
-                /* YENİ KRİTİK DÜZELTME: Hotspot'ların kesilmemesi için overflow ayarı kaldırıldı. */
+                height: 350px; 
+                /* YENİ: Hotspot'ların kesilmemesi için mobil ortalama */
+                display: flex; 
+                justify-content: center; /* Resmi ortalar */
+                align-items: center;
             }
             
             .map-area img {
-                 /* YENİ KRİTİK DÜZELTME: Mobil görünümde görselin sığması için contain kullanıldı. */
+                 /* KRİTİK DÜZELTME: Görselin kaybolan hotspot'ları tekrar göstermesi için */
                  object-fit: contain; 
+                 width: auto; /* Görselin kendi oranında kalmasını sağlar */
+                 height: 100%;
             }
 
             .content-area {
                 width: 100%;
-                /* YENİ DÜZELTME: Mobil cihazlarda içerik padding'ini azalt */
-                padding: 10px 10px 20px 10px; 
+                /* YENİ DÜZELTME: Mobil cihazlarda içerik padding'i en aza indirildi */
+                padding: 10px 5px 20px 5px; 
                 border-left: none; 
                 border-top: 1px solid #ddd;
             }
             
-            /* Bilgi Paneli (info-container) mobil cihazlarda kaydırılabilir olmalı */
-            #info-container {
-                padding-top: 5px; /* Boşluk azaltıldı */
+            /* Menü linkleri mobil cihazlarda tam sığsın diye padding azaltıldı */
+            .menu-link {
+                padding: 10px 8px;
             }
             
-            /* Menü Linkleri (Butonlar) için daha az padding */
-            .menu-link {
-                padding: 10px 12px;
+            /* Bilgi Paneli (info-container) mobil cihazlarda kaydırılabilir olmalı */
+            #info-container {
+                padding-top: 5px; 
             }
 
-            /* Hotspot'lar için önemli not: Yüzdelik pozisyonlar (top, left) korunmalıdır.
-               Görselin object-fit: contain ayarı sayesinde, hotspot'lar doğru pozisyonda kalacaktır.
-               Harita resmi etrafındaki beyaz boşluklar hotspot'ları kesmeyecektir.
+            /* Hotspot'lar: Mutlak konumlandırma yüzdelerle çalıştığı için, görsel (img) de 
+               görüntülenen alana (map-area) göre kendini ortaladığı sürece, hotspot'lar da 
+               görselin üzerinde kalmalıdır.
             */
+            .hotspot {
+                /* İhtiyaç varsa, mobil cihazlarda biraz büyütülerek daha kolay tıklanabilir yapılır */
+                width: 30px; 
+                height: 30px;
+            }
         }
     </style>
 </head>
