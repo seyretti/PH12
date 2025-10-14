@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uhud Savaşı Etkileşimli İnceleme (Mobil Uyumlu)</title>
+    <title>Uhud Savaşı Etkileşimli İnceleme (Mobil Hotspot ve Buton Düzeltmesi)</title>
     <style>
         /* Genel Tasarım Renkleri */
         :root {
@@ -57,7 +57,28 @@
             object-position: center;
         }
 
-        /* Sağ Sütun: İçerik Alanı (Flexbox) */
+        /* Hotspot Stili */
+        .hotspot {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: rgba(255, 100, 0, 0.9); 
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+        .hotspot:hover { transform: scale(1.4); background-color: #ff6600; }
+        .hotspot[data-target="ayneyn"] { top: 35%; left: 20%; }
+        .hotspot[data-target="musliman_merkez"] { top: 48%; left: 45%; }
+        .hotspot[data-target="kureys_sag"] { top: 38%; left: 77%; }
+        .hotspot[data-target="kureys_merkez"] { top: 59%; left: 55%; }
+        .hotspot[data-target="kureys_sol"] { top: 60%; left: 26%; }
+
+
+        /* Sağ Sütun: İçerik Alanı */
         .content-area {
             flex: 1; 
             padding: 10px 20px 20px 20px; 
@@ -100,17 +121,8 @@
             overflow-y: auto; 
         }
         
-        /* İçeriklerin geçişi */
-        .info-content {
-            display: none;
-            padding: 0; 
-            border: none; 
-            background-color: transparent;
-        }
-        
-        .info-content.active {
-            display: block;
-        }
+        .info-content { display: none; padding: 0; border: none; background-color: transparent; }
+        .info-content.active { display: block; }
         
         /* Ana Menü Başlıkları Stili */
         .menu-link {
@@ -127,10 +139,7 @@
             border-left: 5px solid transparent;
         }
         
-        .menu-link:hover {
-            background-color: #d0d0d0;
-            border-left: 5px solid var(--primary-color);
-        }
+        .menu-link:hover { background-color: #d0d0d0; border-left: 5px solid var(--primary-color); }
         
         /* Alt Bilgi Kutularının Stili */
         .detail-box {
@@ -142,39 +151,15 @@
         }
 
         /* Bilgi Başlıkları */
-        .detail-box h3 {
-            color: var(--primary-color);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-            font-size: 1.4em; 
-            margin-top: 0; 
-        }
-        
-        /* Ana Sayfaya Dönüş İkonu */
-        .back-to-home-icon-img { 
-            display: inline-block; 
-            margin-top: 15px;
-            cursor: pointer;
-            transition: box-shadow 0.2s;
-            padding: 5px; 
-            border-radius: 5px;
-            vertical-align: middle; 
-        }
-        
-        .back-to-home-icon-img img {
-            width: 30px; 
-            height: 30px; 
-            display: block; 
-        }
+        .detail-box h3 { color: var(--primary-color); border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 1.4em; margin-top: 0; }
+        .detail-box ul { padding-left: 15px; margin-top: 5px; margin-bottom: 5px; }
+        .detail-box li { margin-bottom: 5px; }
 
-        /* İkon Animasyonu */
-        .back-to-home-icon-img:hover {
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); 
-        }
-        
-        .detail-box .icon-wrapper {
-            text-align: right; 
-        }
+        /* Ana Sayfaya Dönüş İkonu (Resim için düzenlendi) */
+        .back-to-home-icon-img { display: inline-block; margin-top: 15px; cursor: pointer; transition: box-shadow 0.2s; padding: 5px; border-radius: 5px; vertical-align: middle; }
+        .back-to-home-icon-img img { width: 30px; height: 30px; display: block; }
+        .back-to-home-icon-img:hover { box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); }
+        .detail-box .icon-wrapper { text-align: right; }
 
 
         /* ---------------------------------------------------- */
@@ -182,35 +167,54 @@
         /* ---------------------------------------------------- */
         @media (max-width: 768px) {
             body {
-                /* Mobil cihazlarda dikey ortalamayı kaldırıp en üste başla */
                 align-items: flex-start;
-                padding-top: 10px;
+                padding-top: 0; /* Boşluğu kaldır */
             }
 
             .main-wrapper {
-                /* Sütunları alt alta yığ */
                 flex-direction: column;
-                max-width: 95%; /* Yanlardan hafif boşluk bırak */
-                height: auto; /* Yüksekliği içeriğe göre ayarla */
+                max-width: 100%; /* Tam genişlik kullan */
+                height: auto; 
                 min-height: auto;
-                margin: 0 auto 20px auto; /* Alttan biraz boşluk bırak */
+                margin: 0; /* Kenar boşluklarını sıfırla */
+                border-radius: 0; /* Köşe yuvarlaklığını kaldır */
+                box-shadow: none; /* Gölgeyi kaldır */
             }
 
             .map-area {
-                /* Harita tam genişlikte olsun ve belli bir yükseklik alsın */
                 flex: none;
                 width: 100%;
-                height: 300px; /* Görselin yüksekliğini sabitler */
+                height: 250px; /* Görselin yüksekliğini biraz azalt */
+                /* YENİ KRİTİK DÜZELTME: Hotspot'ların kesilmemesi için overflow ayarı kaldırıldı. */
+            }
+            
+            .map-area img {
+                 /* YENİ KRİTİK DÜZELTME: Mobil görünümde görselin sığması için contain kullanıldı. */
+                 object-fit: contain; 
             }
 
             .content-area {
-                /* İçerik de tam genişlikte olsun */
                 width: 100%;
-                border-left: none; /* Sütun ayrımını kaldır */
-                border-top: 1px solid #ddd; /* Haritadan ayır */
+                /* YENİ DÜZELTME: Mobil cihazlarda içerik padding'ini azalt */
+                padding: 10px 10px 20px 10px; 
+                border-left: none; 
+                border-top: 1px solid #ddd;
+            }
+            
+            /* Bilgi Paneli (info-container) mobil cihazlarda kaydırılabilir olmalı */
+            #info-container {
+                padding-top: 5px; /* Boşluk azaltıldı */
+            }
+            
+            /* Menü Linkleri (Butonlar) için daha az padding */
+            .menu-link {
+                padding: 10px 12px;
             }
 
-            /* Hotspot pozisyonları, görselin yüksekliği sabitlendiği için korunabilir. */
+            /* Hotspot'lar için önemli not: Yüzdelik pozisyonlar (top, left) korunmalıdır.
+               Görselin object-fit: contain ayarı sayesinde, hotspot'lar doğru pozisyonda kalacaktır.
+               Harita resmi etrafındaki beyaz boşluklar hotspot'ları kesmeyecektir.
+            */
         }
     </style>
 </head>
@@ -335,6 +339,7 @@
                         <a href="#" class="back-to-home-icon-img" data-target="default-info" title="Ana Sayfa">
                             <img src="https://i.imgur.com/2R6sBqF.png" alt="Ana Sayfa İkonu">
                         </a>
+                    </div>
                     </div>
                 </div>
             </div>
