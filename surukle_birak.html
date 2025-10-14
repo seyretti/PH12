@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2. ÜNİTE : Sürükle & Bırak Etkinliği</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 11pt; background-color: #f4f4f4; color: #333; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: white; background-color: #006400; border: 1px solid #005000; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); border-radius: 5px; padding: 10px 20px; margin-bottom: 25px; font-size: 1.5em; }
+        .section-header { color: #333; background-color: #e6f7ff; border: 1px solid #f4f4f4; border-radius: 5px; padding: 8px; margin-bottom: 10px; font-size: 1.1em; font-weight: bold; text-align: center; box-sizing: border-box; width: 100%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+        .main-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .drag-column { flex: 0 0 220px; display: flex; flex-direction: column; gap: 15px; }
+        .all-drag-items {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f0f8ff;
+            border: 1px solid #f4f4f4;
+            border-radius: 3px;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .drag-item { cursor: grab; background-color: #ffc966; color: #333; padding: 5px 10px; border-radius: 3px; font-size: 11pt; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); text-align: center; user-select: none; border: 1px solid #ff9800; }
+        .all-drag-items.drag-over { box-shadow: 0 0 5px 2px #cccccc; }
+        .activities-column { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        #activities-column { border: 1px solid #f4f4f4; border-radius: 3px; padding: 15px; background-color: #f0f8ff; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+        .etkinlik-container { padding: 5px 0; }
+        .etkinlik-container:last-child { padding-bottom: 0; }
+        .sentence-area { line-height: 1.5; font-size: 11pt; }
+        .drop-zone { display: inline-block; width: 100px; height: 22px; border: 2px dashed #ff9800; background-color: #fff3e0; margin: 0 4px; text-align: center; line-height: 22px; vertical-align: middle; border-radius: 2px; font-weight: bold; color: #cc5500; font-size: 10pt; user-select: none; cursor: default; }
+        .drop-zone[draggable="true"] { background-color: #ffd595; border: 1px solid #cc5500; cursor: grab; color: #333; font-weight: normal; }
+        .buttons-area-left { display: flex; flex-direction: column; gap: 10px; }
+        .action-button { display: flex; align-items: center; justify-content: center; padding: 8px 10px; width: 100%; border: none; border-radius: 3px; cursor: pointer; font-size: 10pt; font-weight: bold; }
+        .btn-icon { width: 16px; height: 16px; fill: white; margin-right: 8px; }
+        .check-button { background-color: #28a745; color: white; }
+        .reset-button { background-color: #dc3545; color: white; }
+        .correct { background-color: #d4edda !important; color: #155724 !important; border-color: #28a745 !important; }
+        .incorrect { background-color: #f8d7da !important; color: #721c24 !important; border-color: #dc3545 !important; }
+        .show-answers-button { background-color: #007bff; color: white; }
+        .feedback-area { width: 100%; padding: 10px; border-radius: 3px; font-weight: bold; text-align: center; margin-top: 5px; display: none; box-sizing: border-box; font-size: 10pt; }
+        .feedback-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        @media (max-width: 768px) { .main-wrapper { flex-direction: column; } .drag-column { order: 2; } .activities-column { order: 1; } .all-drag-items { flex: none; flex-direction: row; flex-wrap: wrap; justify-content: center; height: auto; } .buttons-area-left { flex-direction: row; flex-wrap: wrap; justify-content: space-around; } .action-button { width: 48%; } }
+    </style>
+</head>
+<body>
+    <h1>2. ÜNİTE : Sürükle & Bırak Etkinliği</h1>
+    <div class="main-wrapper">
+        <div class="drag-column">
+            <div class="section-header">Sürüklenebilir Kelimeler</div>
+            <div id="all-drag-items" class="all-drag-items"></div>
+            <div class="buttons-area-left">
+                <button class="action-button check-button" onclick="checkAllActivities()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    KONTROL ET
+                </button>
+                <button class="action-button reset-button" onclick="resetAllActivities()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" /></svg>
+                    YENİLE
+                </button>
+                <div id="feedback-area" class="feedback-area"></div>
+                <button id="show-answers-button" class="action-button show-answers-button" onclick="showCorrectAnswers()" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+                    CEVAPLARI GÖSTER
+                </button>
+            </div>
+        </div>
+        <div class="activities-column">
+            <div class="section-header">Cümlelerde verilen boşlukları sol tarafta verilen kelimelerle doldurunuz.</div>
+            <div id="activities-column"></div>
+        </div>
+    </div>
+
+    <script>
+        const activities = [ { id: 1, sentence: "Hz. Aişe, Hz. Peygamber'e hicretin Medine'ye yapılmasından yaklaşık __B1__ ay sonra katılarak Resulullah'ın hanımı olmuştur.", correctAnswers: { "__B1__": "yedi" } }, { id: 2, sentence: "Hz. Aişe, Hz. Peygamber'in __B2__ yaşantısına dair detayları aktararak sonraki nesillere önemli bilgiler sunmuştur.", correctAnswers: { "__B2__": "özel" } }, { id: 3, sentence: "Hz. Aişe'nin genç yaşı, onun İslam'ın __B3__ dönemindeki uygulamaları öğrenen ve aktaran bir köprü olmasını sağlamıştır.", correctAnswers: { "__B3__": "erken dönem" } }, { id: 4, sentence: "O, hadis ilminin yanı sıra, özellikle __B4__ hükümlerin anlaşılmasına büyük katkı sağlamış bir alimdi.", correctAnswers: { "__B4__": "fıkhi" } }, { id: 5, sentence: "Hz. Aişe, en çok __B5__ rivayet eden sahabeler arasında yer alarak ilmî yönden öne çıkmıştır.", correctAnswers: { "__B5__": "hadis" } }, { id: 6, sentence: "Hz. Aişe'nin evi, kadınların __B6__ ve dini konularda eğitim aldığı bir medrese görevi görmüştür.", correctAnswers: { "__B6__": "mahrem" } }, { id: 7, sentence: "Hz. Aişe, İslam toplumunda kadınların __B7__ hayata katılımının önemli bir örneğini teşkil etmiştir.", correctAnswers: { "__B7__": "sosyal" } } ];
+        const allCorrectWords = ["yedi", "özel", "erken dönem", "fıkhi", "hadis", "mahrem", "sosyal"];
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[array[i], array[j]] = [array[j], array[i]]; } }
+        shuffleArray(activities);
+        let wordsToDrag = [...allCorrectWords]; 
+        shuffleArray(wordsToDrag);
+        const activitiesColumnElement = document.getElementById('activities-column');
+        const allDragItems = document.getElementById('all-drag-items');
+        function loadAllDragItems() { allDragItems.innerHTML = wordsToDrag.map(item => `<span class="drag-item" draggable="true" data-value="${item}">${item}</span>`).join(''); }
+        function loadAllActivities() { activitiesColumnElement.innerHTML = activities.map((activity, index) => { let sentenceHTML = activity.sentence; const blankKey = Object.keys(activity.correctAnswers)[0]; const correctAnswer = activity.correctAnswers[blankKey]; sentenceHTML = sentenceHTML.replace(blankKey, `<span class="drop-zone" data-blank-id="${blankKey}" data-correct-answer="${correctAnswer}"></span>`); return `<div class="etkinlik-container" data-activity-id="${activity.id}"><div class="sentence-area"><strong>${index + 1}.</strong> ${sentenceHTML}</div></div>`; }).join(''); }
+        function attachDragAndDropListeners() { const dragItems = document.querySelectorAll('.drag-item'); const dropZones = document.querySelectorAll('.drop-zone'); const dragItemsContainer = document.getElementById('all-drag-items'); dragItems.forEach(item => item.addEventListener('dragstart', handleDragStart)); dropZones.forEach(zone => { zone.addEventListener('dragover', handleDragOver); zone.addEventListener('dragleave', handleDragLeave); zone.addEventListener('drop', handleDrop); zone.addEventListener('click', handleDropZoneClick); zone.addEventListener('dragstart', handleDragStart); }); dragItemsContainer.addEventListener('dragover', handleDragOverToSource); dragItemsContainer.addEventListener('dragleave', handleDragLeaveFromSource); dragItemsContainer.addEventListener('drop', handleDragItemDrop); }
+        let draggedFromDropZone = false;
+        function handleDragStart(e) { if (e.target.classList.contains('drop-zone') && e.target.hasAttribute('data-current-value')) { e.dataTransfer.setData('text/plain', e.target.getAttribute('data-current-value')); e.target.style.opacity = '0.4'; draggedFromDropZone = true; } else if (e.target.classList.contains('drag-item')) { e.dataTransfer.setData('text/plain', e.target.getAttribute('data-value')); e.target.style.opacity = '0.4'; draggedFromDropZone = false; } }
+        function handleDragOver(e) { e.preventDefault(); if (e.target.getAttribute('data-current-value') === e.dataTransfer.getData('text/plain')) return; e.currentTarget.style.backgroundColor = '#ffd595'; }
+        function handleDragLeave(e) { e.currentTarget.style.backgroundColor = e.currentTarget.hasAttribute('data-current-value') ? '#ffd595' : '#fff3e0'; }
+        function handleDrop(e) { e.preventDefault(); const data = e.dataTransfer.getData('text/plain'); const droppedItem = document.querySelector(`.drag-item[data-value="${data}"]`); if (draggedFromDropZone) { const oldZone = document.querySelector(`.drop-zone[data-current-value="${data}"][style*="opacity: 0.4"]`); if (oldZone) { oldZone.textContent = ''; oldZone.removeAttribute('data-current-value'); oldZone.removeAttribute('draggable'); oldZone.style.opacity = '1'; oldZone.classList.remove('correct', 'incorrect'); } } else if (e.target.hasAttribute('data-current-value')) { const existingValue = e.target.getAttribute('data-current-value'); const existingItem = document.querySelector(`.drag-item[data-value="${existingValue}"]`); if (existingItem) { existingItem.style.display = 'block'; existingItem.style.opacity = '1'; existingItem.style.backgroundColor = ''; } } e.target.textContent = data; e.target.setAttribute('data-current-value', data); e.target.setAttribute('draggable', 'true'); e.target.style.opacity = '1'; if (droppedItem && !draggedFromDropZone) droppedItem.style.display = 'none'; e.target.style.backgroundColor = '#ffd595'; e.target.classList.remove('incorrect', 'correct'); draggedFromDropZone = false; }
+        function handleDragOverToSource(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+        function handleDragLeaveFromSource(e) { e.currentTarget.classList.remove('drag-over'); }
+        function handleDragItemDrop(e) { e.preventDefault(); e.currentTarget.classList.remove('drag-over'); const data = e.dataTransfer.getData('text/plain'); const itemToReturn = document.querySelector(`.drag-item[data-value="${data}"]`); if (itemToReturn) { itemToReturn.style.display = 'block'; itemToReturn.style.opacity = '1'; itemToReturn.style.backgroundColor = ''; } const filledZone = document.querySelector(`.drop-zone[data-current-value="${data}"][style*="opacity: 0.4"]`); if (filledZone) { filledZone.textContent = ''; filledZone.removeAttribute('data-current-value'); filledZone.removeAttribute('draggable'); filledZone.style.opacity = '1'; filledZone.classList.remove('correct', 'incorrect'); filledZone.style.backgroundColor = '#fff3e0'; } }
+        function handleDropZoneClick(e) { const dropZone = e.currentTarget; if (dropZone.hasAttribute('data-current-value')) { const existingValue = dropZone.getAttribute('data-current-value'); const existingItem = document.querySelector(`.drag-item[data-value="${existingValue}"]`); if (existingItem) { existingItem.style.display = 'block'; existingItem.style.opacity = '1'; existingItem.style.backgroundColor = ''; } dropZone.textContent = ''; dropZone.removeAttribute('data-current-value'); dropZone.removeAttribute('draggable'); dropZone.classList.remove('correct', 'incorrect'); dropZone.style.backgroundColor = '#fff3e0'; } }
+        function checkAllActivities() { const dropZones = document.querySelectorAll('.drop-zone'); const feedbackArea = document.getElementById('feedback-area'); const showAnswersBtn = document.getElementById('show-answers-button'); let totalCorrect = 0; dropZones.forEach(zone => { const currentValue = zone.getAttribute('data-current-value'); const correctAnswer = zone.getAttribute('data-correct-answer'); zone.classList.remove('correct', 'incorrect'); if (currentValue && currentValue.toLowerCase() === correctAnswer.toLowerCase()) { zone.classList.add('correct'); totalCorrect++; } else { zone.classList.add('incorrect'); } }); feedbackArea.classList.remove('feedback-success', 'feedback-error'); if (totalCorrect === dropZones.length) { feedbackArea.textContent = 'Tebrikler! Bütün cevaplarınız doğru!'; feedbackArea.classList.add('feedback-success'); } else { feedbackArea.textContent = 'Bazı cevaplar yanlış veya boş. Tekrar deneyin!'; feedbackArea.classList.add('feedback-error'); } feedbackArea.style.display = 'block'; showAnswersBtn.style.display = 'block'; }
+        function resetAllActivities() { document.getElementById('feedback-area').style.display = 'none'; document.getElementById('show-answers-button').style.display = 'none'; document.querySelectorAll('.drop-zone').forEach(zone => { zone.textContent = ''; zone.removeAttribute('data-current-value'); zone.removeAttribute('draggable'); zone.classList.remove('correct', 'incorrect'); zone.style.backgroundColor = '#fff3e0'; }); document.querySelectorAll('.drag-item').forEach(item => { item.style.display = 'block'; item.style.opacity = '1'; item.style.backgroundColor = ''; }); }
+        function showCorrectAnswers() { const dropZones = document.querySelectorAll('.drop-zone'); dropZones.forEach(zone => { const correctAnswer = zone.getAttribute('data-correct-answer'); zone.textContent = correctAnswer; zone.setAttribute('data-current-value', correctAnswer); zone.classList.remove('incorrect'); zone.classList.add('correct'); const dragItem = document.querySelector(`.drag-item[data-value="${correctAnswer}"]`); if (dragItem) { dragItem.style.display = 'none'; } }); const feedbackArea = document.getElementById('feedback-area'); feedbackArea.textContent = 'Doğru cevaplar gösterildi.'; feedbackArea.classList.remove('feedback-error'); feedbackArea.classList.add('feedback-success'); }
+        window.onload = () => { loadAllDragItems(); loadAllActivities(); attachDragAndDropListeners(); };
+    </script>
+</body>
+</html>
