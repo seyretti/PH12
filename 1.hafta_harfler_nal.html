@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSMANLI TÜRKÇESİ HARF PEKİŞTİRME ETKİNLİĞİ</title>
+    <style>
+        /* Evolventa Fontunu Harici Kaynaktan (CDN) Ekleme */
+        @import url('https://fonts.cdnfonts.com/css/evolventa');
+
+        /* CSS Başlangıcı */
+        body {
+            /* TÜM YAZILAR EVOLVENTA */
+            font-family: 'Evolventa', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            /* Sayfa Boyutu */
+            width: 950px; 
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-box {
+            width: 100%;
+            /* BAŞLIK GRADIENT: Açıktan koyuya */
+            background: linear-gradient(to right, #6B8E23, #4B5320); 
+            color: white;
+            text-align: center;
+            padding: 20px 0; 
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px; /* Ana Başlık Font Size */
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 18px; /* Alt Başlık Font Size */
+            margin: 5px 0 0 0;
+            font-weight: normal;
+        }
+
+        /* PUAN VE SÜRE ÇUBUĞU */
+        .info-bar-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 20px; 
+        }
+        
+        .info-box {
+            flex: 1; 
+            padding: 10px 15px;
+            font-size: 16px; 
+            color: white; 
+            border-radius: 5px; 
+            text-align: center;
+            background: linear-gradient(to right, #38761D, #6AA84F); 
+        }
+
+        .quiz-area {
+            text-align: center;
+            font-size: 16px;
+            /* Yüksekliği belirledik ve içeriği dikeyde ortalamak için Flexbox kullandık */
+            min-height: 350px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+        }
+
+        /* Başlangıçta gizli tutulacak alan, sadece ortalama için flex'i kullanır */
+        .quiz-area:not(#start-screen) {
+             display: none; 
+        }
+
+        /* Harf gösterimi, ortalama yapılırken çakışmaması için Flexbox'ın dışında konumlandırıldı */
+        .harf-display {
+            height: 250px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 30px; 
+            position: relative;
+            padding-top: 5px; 
+        }
+        
+        /* HARF İÇİN GERİ SAYIM KUTUSU (BROWSER) */
+        #harf-countdown-box {
+            position: absolute; 
+            top: 0; 
+            padding: 5px 15px;
+            border-radius: 5px;
+            color: white; 
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(to right, #4B5320, #6B8E23); 
+            transition: opacity 0.3s;
+        }
+
+        #current-harf {
+            font-size: 150px; 
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -20%); 
+            transition: opacity 1s ease-out, transform 1s ease-out;
+            opacity: 1;
+        }
+        
+        /* Harf Kaybolma Animasyonu (Fade-out) */
+        .fade-out {
+            opacity: 0 !important;
+            transform: translate(-50%, -80px) scale(1.5) !important;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 10px; 
+        }
+
+        .choice-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px; 
+            width: 150px;
+            transition: background-color 0.3s;
+            font-family: 'Evolventa', sans-serif;
+            text-align: left; 
+        }
+
+        .choice-button:hover {
+            background-color: #45a049;
+        }
+
+        .choice-letter {
+            font-weight: bold;
+        }
+
+        /* Geri bildirim stilleri */
+        #feedback {
+            font-size: 20px;
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 80px; 
+            margin-top: 15px; 
+        }
+        
+        /* YENİDEN DENE ve BAŞLAT Buton Stili */
+        .start-button, .restart-button {
+            background-color: #4B5320; 
+            color: white;
+            padding: 15px 30px;
+            margin-top: 20px; 
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            font-family: 'Evolventa', sans-serif;
+        }
+
+        .start-button:hover, .restart-button:hover {
+            background-color: #6B8E23;
+        }
+
+        .feedback-text {
+            font-weight: bold;
+        }
+
+        .correct-text {
+            color: green;
+        }
+
+        .wrong-text {
+            color: red;
+        }
+
+        .icon {
+            font-size: 24px;
+            line-height: 1; 
+        }
+
+        /* Oyun Sonu Skor Ekranı için Özel Stil */
+        .final-score-display {
+            font-size: 70px;
+            font-weight: bold;
+            color: #4B5320;
+            margin: 10px 0 15px 0; 
+        }
+
+        /* Başlangıç Ekranı Stili */
+        #start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 350px; 
+            text-align: center;
+        }
+        /* CSS Sonu */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-box">
+            <h1>OSMANLI TÜRKÇESİ HARF PEKİŞTİRME ETKİNLİĞİ</h1>
+            <h2>NAZİLLİ ANADOLU LİSESİ 1.HAFTA - SEFA AKBAŞ</h2>
+        </div>
+
+        <div class="info-bar-container">
+            <div id="score" class="info-box">Puan: 0</div>
+            <div id="timer" class="info-box">Süre: 01:00</div>
+        </div>
+
+        <div id="start-screen" style="display: flex;"> 
+            <p style="font-size: 20px; color: #4B5320;">Yarışmaya başlamak için butona tıklayınız. Sesli geri sayım başlayacaktır.</p>
+            <button id="start-button" class="start-button">YARIŞMAYI BAŞLAT</button>
+        </div>
+
+        <div class="quiz-area" id="quiz-area">
+            </div>
+    </div>
+
+    <script>
+        // JavaScript Başlangıcı
+
+        // =================================================================
+        // SESLER (Yerel Dosyalar Kullanılıyor)
+        // =================================================================
+        // NOT: Bu dosyaların (correct.mp3, wrong.mp3, clock.mp3) HTML dosyasıyla aynı klasörde olması GEREKİR.
+        const audioClock = new Audio('clock.mp3'); 
+        const audioCorrect = new Audio('correct.mp3'); 
+        const audioWrong = new Audio('wrong.mp3'); 
+
+        // SES AYARI: CLOCK sesini %10 (10'da bir) oranında çalsın.
+        audioClock.volume = 0.10; 
+
+        // Anlık sesleri oynatan genel fonksiyon (Basit Audio nesneleri için)
+        function playAudio(audioElement, loop = false) {
+            audioElement.currentTime = 0; 
+            audioElement.loop = loop;
+            audioElement.play().catch(e => { console.log("Ses çalınamadı (Autoplay kısıtlaması olabilir)."); });
+        }
+
+        // =================================================================
+        // HARFLER VE EŞLEŞMELER
+        // =================================================================
+        const rikaHarfler = {
+            'ا': 'elif', 'ب': 'be', 'پ': 'pe', 
+            'ت': 'te', 
+            'ث': 'se',
+            'ج': 'cim', 
+            'چ': 'çe', 
+            'ح': 'ha', 
+            'خ': 'hı', 
+            'د': 'dal',
+            'ذ': 'zel', 'ر': 'ra', 
+            'ز': 'ze', 'ژ': 'je', 'س': 'sin',
+            'ش': 'şın', 
+            'ص': 'sad', 'ض': 'dad', 'ط': 'tı', 'ظ': 'zı',
+            'ع': 'ayn', 'غ': 'gayn', 'ف': 'fe', 'ق': 'kaf', 'ك': 'kef',
+            'گ': 'gef', 'ڭ': 'nef', 'ل': 'lam', 
+            'م': 'mim', 
+            'ن': 'nun',
+            'و': 'vav', 'ه': 'he', 'ى': 'ye'
+        };
+        const harfList = Object.keys(rikaHarfler);
+        const secenekler = ['a', 'b', 'c', 'd', 'e'];
+        const totalDuration = 60; // 1 Dakika (60 saniye)
+        const harfDuration = 5; // Her harf için 5 saniye
+        
+        let timeLeft = totalDuration;
+        let harfTimeLeft = harfDuration;
+        let score = 0;
+        let currentHarf = '';
+        let timerInterval; 
+        let harfInterval; 
+        let harfTimeout; 
+
+        // DOM Elementleri (Global olarak tanımlananlar)
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const quizAreaEl = document.getElementById('quiz-area');
+        const startScreenEl = document.getElementById('start-screen');
+        const startButtonEl = document.getElementById('start-button');
+        
+        // Dinamik olarak oluşturulan elemanlar için placeholder'lar
+        let harfEl, harfCountdownBoxEl, harfCountdownEl, choicesContainer, feedbackEl;
+
+        // =================================================================
+        // HTML YAPISINI OYUN İÇİNDE OLUŞTURMA
+        // =================================================================
+        function createQuizElements() {
+            // Quiz alanının içeriği temizlenir ve Harf/Şık/Feedback yapısı yeniden oluşturulur
+            quizAreaEl.innerHTML = `
+                <div class="harf-display">
+                    <div id="harf-countdown-box">
+                        <span id="harf-countdown">5</span>
+                    </div>
+                    <span id="current-harf"></span>
+                </div>
+
+                <div class="choices" id="choices-container"></div>
+                <div id="feedback"></div>
+            `;
+            // Yeni DOM elementlerini atama
+            harfEl = document.getElementById('current-harf');
+            harfCountdownBoxEl = document.getElementById('harf-countdown-box'); 
+            harfCountdownEl = document.getElementById('harf-countdown'); 
+            choicesContainer = document.getElementById('choices-container');
+            feedbackEl = document.getElementById('feedback');
+        }
+
+
+        // =================================================================
+        // ZAMANLAYICI VE OYUN KONTROL
+        // =================================================================
+        
+        function startGameFlow() {
+            // Başlangıç ekranını gizle, quiz elementlerini oluştur
+            startScreenEl.style.display = 'none';
+            createQuizElements(); 
+            quizAreaEl.style.display = 'flex'; 
+
+            // CLOCK sesini arka planda döngüye alarak başlat
+            playAudio(audioClock, true); 
+            
+            startTimer();
+            displayNewHarf();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    clearInterval(harfInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `Süre: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // =================================================================
+        // HARF GERİ SAYIM YÖNETİMİ
+        // =================================================================
+        
+        function startHarfCountdown() {
+            clearInterval(harfInterval); 
+            harfTimeLeft = harfDuration;
+            harfCountdownEl.textContent = harfTimeLeft;
+            
+            // Eğer saat sesi durmuşsa (oyun başlatıldığında veya yeniden denerken) tekrar başlat
+            if (audioClock.paused) {
+                 playAudio(audioClock, true);
+            }
+
+            harfInterval = setInterval(() => {
+                harfTimeLeft--;
+                harfCountdownEl.textContent = harfTimeLeft;
+                
+                if (harfTimeLeft <= 0) {
+                    clearInterval(harfInterval);
+                    
+                    // Harf kaybolma animasyonu ve feedback
+                    harfEl.classList.add('fade-out');
+                    harfCountdownBoxEl.style.opacity = '0'; 
+                    feedbackEl.innerHTML = '<span class="feedback-text wrong-text">SÜRE DOLDU!</span>';
+                    
+                    setTimeout(displayNewHarf, 1000); 
+                }
+            }, 1000);
+
+            clearTimeout(harfTimeout);
+        }
+
+        // =================================================================
+        // HARF SEÇİMİ VE GÖSTERİMİ
+        // =================================================================
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function generateChoices(correctHarf) {
+            const correctName = rikaHarfler[correctHarf];
+            const allNames = Object.values(rikaHarfler).filter(n => n !== correctName);
+            
+            // 4 Yanlış cevap seçimi
+            let wrongNames = [];
+            while (wrongNames.length < 4) {
+                const randomName = getRandomItem(allNames);
+                if (!wrongNames.includes(randomName)) {
+                    wrongNames.push(randomName);
+                }
+            }
+
+            const allChoices = [correctName, ...wrongNames];
+            
+            // Şıkları karıştır
+            allChoices.sort(() => Math.random() - 0.5); 
+            
+            // Şıkları oluştur ve ekrana bas
+            choicesContainer.innerHTML = '';
+            secenekler.forEach((letter, index) => {
+                const choiceName = allChoices[index];
+                const button = document.createElement('button');
+                button.className = 'choice-button';
+                
+                button.innerHTML = `<span class="choice-letter">${letter})</span> ${choiceName}`; 
+                
+                button.dataset.name = choiceName;
+                button.addEventListener('click', () => {
+                    checkAnswer(choiceName, correctName);
+                });
+                choicesContainer.appendChild(button);
+            });
+        }
+
+        function displayNewHarf() {
+            if (timeLeft <= 0) return;
+
+            clearInterval(harfInterval);
+            clearTimeout(harfTimeout);
+            
+            // Animasyonları sıfırla ve sayaç görünür yap
+            harfEl.classList.remove('fade-out');
+            harfEl.style.opacity = '1';
+            harfEl.style.transform = 'translate(-50%, -20%)'; 
+            harfCountdownBoxEl.style.opacity = '1';
+            feedbackEl.innerHTML = ''; 
+
+            currentHarf = getRandomItem(harfList);
+            harfEl.textContent = currentHarf;
+            generateChoices(currentHarf);
+
+            startHarfCountdown();
+        }
+
+        // =================================================================
+        // CEVAP KONTROLÜ
+        // =================================================================
+
+        function checkAnswer(selectedName, correctName) {
+            clearInterval(harfInterval); // Harf geri sayımını durdur
+            clearTimeout(harfTimeout); 
+            // CLOCK sesi arka planda çalmaya devam eder
+
+            // Tüm butonları devre dışı bırak
+            Array.from(choicesContainer.children).forEach(button => {
+                button.disabled = true;
+            });
+
+            if (selectedName === correctName) {
+                score += 10;
+                playAudio(audioCorrect); // DOĞRU SESİNİ ÇAL
+                
+                feedbackEl.innerHTML = `
+                    <span class="icon correct-text">✅</span> 
+                    <span class="feedback-text correct-text">DOĞRU! (+10 Puan)</span>
+                `;
+                
+                const correctButton = Array.from(choicesContainer.children).find(b => b.dataset.name === correctName);
+                if (correctButton) correctButton.style.backgroundColor = 'green';
+            } else {
+                playAudio(audioWrong); // YANLIŞ SESİNİ ÇAL
+                
+                feedbackEl.innerHTML = `
+                    <span class="icon wrong-text">❌</span> 
+                    <span class="feedback-text wrong-text">YANLIŞ!</span>
+                `;
+
+                const wrongButton = Array.from(choicesContainer.children).find(b => b.dataset.name === selectedName);
+                if (wrongButton) wrongButton.style.backgroundColor = 'red';
+                const correctButton = Array.from(choicesContainer.children).find(b => b.dataset.name === correctName);
+                if (correctButton) correctButton.style.backgroundColor = 'green';
+            }
+
+            scoreEl.textContent = `Puan: ${score}`;
+
+            // Harf ve sayaç kaybolma animasyonu
+            harfEl.classList.add('fade-out');
+            harfCountdownBoxEl.style.opacity = '0';
+
+            // 1 saniye sonra yeni harfe geç
+            setTimeout(() => {
+                feedbackEl.innerHTML = '';
+                // Butonları tekrar etkinleştir (yeni soru için)
+                Array.from(choicesContainer.children).forEach(button => {
+                    button.disabled = false;
+                });
+                displayNewHarf();
+            }, 1000);
+        }
+
+        // =================================================================
+        // OYUN SONU
+        // =================================================================
+
+        function endGame() {
+            clearInterval(timerInterval);
+            clearInterval(harfInterval);
+            clearTimeout(harfTimeout);
+            
+            // CLOCK SESİNİ DURDUR
+            audioClock.pause(); 
+            audioClock.currentTime = 0;
+            
+            // Harf ve şıkları temizle
+            quizAreaEl.innerHTML = ''; // Tüm quiz içeriği temizlenir
+
+            let endMessage;
+            
+            if (score >= 90) { // 9 doğru cevap (9 * 10 = 90 puan)
+                endMessage = `
+                    <div style="text-align: center; font-size: 24px;">
+                        <span class="icon" style="font-size: 40px;">🏆🤩</span>
+                        <span class="feedback-text correct-text" style="font-size: 30px;">MÜKEMMEL! TEBRİKLER!</span>
+                    </div>
+                    <div class="final-score-display">
+                        ${score}
+                    </div>
+                    <span class="feedback-text">Toplam Puanınız</span>
+                    <button id="restart-button" class="restart-button" onclick="restartGame()">YENİDEN DENE</button>
+                `;
+                playAudio(audioCorrect); 
+            } else {
+                endMessage = `
+                    <div style="text-align: center; font-size: 24px;">
+                        <span class="icon correct-text">🌟</span>
+                        <span class="feedback-text">ETKİNLİK SONA ERDİ!</span>
+                    </div>
+                    <div class="final-score-display">
+                        ${score}
+                    </div>
+                    <span class="feedback-text">Toplam Puanınız</span>
+                    <button id="restart-button" class="restart-button" onclick="restartGame()">YENİDEN DENE</button>
+                `;
+                playAudio(audioCorrect); 
+            }
+
+            // Oyun sonu içeriği quiz-area'nın içine ortalanmış olarak yerleştirilir.
+            quizAreaEl.innerHTML = endMessage;
+            quizAreaEl.style.display = 'flex'; 
+        }
+
+        // =================================================================
+        // OYUNU YENİDEN BAŞLATMA
+        // =================================================================
+
+        function restartGame() {
+            // Değişkenleri sıfırla
+            timeLeft = totalDuration;
+            score = 0;
+            currentHarf = '';
+
+            // Önceki oyun durumunu temizle
+            clearInterval(timerInterval);
+            clearInterval(harfInterval);
+            clearTimeout(harfTimeout);
+            
+            // Ekranları sıfırla
+            scoreEl.textContent = `Puan: 0`;
+            updateTimerDisplay(); 
+            
+            // Yeni oyunu başlat
+            startGameFlow();
+        }
+
+        // =================================================================
+        // BAŞLANGIÇ
+        // =================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sayfa yüklenince sadece zamanı göster (Başlangıç ekranı görünür)
+            updateTimerDisplay(); 
+            
+            // Başlat butonuna tıklandığında oyun akışını başlat
+            startButtonEl.addEventListener('click', startGameFlow);
+        });
+        // JavaScript Sonu
+    </script>
+
+</body>
+</html>
