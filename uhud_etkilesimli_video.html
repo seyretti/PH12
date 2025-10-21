@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İnteraktif Video: Uhud Savaşı (Marker KESİN ÇÖZÜM)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Evolventa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Başlangıcı */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Evolventa', sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .video-wrapper {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background-color: #000;
+        }
+
+        #uhudVideo {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Video Kontrolleri ve Zaman Çubuğu */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+
+        .play-pause-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .time-start {
+            color: white;
+            font-size: 0.9em;
+            width: 40px; 
+            text-align: left;
+        }
+
+        .time-end {
+            color: white;
+            font-size: 0.9em;
+            width: 40px; 
+            text-align: right;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1;
+            height: 8px;
+            background-color: #555;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            margin: 0 5px; 
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #007bff;
+            border-radius: 5px;
+        }
+
+        /* Soru İşaretleri (Noktalar) */
+        .question-marker {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: transparent;
+            border: 2px solid #28a745; /* Boş yeşil halka */
+            z-index: 5;
+            pointer-events: none;
+            display: none; /* JS ile görünür yapılacak */
+        }
+        
+        .question-marker.completed {
+            background-color: #007bff; /* Mavi renkle doldur */
+            border-color: #007bff;
+        }
+
+        /* Soru Katmanları (Overlay) */
+        .question-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
+            width: 480px; 
+            max-width: 90%;
+            min-height: 270px;
+            box-sizing: border-box;
+            font-family: 'Evolventa', sans-serif;
+            overflow-y: auto;
+        }
+        
+        #q2Overlay {
+            width: 700px; 
+            min-height: 350px;
+        }
+
+        .question-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        #q1Overlay .input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1em;
+            flex-wrap: nowrap;
+            gap: 5px;
+        }
+
+        #q1Overlay .input-group input[type="text"] {
+            padding: 5px 8px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            width: 60px;
+            text-align: center;
+            font-family: 'Evolventa', sans-serif;
+        }
+
+        .btn-check {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-family: 'Evolventa', sans-serif;
+            transition: background-color 0.3s;
+            background-color: #007bff;
+            color: white;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: center;
+            gap: 5px;
+            font-weight: bold;
+        }
+        
+        .btn-check:hover {
+            background-color: #0056b3;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .feedback.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn-show-solution {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-show-solution:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-retry {
+            background-color: #ffc107;
+            color: #343a40;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-continue {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 15px;
+        }
+
+        .solution-text {
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            width: 100%;
+            white-space: normal; 
+            text-align: left;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            outline: none;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked {
+            border-color: #007bff;
+            background-color: #007bff;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        /* CSS Sonu */
+    </style>
+</head>
+<body>
+
+<div class="video-wrapper">
+    <video id="uhudVideo" src="uhud_d.mp4" playsinline></video>
+
+    <div class="video-controls">
+        <button id="playPauseBtn" class="play-pause-btn">&#9658;</button> 
+        <div class="time-start" id="timeCurrent">00:00</div>
+        
+        <div class="progress-bar-container" id="progressBarContainer">
+            <div id="marker2s" class="question-marker"></div>
+            <div id="marker7s" class="question-marker"></div>
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="time-end" id="timeDuration">00:00</div>
+    </div>
+
+    <div id="q1Overlay" class="question-overlay">
+        <div class="question-content">
+            <h3>Uhud Savaşı'nın tarihini rakamla yazınız.</h3>
+            <div class="input-group">
+                <span>Uhud Savaşı</span>
+                <input type="text" id="q1Answer" maxlength="4" placeholder="....">
+                <span>yılında meydana gelmiştir.</span>
+            </div>
+            <button class="btn-check" onclick="checkQ1()">
+                <span style="font-size: 1.2em; line-height: 1;">&#10003;</span>
+                KONTROL ET
+            </button>
+
+            <div id="q1Feedback" class="feedback"></div>
+
+            <div id="q1Actions" class="action-buttons" style="display: none;">
+                <div id="q1ErrorActions" style="display: none; align-items: center; gap: 15px;">
+                    <button class="btn-show-solution" onclick="toggleSolution('q1')">
+                        <span style="font-size: 1.1em;">&#128065;</span>Çözümü göster
+                    </button>
+                    <button class="btn-retry" onclick="resetQ1()">
+                        <span style="font-size: 1.1em;">&#x1F503;</span>Yeniden Dene
+                    </button>
+                </div>
+                <button id="q1Continue" class="btn-continue" onclick="continueVideo(1)" style="display: none;">Devam et</button>
+            </div>
+            <div id="q1SolutionText" class="solution-text">Doğru Cevap: 625</div>
+        </div>
+    </div>
+
+    <div id="q2Overlay" class="question-overlay">
+        <div class="question-content">
+            <h3>Aşağıdaki cümlelerde doğru olan ifadeleri işaretleyiniz.</h3>
+            <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" name="q2_option" value="a">Uhud Savaşı Müslümanlarla Mekke müşrikleri arasında yapılmıştır.</label>
+                <label class="checkbox-item"><input type="checkbox" name="q2_option" value="b">Uhud Savaşı Müslümanların kesin zaferiyle sonuçlanmıştır.</label>
+                <label class="checkbox-item"><input type="checkbox" name="q2_option" value="c">Savaşın nedeni, Bedir yenilgisinin intikamını almak isteyen Müslümanlardır.</label>
+                <label class="checkbox-item"><input type="checkbox" name="q2_option" value="d">Savaşta Hz. Hamza şehit olmuştur.</label>
+                <label class="checkbox-item"><input type="checkbox" name="q2_option" value="e">Uhud Savaşı Medine yakınlarında gerçekleşmiştir.</label>
+            </div>
+            <button class="btn-check" onclick="checkQ2()">
+                <span style="font-size: 1.2em; line-height: 1;">&#10003;</span>
+                KONTROL ET
+            </button>
+
+            <div id="q2Feedback" class="feedback"></div>
+
+            <div id="q2Actions" class="action-buttons" style="display: none;">
+                <div id="q2ErrorActions" style="display: none; align-items: center; gap: 15px;">
+                    <button class="btn-show-solution" onclick="toggleSolution('q2')">
+                        <span style="font-size: 1.1em;">&#128065;</span>Çözümü göster
+                    </button>
+                    <button class="btn-retry" onclick="resetQ2()">
+                        <span style="font-size: 1.1em;">&#x1F503;</span>Yeniden Dene
+                    </button>
+                </div>
+                <button id="q2Continue" class="btn-continue" onclick="continueVideo(2)" style="display: none;">Devam et</button>
+            </div>
+            <div id="q2SolutionText" class="solution-text">Doğru ifadeler: 1. Uhud Savaşı Müslümanlarla Mekke müşrikleri arasında yapılmıştır. / 4. Savaşta Hz. Hamza şehit olmuştur. / 5. Uhud Savaşı Medine yakınlarında gerçekleşmiştir.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript Başlangıcı
+    const video = document.getElementById('uhudVideo');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const progressBar = document.getElementById('progressBar');
+    const timeCurrent = document.getElementById('timeCurrent');
+    const timeDuration = document.getElementById('timeDuration');
+    
+    const marker2s = document.getElementById('marker2s');
+    const marker7s = document.getElementById('marker7s');
+    const progressBarContainer = document.getElementById('progressBarContainer');
+
+    const q1Overlay = document.getElementById('q1Overlay');
+    const q2Overlay = document.getElementById('q2Overlay');
+    const q2Checkboxes = document.querySelectorAll('#q2Overlay input[type="checkbox"]');
+
+    let q1Triggered = false;
+    let q2Triggered = false;
+    const q1Time = 2; // Soru 1 saniyesi
+    const q2Time = 7; // Soru 2 saniyesi
+
+    // Zamanı MM:SS formatına dönüştüren yardımcı fonksiyon
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        const format = (val) => val.toString().padStart(2, '0');
+        return `${format(m)}:${format(s)}`;
+    }
+
+    // Marker pozisyonlarını hesaplayan ve güncelleyen fonksiyon
+    function setMarkerPositions() {
+        const duration = video.duration;
+        if (isNaN(duration) || duration <= 0 || !isFinite(duration)) {
+            // Süre yüklenmediyse, tekrar denemek için 100ms bekle (ZORLAMA)
+            setTimeout(setMarkerPositions, 100);
+            return;
+        }
+
+        const setPosition = (marker, time) => {
+            const percentage = (time / duration) * 100;
+            // Marker'ı yüzde konumuna ayarla ve yarım genişliği kadar geri kaydır (7px)
+            marker.style.left = `calc(${percentage}% - 7px)`; 
+            marker.style.display = 'block'; // Görünür yap
+        };
+
+        // Marker'ları ayarla
+        setPosition(marker2s, q1Time);
+        setPosition(marker7s, q2Time);
+        timeDuration.textContent = formatTime(duration); 
+        // console.log(`Marker'lar ayarlandı. Süre: ${formatTime(duration)}`);
+    }
+
+    // KRİTİK ÇÖZÜM: Video yükleme olaylarının tümünü dinle ve zorla
+    video.addEventListener('loadedmetadata', setMarkerPositions);
+    video.addEventListener('canplay', setMarkerPositions);
+    // Sayfa yüklendikten 1 saniye sonra da bir kez daha zorla
+    window.onload = () => {
+        setTimeout(setMarkerPositions, 1000);
+    };
+
+
+    // Oynat/Duraklat butonu işlevi
+    playPauseBtn.addEventListener('click', () => {
+        if (q1Overlay.style.display === 'block' || q2Overlay.style.display === 'block') {
+             return;
+        }
+        if (video.paused || video.ended) {
+            video.play();
+        } else {
+            video.pause();
+        }
+    });
+
+    // Video zamanını izleme ve kontrol çubuğunu güncelleme
+    video.addEventListener('timeupdate', () => {
+        const currentTime = video.currentTime;
+        const duration = video.duration;
+
+        // İlerleme çubuğunu ve geçen süreyi güncelle
+        if (!isNaN(duration) && duration > 0) {
+            const progress = (currentTime / duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            timeCurrent.textContent = formatTime(currentTime);
+        }
+
+        // Soru 1: 2. saniye kontrolü
+        if (Math.floor(currentTime) >= q1Time && !q1Triggered) {
+            video.pause();
+            document.getElementById('q1Overlay').style.display = 'block';
+            q1Triggered = true; 
+        }
+
+        // Soru 2: 7. saniye kontrolü
+        if (Math.floor(currentTime) >= q2Time && !q2Triggered && document.getElementById('marker2s').classList.contains('completed')) {
+            video.pause();
+            document.getElementById('q2Overlay').style.display = 'block';
+            q2Triggered = true; 
+        }
+    });
+
+    // Diğer fonksiyonlar (checkQ1, resetQ1, checkQ2, resetQ2, continueVideo, toggleSolution) önceki versiyonlarda olduğu gibi çalışır.
+    // Kod tekrarından kaçınmak için bu kısım sadeleştirilmiştir. Tüm fonksiyonlar yukarıdaki HTML bloğunun <script> etiketi içinde tam olarak yer almaktadır.
+
+    /**
+     * Boşluk Doldurma Sorusu (Q1) Kontrolü
+     */
+    function checkQ1() {
+        const answerInput = document.getElementById('q1Answer');
+        const userAnswer = answerInput.value.trim();
+        const correctAnswer = '625';
+
+        const q1Feedback = document.getElementById('q1Feedback');
+        const q1Actions = document.getElementById('q1Actions');
+        const q1ErrorActions = document.getElementById('q1ErrorActions');
+        const q1Continue = document.getElementById('q1Continue');
+
+        q1Feedback.style.display = 'block';
+        q1Actions.style.display = 'flex';
+        document.getElementById('q1SolutionText').style.display = 'none';
+
+        if (userAnswer === correctAnswer) {
+            q1Feedback.className = 'feedback success';
+            q1Feedback.textContent = 'Tebrikler!';
+            q1ErrorActions.style.display = 'none';
+            q1Continue.style.display = 'block';
+            answerInput.disabled = true;
+            document.querySelector('#q1Overlay .btn-check').style.display = 'none';
+            marker2s.classList.add('completed'); 
+        } else {
+            q1Feedback.className = 'feedback error';
+            q1Feedback.textContent = 'Üzgünüm. Tekrar deneyin!';
+            q1ErrorActions.style.display = 'flex';
+            q1Continue.style.display = 'none';
+        }
+    }
+
+    /**
+     * Q1 ve Q2 için çözüm göster/gizle
+     */
+    function toggleSolution(qId) {
+        const solutionText = document.getElementById(qId + 'SolutionText');
+        solutionText.style.display = solutionText.style.display === 'block' ? 'none' : 'block';
+    }
+
+    /**
+     * Q1'i sıfırla
+     */
+    function resetQ1() {
+        document.getElementById('q1Answer').value = '';
+        document.getElementById('q1Answer').disabled = false;
+        document.getElementById('q1Feedback').style.display = 'none';
+        document.getElementById('q1Actions').style.display = 'none';
+        document.getElementById('q1ErrorActions').style.display = 'none';
+        document.getElementById('q1SolutionText').style.display = 'none';
+        document.querySelector('#q1Overlay .btn-check').style.display = 'block';
+    }
+
+    /**
+     * Çoktan Seçmeli Soru (Q2) Kontrolü
+     */
+    function checkQ2() {
+        const correctAnswers = ['a', 'd', 'e'];
+        const selectedOptions = Array.from(q2Checkboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+
+        const q2Feedback = document.getElementById('q2Feedback');
+        const q2Actions = document.getElementById('q2Actions');
+        const q2ErrorActions = document.getElementById('q2ErrorActions');
+        const q2Continue = document.getElementById('q2Continue');
+        
+        const isCorrect = (selectedOptions.length === correctAnswers.length) &&
+                          selectedOptions.every(val => correctAnswers.includes(val));
+
+        q2Feedback.style.display = 'block';
+        q2Actions.style.display = 'flex';
+        document.getElementById('q2SolutionText').style.display = 'none';
+
+        if (isCorrect) {
+            q2Feedback.className = 'feedback success';
+            q2Feedback.textContent = 'Tebrikler. Hepsi doğru!';
+            q2ErrorActions.style.display = 'none';
+            q2Continue.style.display = 'block';
+            q2Checkboxes.forEach(cb => cb.disabled = true);
+            document.querySelector('#q2Overlay .btn-check').style.display = 'none';
+            marker7s.classList.add('completed'); 
+        } else {
+            q2Feedback.className = 'feedback error';
+            q2Feedback.textContent = 'Üzgünüm. Eksik ya da hatalı cevaplar var!';
+            q2ErrorActions.style.display = 'flex';
+            q2Continue.style.display = 'none';
+        }
+    }
+
+    /**
+     * Q2'yi sıfırla
+     */
+    function resetQ2() {
+        q2Checkboxes.forEach(cb => {
+            cb.checked = false;
+            cb.disabled = false;
+        });
+        document.getElementById('q2Feedback').style.display = 'none';
+        document.getElementById('q2Actions').style.display = 'none';
+        document.getElementById('q2ErrorActions').style.display = 'none';
+        document.getElementById('q2SolutionText').style.display = 'none';
+        document.querySelector('#q2Overlay .btn-check').style.display = 'block';
+    }
+
+    /**
+     * Video oynatmasına devam et
+     */
+    function continueVideo(questionNumber) {
+        if (questionNumber === 1) {
+            document.getElementById('q1Overlay').style.display = 'none';
+        } else if (questionNumber === 2) {
+            document.getElementById('q2Overlay').style.display = 'none';
+        }
+        video.play();
+    }
+    // JavaScript Sonu
+</script>
+</body>
+</html>
