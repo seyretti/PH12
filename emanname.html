@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeni İçerik Projesi - Garantili Süre ve İlerleme</title>
+    
+    <style>
+        /* Ana Renk Paleti */
+        :root {
+            --mavi: #3498db;
+            --koyu-gri: rgba(0, 0, 0, 0.85);
+            --acik-gri: #ffffff;
+        }
+
+        /* Font ve Genel Ayarlar */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0; 
+            font-family: 'Myriad Pro', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        /* ÇALIŞMA ALANI */
+        #calisma-alani {
+            width: 960px;
+            height: 540px;
+            background-image: url('arka-plan.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            border: 2px solid var(--mavi);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5); 
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        /* YAZDIRMA ALANI (200PX YÜKSEKLİK, 0.5 SAYDAMLIK, SOL ÜST BAŞLANGIÇ) */
+        #yazdirma-alani {
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            
+            width: 500px; 
+            height: 200px; 
+            
+            padding: 10px 15px; 
+            
+            background-color: rgba(255, 255, 255, 0.5); 
+            color: #333; 
+            border-radius: 10px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); 
+            
+            font-size: 18px; 
+            line-height: 1.4; 
+            
+            /* TAŞMA VE SÖZCÜK KAYDIRMA AYARI */
+            overflow: hidden; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            
+            display: block; 
+            text-align: left; /* Sol üst başlangıç */
+        }
+        
+        #yazdirilan-metin {
+            margin: 0; 
+            width: 100%;
+            font-weight: bold; 
+            
+            /* Sığdırma Çözümü */
+            white-space: normal !important; 
+            word-wrap: break-word; 
+        }
+        
+        /* PLAYER ARAYÜZÜ VE DİĞER STİLLER */
+        #player {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px; 
+            background-color: var(--koyu-gri); 
+            display: flex;
+            align-items: center;
+            padding: 0 10px; 
+            box-sizing: border-box;
+            color: var(--acik-gri);
+        }
+        
+        /* SÜRE BİLGİSİ (ÇAKIŞMA ÇÖZÜMÜ) */
+        #sure-bilgisi {
+            font-size: 14px;
+            margin-left: 10px;
+            white-space: nowrap;
+            min-width: 90px; 
+            text-align: right; 
+        }
+
+        /* DİĞER PLAYER BİLEŞENLERİ (Aynı) */
+        .player-kontrol button, .player-kontrol span, #hiz-ayari { background: none; border: none; color: var(--acik-gri); font-size: 24px; cursor: pointer; padding: 5px; transition: color 0.2s; outline: none; font-family: inherit; margin: 0 5px; }
+        #play-pause-btn { font-size: 20px; color: var(--mavi); margin-right: 10px; }
+        #hiz-ayari { font-size: 16px; color: var(--mavi); padding: 0 8px; -webkit-appearance: none; -moz-appearance: none; appearance: none; cursor: pointer; }
+        #ilerleme-konteyner { flex-grow: 1; height: 4px; background-color: rgba(255, 255, 255, 0.3); margin: 0 15px; position: relative; cursor: pointer; }
+        #ilerleme-dolu { height: 100%; width: 0%; background-color: var(--acik-gri); position: absolute; top: 0; left: 0; }
+        #ilerleme-topu { position: absolute; top: 50%; left: 0%; transform: translate(-50%, -50%); height: 12px; width: 12px; background-color: var(--acik-gri); border-radius: 50%; z-index: 10; box-shadow: 0 0 5px rgba(0,0,0,0.5); display: none; }
+    </style>
+</head>
+<body>
+    
+    <div id="calisma-alani">
+        
+        <div id="yazdirma-alani">
+            <p id="yazdirilan-metin"></p> 
+        </div>
+        
+        <div id="player">
+            <button id="play-pause-btn" title="Oynat / Durdur">&#9654;</button>
+            <select id="hiz-ayari" title="Oynatma Hızı">
+                <option value="400">0.25x</option>
+                <option value="200">0.5x</option>
+                <option value="100" selected>1.0x</option>
+                <option value="50">2.0x</option>
+                <option value="25">4.0x</option>
+            </select>
+            <div id="ilerleme-konteyner">
+                <div id="ilerleme-dolu"></div>
+                <div id="ilerleme-topu"></div>
+            </div>
+            <div id="sure-bilgisi">
+                <span id="gecen-sure">00:00</span> / <span id="toplam-sure">01:25</span>
+            </div>
+        </div>
+        
+    </div>
+
+    <audio id="emanname-audio" src="emanname.mp3" preload="auto"></audio>
+
+    <script>
+        const tamMetin = `Rahman ve Rahim olan Allah’ın adıyla. Bu sözleşme, müminlerin emiri ve Allah’ın (cc) kulu Ömer tarafından İliya halkına verilen bir emandır. Onların canlarına, mallarına, kiliselerine, haçlarına, yerleşik ve göçebe olan bütün fertlerine verilen bir teminattır. Kiliseleri mesken yapılmayacak, yıkılmayacak ve kısmen dahi olsa işgal edilmeyecektir. İçindeki kutsal eşyalara dokunulmayacaktır. Halkın mallarına el sürülmeyecektir. Kimse dinî inançlarından dolayı zorlanmayacak, kendilerine asla zarar gelmeyecek ve yurtlarına Yahudiler iskân olunmayacaktır. Buna karşılık onlar da cizye vereceklerdir. Bunlardan kim yurdunu terk etmek isterse, gideceği yere kadar mal ve can emniyeti sağlanacaktır. Yurdunda kalmak isteyenler ise, güvende olacaklardır ve cizye vereceklerdir. İsteyen Rumlarla gidecek, isteyen de toprağına dönecektir. Hasat elde edinceye kadar onlardan bir şey istenmeyecektir. Bu, Allah’ın Resulü’nün, halifelerin ve müminlerin Kudüs halkına verdiği güvenlik ahdidir. Cizye ödedikleri müddetçe geçerlidir. Şahitler: Halid bin Velid, Amr bin As, Abdurrahman bin Avf, ve Muaviye bin Ebi Süfyan`;
+
+        // Metin, okuma duraklarına göre ayrıldı (her durak bir "sayfa")
+        const sayfalar = [
+            'Rahman ve Rahim olan Allah’ın adıyla.', // ~2.5s
+            'Bu sözleşme, müminlerin emiri ve Allah’ın (cc) kulu Ömer tarafından İliya halkına verilen bir emandır.', // ~7.5s
+            'Onların canlarına, mallarına, kiliselerine, haçlarına, yerleşik ve göçebe olan bütün fertlerine verilen bir teminattır.', // ~14.5s
+            'Kiliseleri mesken yapılmayacak, yıkılmayacak ve kısmen dahi olsa işgal edilmeyecektir. İçindeki kutsal eşyalara dokunulmayacaktır.', // ~24s
+            'Halkın mallarına el sürülmeyecektir. Kimse dinî inançlarından dolayı zorlanmayacak, kendilerine asla zarar gelmeyecek ve yurtlarına Yahudiler iskân olunmayacaktır.', // ~33s
+            'Buna karşılık onlar da cizye vereceklerdir.', // ~36s
+            'Bunlardan kim yurdunu terk etmek isterse, gideceği yere kadar mal ve can emniyeti sağlanacaktır.', // ~48s
+            'Yurdunda kalmak isteyenler ise, güvende olacaklardır ve cizye vereceklerdir.', // ~54s
+            'İsteyen Rumlarla gidecek, isteyen de toprağına dönecektir.', // ~61s
+            'Hasat elde edinceye kadar onlardan bir şey istenmeyecektir.', // ~66.5s
+            'Bu, Allah’ın Resulü’nün, halifelerin ve müminlerin Kudüs halkına verdiği güvenlik ahdidir.', // ~73s
+            'Cizye ödedikleri müddetçe geçerlidir.', // ~76s
+            'Şahitler: Halid bin Velid, Amr bin As, Abdurrahman bin Avf, ve Muaviye bin Ebi Süfyan' // ~85s (Bitiş)
+        ];
+
+        // Okuma duraklarının saniye cinsinden zamanları
+        const senkronizasyonNoktalari = [
+            2.5, 7.5, 14.5, 24, 33, 36, 48, 54, 61, 66.5, 73, 76, 85
+        ];
+        
+        // DOM Elementleri
+        const yazdirilanMetinElementi = document.getElementById('yazdirilan-metin');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const hizAyariSelect = document.getElementById('hiz-ayari');
+        const gecenSureElementi = document.getElementById('gecen-sure');
+        const ilerlemeDolu = document.getElementById('ilerleme-dolu');
+        const ilerlemeTopu = document.getElementById('ilerleme-topu');
+        const ilerlemeKonteyner = document.getElementById('ilerleme-konteyner');
+        const sesDosyasi = document.getElementById('emanname-audio');
+
+        // Durum Değişkenleri
+        let sayfaIndex = 0; 
+        let isPlaying = false;
+        
+        const toplamSaniye = 85; // TOPLAM SÜRE KESİNLEŞTİ: 01:25 saniye
+
+        // Süreyi MM:SS formatına dönüştüren yardımcı fonksiyon
+        function formatSure(saniye) {
+            const dakika = Math.floor(saniye / 60);
+            const saniyeKalan = Math.floor(saniye % 60);
+            return `${String(dakika).padStart(2, '0')}:${String(saniyeKalan).padStart(2, '0')}`;
+        }
+        
+        // Player durumunu güncelleyen temel fonksiyon (Çubuk ve süre)
+        function guncellePlayer() {
+            const gecenSaniye = sesDosyasi.currentTime;
+            
+            // 1. İlerleme Çubuğu Güncellemesi
+            const ilerlemeYuzdesi = (gecenSaniye / toplamSaniye) * 100;
+            ilerlemeDolu.style.width = `${ilerlemeYuzdesi}%`;
+            ilerlemeTopu.style.left = `${ilerlemeYuzdesi}%`;
+            
+            // 2. Süre Güncellemesi (SANIYE İLERLEME ÇÖZÜMÜ)
+            gecenSureElementi.textContent = formatSure(gecenSaniye);
+        }
+        
+        // Metin Akışı ve Senkronizasyon (SADECE GÖRSEL)
+        function senkronizeMetniGoster() {
+            const mevcutZaman = sesDosyasi.currentTime;
+            let yeniSayfaIndex = sayfaIndex;
+
+            // Hangi metin parçasının gösterileceğini bul (senkronizasyon noktalarını kontrol et)
+            // Cümle bitiş zamanı (senkronizasyon noktası) geçilmişse, bir sonraki cümleye geç
+            while (yeniSayfaIndex < senkronizasyonNoktalari.length && mevcutZaman >= senkronizasyonNoktalari[yeniSayfaIndex]) {
+                yeniSayfaIndex++;
+            }
+            
+            // Eğer sayfa değiştiyse, yeni metni göster
+            if (yeniSayfaIndex !== sayfaIndex) {
+                // Sadece mevcut cümleyi gösteriyoruz.
+                yazdirilanMetinElementi.textContent = sayfalar[yeniSayfaIndex -1];
+                sayfaIndex = yeniSayfaIndex;
+            }
+        }
+
+
+        // Oynat/Durdur İşlevi
+        function togglePlayPause() {
+            if (sesDosyasi.ended) {
+                // Ses bittiyse sıfırla ve yeniden başlat
+                sesDosyasi.currentTime = 0;
+                sesDosyasi.play();
+                sayfaIndex = 0;
+                yazdirilanMetinElementi.textContent = sayfalar[0]; 
+            }
+
+            if (isPlaying) {
+                // Durdur
+                sesDosyasi.pause();
+                playPauseBtn.innerHTML = '&#9654;'; 
+                ilerlemeTopu.style.display = 'none';
+                isPlaying = false;
+            } else {
+                // Oynat
+                sesDosyasi.play();
+                playPauseBtn.innerHTML = '&#9616;&#9616;'; 
+                ilerlemeTopu.style.display = 'block';
+                isPlaying = true;
+                
+                // Oynatma başladığında ilk metni hemen göster
+                if (sesDosyasi.currentTime === 0) {
+                     yazdirilanMetinElementi.textContent = sayfalar[0]; 
+                     sayfaIndex = 1; // Başlangıçta ilk metin gösterildiği için, indeksi bir sonraki noktaya ayarla
+                }
+            }
+        }
+
+        // Hız Değiştirme İşlevi
+        function degistirHiz() {
+            const hizKatsayisi = 100 / parseInt(hizAyariSelect.value, 10);
+            sesDosyasi.playbackRate = hizKatsayisi;
+            
+            // Hız değiştiğinde metin akışı da buna göre senkronize olacaktır.
+        }
+        
+        // İlerleme Çubuğuna Tıklama İşlevi (Seek)
+        ilerlemeKonteyner.addEventListener('click', (e) => {
+            const rect = ilerlemeKonteyner.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const konteynerGenisligi = rect.width;
+            
+            const yuzde = (clickX / konteynerGenisligi);
+            const hedefZaman = toplamSaniye * yuzde;
+            
+            // Ses dosyasının konumunu ayarla
+            sesDosyasi.currentTime = hedefZaman;
+
+            // Metin sayfasını atanan konuma göre bul
+            let yeniSayfaIndex = 0;
+            for (let i = 0; i < senkronizasyonNoktalari.length; i++) {
+                if (hedefZaman < senkronizasyonNoktalari[i]) {
+                    yeniSayfaIndex = i;
+                    break;
+                }
+            }
+
+            // Metin alanını sıfırla ve yeni metni hemen göster
+            sayfaIndex = yeniSayfaIndex;
+            yazdirilanMetinElementi.textContent = sayfalar[sayfaIndex];
+
+            if (isPlaying) {
+                // Çalmaya devam et
+            } else {
+                guncellePlayer();
+                ilerlemeTopu.style.display = 'block';
+            }
+        });
+
+        // Olay Dinleyicileri
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        hizAyariSelect.addEventListener('change', degistirHiz);
+
+        // **KRİTİK ÇÖZÜM:** Sesin her saniye değiştiğini kontrol etmek için timeupdate olayını kullanıyoruz.
+        sesDosyasi.addEventListener('timeupdate', () => {
+             guncellePlayer();
+             senkronizeMetniGoster();
+        });
+
+        sesDosyasi.addEventListener('loadedmetadata', function() {
+            // Ses dosyasının süresi yüklendiğinde toplam süreyi ayarla
+            toplamSureElementi.textContent = formatSure(toplamSaniye);
+        });
+        
+        sesDosyasi.addEventListener('ended', function() {
+            // Ses bittiğinde player durumunu güncelle
+            playPauseBtn.innerHTML = '&#10227;'; 
+            ilerlemeTopu.style.display = 'none';
+            isPlaying = false;
+        });
+
+
+        // Başlangıç Ayarları
+        window.onload = function() {
+            // Hız ayarında varsayılan değeri seç
+            hizAyariSelect.value = 100;
+        };
+    </script>
+</body>
+</html>
