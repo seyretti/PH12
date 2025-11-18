@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSMANLI TÜRKÇESİ VAV OKUTUCUSU ETKİNLİĞİ</title>
+    <style>
+        /* Evolventa Fontunu Harici Kaynaktan (CDN) Ekleme */
+        @import url('https://fonts.cdnfonts.com/css/evolventa');
+
+        /* CSS Başlangıcı */
+        body {
+            /* TÜM YAZILAR EVOLVENTA */
+            font-family: 'Evolventa', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            /* Sayfa Boyutu */
+            width: 950px; 
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-box {
+            width: 100%;
+            /* BAŞLIK GRADIENT: Açıktan koyuya */
+            background: linear-gradient(to right, #6B8E23, #4B5320); 
+            color: white;
+            text-align: center;
+            padding: 20px 0; 
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px; /* Ana Başlık Font Size */
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 18px; /* Alt Başlık Font Size */
+            margin: 5px 0 0 0;
+            font-weight: normal;
+        }
+
+        /* PUAN VE SÜRE ÇUBUĞU */
+        .info-bar-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px; /* Mesafeyi bir tık azalttık */
+            gap: 20px; 
+        }
+        
+        .info-box {
+            flex: 1; 
+            padding: 10px 15px;
+            font-size: 16px; 
+            color: white; 
+            border-radius: 5px; 
+            text-align: center;
+            background: linear-gradient(to right, #38761D, #6AA84F); 
+        }
+
+        .quiz-area {
+            text-align: center;
+            font-size: 16px;
+            /* Yüksekliği belirledik ve içeriği dikeyde ortalamak için Flexbox kullandık */
+            min-height: 350px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+        }
+
+        /* Başlangıçta gizli tutulacak alan, sadece ortalama için flex'i kullanır */
+        #quiz-area:not(#start-screen) {
+             display: none; 
+        }
+
+        /* Kelime gösterim alanı (Daha dengeli bir konumlandırma için) */
+        .harf-display {
+            height: 200px; /* Yüksekliği korundu */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px; 
+            position: relative;
+            padding-top: 15px; /* Sayacın kelime üzerinde dengeli durması için boşluk */
+        }
+        
+        /* GERİ SAYIM KUTUSU - DENGELENDİ */
+        #harf-countdown-box {
+            position: absolute; 
+            top: 0; /* Kelime alanının tepesine yerleşir */
+            padding: 5px 15px;
+            border-radius: 5px;
+            color: white; 
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(to right, #4B5320, #6B8E23); 
+            transition: opacity 0.3s;
+        }
+
+        #current-harf {
+            /* Varsayılan font boyutu */
+            font-size: 100px; 
+            direction: rtl; /* Sağdan sola yazım */
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            /* Konum sabit tutuldu */
+            transform: translate(-50%, -60px) scale(1.0); 
+            /* Geçiş hızı 0.5s'ye ayarlandı. Transform geçişi eklendi. */
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out, font-size 0.3s; 
+            opacity: 1;
+            /* Satır atlamayı engellemek için */
+            white-space: nowrap; 
+        }
+        
+        /* Kelime Kaybolma Animasyonu (Fade-out) */
+        .fade-out {
+            /* Sadece OPACITY ile kaybolma sağlanarak titreme kesin olarak engellendi */
+            opacity: 0 !important; 
+            /* Transform özelliği kaldırıldı */
+        }
+
+        .choices {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 10px; 
+        }
+
+        .choice-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px; 
+            width: 180px; /* Buton genişliğini artırdık */
+            transition: background-color 0.3s;
+            font-family: 'Evolventa', sans-serif;
+            text-align: left; 
+        }
+
+        .choice-button:hover {
+            background-color: #45a049;
+        }
+
+        .choice-letter {
+            font-weight: bold;
+        }
+
+        /* Geri bildirim stilleri */
+        #feedback {
+            font-size: 20px;
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 80px; 
+            margin-top: 15px; 
+        }
+        
+        /* YENİDEN DENE ve BAŞLAT Buton Stili */
+        .start-button, .restart-button {
+            background-color: #4B5320; 
+            color: white;
+            padding: 15px 30px;
+            margin-top: 20px; 
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            font-family: 'Evolventa', sans-serif;
+        }
+
+        .start-button:hover, .restart-button:hover {
+            background-color: #6B8E23;
+        }
+
+        .feedback-text {
+            font-weight: bold;
+        }
+
+        .correct-text {
+            color: green;
+        }
+
+        .wrong-text {
+            color: red;
+        }
+
+        .icon {
+            font-size: 24px;
+            line-height: 1; 
+        }
+
+        /* Oyun Sonu Skor Ekranı için Özel Stil */
+        .final-score-display {
+            font-size: 70px;
+            font-weight: bold;
+            color: #4B5320;
+            margin: 10px 0 15px 0; 
+        }
+
+        /* Başlangıç Ekranı Stili */
+        #start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 350px; 
+            text-align: center;
+        }
+        /* CSS Sonu */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-box">
+            <h1>OSMANLI TÜRKÇESİ VAV OKUTUCUSU(O,Ö,U,Ü SESİ) ETKİNLİĞİ</h1>
+            <h2>NAZİLLİ FEN LİSESİ 3.HAFTA - Enes Namık TOSUN</h2>
+        </div>
+
+        <div class="info-bar-container">
+            <div id="score" class="info-box">Puan: 0</div>
+            <div id="timer" class="info-box">Süre: 01:00</div>
+        </div>
+
+        <div id="start-screen" style="display: flex;"> 
+            <p style="font-size: 20px; color: #4B5320;">
+                **VAV OKUTUCUSU (O,Ö,U,Ü SESİ) KELİME OKUMA ETKİNLİĞİ**<br>
+                Ekrana gelen Osmanlı Türkçesi (Kur'an harfli) kelimenin doğru okunuşunu şıklardan bulunuz.<br>
+                Yarışmaya başlamak için butona tıklayınız. Sesli geri sayım başlayacaktır.
+            </p>
+            <button id="start-button" class="start-button">YARIŞMAYI BAŞLAT</button>
+        </div>
+
+        <div class="quiz-area" id="quiz-area">
+            </div>
+    </div>
+
+    <script>
+        // JavaScript Başlangıcı
+
+        // =================================================================
+        // SESLER (Yerel Dosyalar Kullanılıyor ve Ses Seviyesi Ayarlandı)
+        // =================================================================
+        // NOT: Bu dosyaların (correct.mp3, wrong.mp3, clock.mp3) HTML dosyasıyla aynı klasörde olması GEREKİR.
+        const audioClock = new Audio('clock.mp3'); 
+        const audioCorrect = new Audio('correct.mp3'); 
+        const audioWrong = new Audio('wrong.mp3'); 
+
+        // SES AYARI: Sesler %10 (0.10) oranında çalsın.
+        audioClock.volume = 0.10; 
+        audioCorrect.volume = 0.10; 
+        audioWrong.volume = 0.10;  
+
+        // Anlık sesleri oynatan genel fonksiyon (Basit Audio nesneleri için)
+        function playAudio(audioElement, loop = false) {
+            audioElement.currentTime = 0; 
+            audioElement.loop = loop;
+            audioElement.play().catch(e => { console.log("Ses çalınamadı (Autoplay kısıtlaması olabilir)."); });
+        }
+
+        // =================================================================
+        // KELİMELER VE EŞLEŞMELER (Vav Okutucusu "o, ö, u, ü" Sesi) - GÜNCELLENDİ
+        // =================================================================
+        const kelimeListesi = {
+            'او': 'o', 
+            'بو': 'bu', 
+            'شو': 'şu', 
+            'اون': 'on', 
+            'موز': 'muz', 
+            'چوق': 'çok', 
+            'قوم': 'kum', 
+            'اوچ': 'üç', 
+            'كوز': 'göz', 
+            'تول': 'tül', 
+            'سوز': 'söz', 
+            'بوتون': 'bütün', 
+            'بويوك': 'büyük', 
+            'طوقوز': 'dokuz', 
+            'قانون': 'kanun', 
+            'صالون': 'salon', 
+            'چوربه': 'çorba', 
+            'طوربه': 'torba', 
+            'قاربون': 'karbon', // Düzeltildi: Kaf-Elif-Ra-Be-Vav-Nun
+            'بالیوز': 'balyoz', 
+            'فاصولیه': 'fasulye', 
+            'یومورطه': 'yumurta', 
+            'باربونيه': 'barbunya', 
+            'صابون': 'sabun', 
+        };
+        
+        // Kelime listesinin Osmanlıca imlaları (Anahtar/Key)
+        const osmanlicaKelimeler = Object.keys(kelimeListesi);
+        
+        // Latin harfli okunuşlar (Değer/Value)
+        const latinOkunuslar = Object.values(kelimeListesi);
+
+        const secenekler = ['a', 'b', 'c', 'd', 'e']; // 5 şık 
+        const totalDuration = 60; // 1 Dakika (60 saniye)
+        const harfDuration = 5; // Her kelime için 5 saniye (Eski isim korundu)
+        
+        let timeLeft = totalDuration;
+        let harfTimeLeft = harfDuration;
+        let score = 0;
+        let currentOsmanlicaKelime = '';
+        let timerInterval; 
+        let harfInterval; 
+        let harfTimeout; 
+        
+        // Kelimeleri rastgele sırada tutacak dizi
+        let shuffledKelimeler = [];
+        let kelimeIndex = 0;
+
+        // DOM Elementleri (Global olarak tanımlananlar)
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const quizAreaEl = document.getElementById('quiz-area');
+        const startScreenEl = document.getElementById('start-screen');
+        const startButtonEl = document.getElementById('start-button');
+        
+        // Dinamik olarak oluşturulan elemanlar için placeholder'lar
+        let harfEl, harfCountdownBoxEl, harfCountdownEl, choicesContainer, feedbackEl;
+
+        // =================================================================
+        // YARDIMCI FONKSİYON: DİZİ KARMA (Fisher-Yates Shuffle)
+        // =================================================================
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // =================================================================
+        // HTML YAPISINI OYUN İÇİNDE OLUŞTURMA
+        // =================================================================
+        function createQuizElements() {
+            // Quiz alanının içeriği temizlenir ve Kelime/Şık/Feedback yapısı yeniden oluşturulur
+            quizAreaEl.innerHTML = `
+                <div class="harf-display">
+                    <div id="harf-countdown-box">
+                        <span id="harf-countdown">5</span>
+                    </div>
+                    <span id="current-harf" style="direction: rtl;"></span> 
+                </div>
+
+                <div class="choices" id="choices-container"></div>
+                <div id="feedback"></div>
+            `;
+            // Yeni DOM elementlerini atama
+            harfEl = document.getElementById('current-harf');
+            harfCountdownBoxEl = document.getElementById('harf-countdown-box'); 
+            harfCountdownEl = document.getElementById('harf-countdown'); 
+            choicesContainer = document.getElementById('choices-container');
+            feedbackEl = document.getElementById('feedback');
+        }
+
+
+        // =================================================================
+        // ZAMANLAYICI VE OYUN KONTROL
+        // =================================================================
+        
+        function startGameFlow() {
+            // Başlangıç ekranını gizle, quiz elementlerini oluştur
+            startScreenEl.style.display = 'none';
+            createQuizElements(); 
+            quizAreaEl.style.display = 'flex'; 
+            
+            // Kelime listesini karıştır ve indeksi sıfırla
+            shuffledKelimeler = [...osmanlicaKelimeler];
+            shuffleArray(shuffledKelimeler);
+            kelimeIndex = 0;
+
+            // CLOCK sesini arka planda döngüye alarak başlat
+            playAudio(audioClock, true); 
+            
+            startTimer();
+            displayNewKelime(); // Kelime gösterme fonksiyonunu çağırdık
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    clearInterval(harfInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `Süre: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // =================================================================
+        // KELİME GERİ SAYIM YÖNETİMİ
+        // =================================================================
+        
+        function startKelimeCountdown() {
+            clearInterval(harfInterval); 
+            harfTimeLeft = harfDuration;
+            harfCountdownEl.textContent = harfTimeLeft;
+            
+            // Eğer saat sesi durmuşsa (oyun başlatıldığında veya yeniden denerken) tekrar başlat
+            if (audioClock.paused) {
+                 playAudio(audioClock, true);
+            }
+
+            harfInterval = setInterval(() => {
+                harfTimeLeft--;
+                harfCountdownEl.textContent = harfTimeLeft;
+                
+                if (harfTimeLeft <= 0) {
+                    clearInterval(harfInterval);
+                    
+                    // Kelime kaybolma animasyonu ve feedback
+                    harfEl.classList.add('fade-out');
+                    harfCountdownBoxEl.style.opacity = '0'; 
+                    feedbackEl.innerHTML = '<span class="feedback-text wrong-text">SÜRE DOLDU!</span>';
+                    
+                    setTimeout(displayNewKelime, 1000); 
+                }
+            }, 1000);
+
+            clearTimeout(harfTimeout);
+        }
+
+        // =================================================================
+        // KELİME SEÇİMİ VE GÖSTERİMİ
+        // =================================================================
+
+        function getRandomItem(arr) {
+            // Karışık diziden sırayla alıyoruz
+            if (kelimeIndex >= arr.length) {
+                 // Karışık liste bittiğinde tekrar karıştırılacak
+                 return null;
+            }
+            return arr[kelimeIndex++];
+        }
+
+        function generateChoices(correctOsmanlicaKelime) {
+            const correctName = kelimeListesi[correctOsmanlicaKelime];
+            // Tüm Latin okunuşlarını al
+            const allNames = latinOkunuslar.filter(n => n !== correctName);
+            
+            // 4 Yanlış cevap seçimi
+            let wrongNames = [];
+            
+            // Yeterli yanlış cevap bulana kadar döngü
+            while (wrongNames.length < 4 && allNames.length > 0) {
+                // Rastgele bir yanlış okunuş seç
+                const randomIndex = Math.floor(Math.random() * allNames.length);
+                const randomName = allNames[randomIndex];
+                
+                if (!wrongNames.includes(randomName)) {
+                    wrongNames.push(randomName);
+                }
+            }
+            
+            const allChoices = [correctName, ...wrongNames];
+            
+            // Şıkları karıştır 
+            allChoices.sort(() => Math.random() - 0.5); 
+            
+            // Şıkları oluştur ve ekrana bas
+            choicesContainer.innerHTML = '';
+            // Şık sayısı kadar döner (max 5)
+            allChoices.forEach((choiceName, index) => {
+                const letter = secenekler[index];
+                const button = document.createElement('button');
+                button.className = 'choice-button';
+                
+                button.innerHTML = `<span class="choice-letter">${letter})</span> ${choiceName}`; 
+                
+                button.dataset.name = choiceName;
+                button.addEventListener('click', () => {
+                    checkAnswer(choiceName, correctName);
+                });
+                choicesContainer.appendChild(button);
+            });
+        }
+
+        function displayNewKelime() {
+            if (timeLeft <= 0) return;
+            
+            // Karışık listedeki kelimeler bittiyse, listeyi tekrar karıştır
+            if (kelimeIndex >= shuffledKelimeler.length) {
+                shuffleArray(shuffledKelimeler);
+                kelimeIndex = 0;
+            }
+
+            clearInterval(harfInterval);
+            clearTimeout(harfTimeout);
+            
+            // Animasyonları sıfırla
+            harfEl.classList.remove('fade-out');
+            harfCountdownBoxEl.style.opacity = '1';
+            feedbackEl.innerHTML = ''; 
+
+            currentOsmanlicaKelime = getRandomItem(shuffledKelimeler); // Karışık diziden kelimeyi sırayla al
+            
+            // Kelime uzunluğuna göre font boyutunu dinamik olarak ayarla
+            const kelimeUzunlugu = currentOsmanlicaKelime.length;
+            
+            if (kelimeUzunlugu > 5) { 
+                // Uzun kelimeler için font boyutunu küçültüyoruz
+                harfEl.style.fontSize = '70px'; 
+            } else {
+                // Kısa kelimeler için normal boyutta kalsın
+                harfEl.style.fontSize = '100px';
+            }
+            
+            // YUMUŞAK GİRİŞ ANİMASYONU BAŞLANGIÇ AYARLARI
+            // Kelime ekranda görünmez ve hafif büyütülmüş olarak başlar
+            harfEl.style.opacity = '0';
+            harfEl.style.transform = 'translate(-50%, -60px) scale(1.1)'; 
+            
+            harfEl.textContent = currentOsmanlicaKelime;
+            
+            // Zorunlu gecikme olmadan hemen ardından hedef duruma geçilir (Belerme)
+            requestAnimationFrame(() => {
+                harfEl.style.opacity = '1';
+                harfEl.style.transform = 'translate(-50%, -60px) scale(1.0)';
+            });
+            
+            // Kelimenin doğru okunuşunu şıklar için kullan
+            generateChoices(currentOsmanlicaKelime);
+
+            startKelimeCountdown(); // Geri sayımı başlat
+        }
+
+        // =================================================================
+        // CEVAP KONTROLÜ
+        // =================================================================
+
+        function checkAnswer(selectedName, correctName) {
+            clearInterval(harfInterval); // Kelime geri sayımını durdur
+            clearTimeout(harfTimeout); 
+
+            // Tüm butonları devre dışı bırak
+            Array.from(choicesContainer.children).forEach(button => {
+                button.disabled = true;
+            });
+
+            if (selectedName === correctName) {
+                score += 10;
+                playAudio(audioCorrect); // DOĞRU SESİNİ ÇAL
+                
+                feedbackEl.innerHTML = `
+                    <span class="icon correct-text">✅</span> 
+                    <span class="feedback-text correct-text">DOĞRU! (+10 Puan)</span>
+                `;
+                
+                const correctButton = Array.from(choicesContainer.children).find(b => b.dataset.name === correctName);
+                if (correctButton) correctButton.style.backgroundColor = 'green';
+            } else {
+                playAudio(audioWrong); // YANLIŞ SESİNİ ÇAL
+                
+                feedbackEl.innerHTML = `
+                    <span class="icon wrong-text">❌</span> 
+                    <span class="feedback-text wrong-text">YANLIŞ!</span>
+                `;
+
+                const wrongButton = Array.from(choicesContainer.children).find(b => b.dataset.name === selectedName);
+                if (wrongButton) wrongButton.style.backgroundColor = 'red';
+                const correctButton = Array.from(choicesContainer.children).find(b => b.dataset.name === correctName);
+                if (correctButton) correctButton.style.backgroundColor = 'green';
+            }
+
+            scoreEl.textContent = `Puan: ${score}`;
+
+            // Kelime ve sayaç kaybolma animasyonu
+            harfEl.classList.add('fade-out');
+            harfCountdownBoxEl.style.opacity = '0';
+
+            // 1 saniye sonra yeni kelimeye geç
+            setTimeout(() => {
+                feedbackEl.innerHTML = '';
+                // Butonları tekrar etkinleştir (yeni soru için)
+                Array.from(choicesContainer.children).forEach(button => {
+                    button.disabled = false;
+                });
+                displayNewKelime(); // Yeni kelimeyi göster
+            }, 1000);
+        }
+
+        // =================================================================
+        // OYUN SONU
+        // =================================================================
+
+        function endGame() {
+            clearInterval(timerInterval);
+            clearInterval(harfInterval);
+            clearTimeout(harfTimeout);
+            
+            // CLOCK SESİNİ DURDUR
+            audioClock.pause(); 
+            audioClock.currentTime = 0;
+            
+            // Kelime ve şıkları temizle
+            quizAreaEl.innerHTML = ''; 
+
+            let endMessage;
+            
+            if (score >= 90) { 
+                endMessage = `
+                    <div style="text-align: center; font-size: 24px;">
+                        <span class="icon" style="font-size: 40px;">🏆🤩</span>
+                        <span class="feedback-text correct-text" style="font-size: 30px;">MÜKEMMEL! TEBRİKLER!</span>
+                    </div>
+                    <div class="final-score-display">
+                        ${score}
+                    </div>
+                    <span class="feedback-text">Toplam Puanınız</span>
+                    <button id="restart-button" class="restart-button" onclick="restartGame()">YENİDEN DENE</button>
+                `;
+                playAudio(audioCorrect); 
+            } else {
+                endMessage = `
+                    <div style="text-align: center; font-size: 24px;">
+                        <span class="icon correct-text">🌟</span>
+                        <span class="feedback-text">ETKİNLİK SONA ERDİ!</span>
+                    </div>
+                    <div class="final-score-display">
+                        ${score}
+                    </div>
+                    <span class="feedback-text">Toplam Puanınız</span>
+                    <button id="restart-button" class="restart-button" onclick="restartGame()">YENİDEN DENE</button>
+                `;
+                playAudio(audioCorrect); 
+            }
+
+            // Oyun sonu içeriği quiz-area'nın içine ortalanmış olarak yerleştirilir.
+            quizAreaEl.innerHTML = endMessage;
+            quizAreaEl.style.display = 'flex'; 
+        }
+
+        // =================================================================
+        // OYUNU YENİDEN BAŞLATMA
+        // =================================================================
+
+        function restartGame() {
+            // Değişkenleri sıfırla
+            timeLeft = totalDuration;
+            score = 0;
+            currentOsmanlicaKelime = '';
+
+            // Önceki oyun durumunu temizle
+            clearInterval(timerInterval);
+            clearInterval(harfInterval);
+            clearTimeout(harfTimeout);
+            
+            // Ekranları sıfırla
+            scoreEl.textContent = `Puan: 0`;
+            updateTimerDisplay(); 
+            
+            // Yeni oyunu başlat
+            startGameFlow();
+        }
+
+        // =================================================================
+        // BAŞLANGIÇ
+        // =================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sayfa yüklenince sadece zamanı göster (Başlangıç ekranı görünür)
+            updateTimerDisplay(); 
+            
+            // Başlat butonuna tıklandığında oyun akışını başlat
+            startButtonEl.addEventListener('click', startGameFlow);
+        });
+        // JavaScript Sonu
+    </script>
+
+</body>
+</html>
