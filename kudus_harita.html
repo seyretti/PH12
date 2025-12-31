@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kudüs İnteraktif Harita</title>
+    <style>
+        /* --- GENEL TASARIM --- */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- HARİTA ALANI --- */
+        .map-wrapper {
+            position: relative;
+            width: 95%; 
+            max-width: 850px; 
+            margin: 20px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            background-color: #fff;
+            border: 5px solid #fff;
+            line-height: 0;
+        }
+
+        .main-map-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* --- TIKLAMA NOKTALARI (HOTSPOTS) --- */
+        .hotspot {
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .hotspot:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+            transform: scale(1.1);
+            border: 2px solid #fff;
+        }
+
+        /* KONUMLAR (Senin resmine göre ayarlı) */
+        #spot-dome { top: 35%; left: 47%; width: 10%; height: 18%; }
+        #spot-chain { top: 41%; left: 56%; width: 7%; height: 13%; }
+        #spot-aqsa { top: 64%; left: 54%; width: 9%; height: 16%; }
+        #spot-wall { top: 44%; left: 37%; width: 7%; height: 13%; }
+        #spot-gate { top: 64%; left: 40%; width: 7%; height: 13%; }
+
+        /* --- MODAL (AÇILIR PENCERE) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background-color: #fff;
+            width: 800px;
+            max-width: 90%;
+            height: 450px;
+            display: flex;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        /* Sol Taraf: Bilgi */
+        .modal-info {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #fcfcfc;
+            border-right: 1px solid #eee;
+            overflow-y: auto;
+        }
+
+        .modal-badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            align-self: flex-start;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin: 0 0 15px 0;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Sağ Taraf: Galeri */
+        .modal-gallery {
+            flex: 1.3;
+            position: relative;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0; left: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .slide-img.active { opacity: 1; }
+
+        /* Hata Kutusu Stili */
+        .placeholder-box {
+            position: absolute;
+            top:0; left:0;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background-color: #eee; color: #777;
+            text-align: center; padding: 20px;
+            box-sizing: border-box;
+        }
+        .placeholder-icon { font-size: 40px; margin-bottom: 10px; }
+
+        /* Galeri Butonları */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.3);
+            color: white;
+            border: none;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 20;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+        .nav-btn:hover { background: rgba(255,255,255,1); color: #000; }
+        .prev-btn { left: 15px; }
+        .next-btn { right: 15px; }
+
+        /* Kapatma Butonu */
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: #fff;
+            color: #333;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 50;
+            font-weight: bold;
+        }
+        .close-btn:hover { color: #e74c3c; }
+
+        @media (max-width: 768px) {
+            .modal-card { flex-direction: column-reverse; height: 80vh; }
+            .modal-info { padding: 20px; flex: 1; }
+            .modal-gallery { flex: 1; height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="map-wrapper">
+        <img src="kh_resimler/kudus.jpg" alt="Kudüs Haritası" class="main-map-image">
+
+        <div class="hotspot" id="spot-dome" onclick="openModal('dome')" title="Kubbetü's-Sahra"></div>
+        <div class="hotspot" id="spot-chain" onclick="openModal('chain')" title="Zincir Kubbesi"></div>
+        <div class="hotspot" id="spot-aqsa" onclick="openModal('aqsa')" title="Mescid-i Aksa"></div>
+        <div class="hotspot" id="spot-wall" onclick="openModal('wall')" title="Burak Duvarı"></div>
+        <div class="hotspot" id="spot-gate" onclick="openModal('gate')" title="Babu'l Meğaribe"></div>
+    </div>
+
+    <div class="modal-overlay" id="modal-box">
+        <div class="modal-card">
+            <div class="close-btn" onclick="closeModal()">✕</div>
+            
+            <div class="modal-info">
+                <span class="modal-badge">KUTSAL MEKAN</span>
+                <h2 class="modal-title" id="m-title">Başlık</h2>
+                <p class="modal-desc" id="m-desc">Açıklama</p>
+            </div>
+
+            <div class="modal-gallery" id="gallery-container">
+                <button class="nav-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
+                <button class="nav-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- VERİTABANI ---
+        // Resim yolları "kh_resimler/DOSYA_ADI.jpg" olarak ayarlandı.
+        
+        const contentData = {
+            dome: {
+                title: "Kubbetü's-Sahra",
+                desc: "Harem-i Şerif'in kalbinde yer alan, altın kubbeli simge yapı. Hacer-i Muallak taşının üzerine inşa edilmiştir. İslam mimarisinin en eski örneklerindendir.",
+                images: ["kh_resimler/sahra1.jpg"] 
+            },
+            chain: {
+                title: "Zincir Kubbesi",
+                desc: "Kubbetü's-Silsile olarak bilinir. Altın kubbenin hemen doğusunda yer alan küçük ve zarif yapıdır. Harem'in tam orta noktası kabul edilir.",
+                images: ["kh_resimler/zincir1.jpg"]
+            },
+            aqsa: {
+                title: "Mescid-i Aksa",
+                desc: "Kıble Mescidi. Harem'in güney ucundaki kurşun kubbeli, Müslümanların ana ibadet mekanıdır. İlk kıblemizdir.",
+                images: ["kh_resimler/aksa1.jpg"]
+            },
+            wall: {
+                title: "Burak Duvarı",
+                desc: "Batı duvarı. Peygamberimizin Miraç gecesi Burak'ı bağladığı kabul edilen kutsal duvar. Tarihi dokusuyla Kudüs'ün en önemli noktalarındandır.",
+                images: ["kh_resimler/burak1.jpg"]
+            },
+            gate: {
+                title: "Babu'l-Meğaribe",
+                desc: "Faslılar Kapısı. Burak Duvarı meydanından Harem'e çıkan rampa girişidir. Tarih boyunca stratejik bir öneme sahip olmuştur.",
+                images: ["kh_resimler/megaribe1.jpg"]
+            }
+        };
+
+        // --- MANTIK KISMI ---
+        let currentSlide = 0;
+        let activeImages = [];
+        const modal = document.getElementById('modal-box');
+        const gallery = document.getElementById('gallery-container');
+
+        function openModal(id) {
+            const data = contentData[id];
+            if(!data) return;
+
+            document.getElementById('m-title').innerText = data.title;
+            document.getElementById('m-desc').innerText = data.desc;
+
+            // Slider'ı sıfırla
+            activeImages = data.images;
+            currentSlide = 0;
+            
+            // Eski resimleri temizle (butonlar hariç)
+            const oldImages = gallery.querySelectorAll('.slide-element');
+            oldImages.forEach(el => el.remove());
+
+            // Yeni resimleri ekle
+            activeImages.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src; 
+                img.classList.add('slide-img', 'slide-element');
+                if(index === 0) img.classList.add('active');
+
+                // HATA YÖNETİMİ: Resim adı yanlışsa veya dosya yoksa
+                img.onerror = function() {
+                    this.style.display = 'none'; 
+                    
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'placeholder-box slide-element';
+                    if(index === 0) placeholder.classList.add('active');
+                    placeholder.innerHTML = `
+                        <div class="placeholder-icon">⚠️</div>
+                        <div style="font-size:14px; color:#555;">
+                            <strong>${src}</strong><br>dosyası bulunamadı.<br>
+                            Klasör ismini ve dosya adını kontrol et.
+                        </div>
+                    `;
+                    gallery.appendChild(placeholder);
+                };
+
+                gallery.appendChild(img);
+            });
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function changeSlide(direction) {
+            const slides = gallery.querySelectorAll('.slide-element');
+            if(slides.length === 0) return;
+
+            slides[currentSlide].classList.remove('active');
+            slides[currentSlide].style.opacity = 0; 
+
+            currentSlide += direction;
+
+            if(currentSlide >= slides.length) currentSlide = 0;
+            if(currentSlide < 0) currentSlide = slides.length - 1;
+
+            slides[currentSlide].classList.add('active');
+            slides[currentSlide].style.opacity = 1;
+        }
+
+        // ESC tuşu
+        document.addEventListener('keydown', (e) => {
+            if(e.key === "Escape") closeModal();
+        });
+    </script>
+</body>
+</html>
