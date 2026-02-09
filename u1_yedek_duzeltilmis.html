@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12. Sınıf - 1. Ünite Değerlendirme: Kudüs</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Merriweather:wght@400;700;900&family=Oswald:wght@500;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Renk Paleti */
+            --primary: #107C91; /* Turkuaz */
+            --secondary: #ECA418; /* Hardal */
+            --bg-color: #eef2f5;
+            --text-color: #2c3e50;
+            --white: #ffffff;
+            
+            /* FONT AYARLARI */
+            --body-font: 'Open Sans', sans-serif;        
+            --serif-font: 'Merriweather', serif;        
+            --condensed-font: 'Oswald', sans-serif;     
+            --geometric-font: 'Jost', sans-serif;        
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--body-font);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* --- ANA ÇERÇEVE --- */
+        .main-frame {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid #d1d9e6;
+        }
+
+        /* --- HEADER TASARIMI --- */
+        header {
+            background-color: var(--primary);
+            height: 140px; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-bottom: 4px solid var(--secondary);
+        }
+
+        .header-sub-line {
+            width: 100%;
+            height: 1px; 
+            background-color: var(--primary);
+        }
+
+        /* 1. Katman: Beyaz Çizgi */
+        .header-shape-white {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 110px; 
+            background-color: white;
+            clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
+            z-index: 1;
+        }
+
+        /* 2. Katman: Hardal Alan */
+        .header-shape-secondary {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 102px; 
+            background-color: var(--secondary);
+            clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-right: 25px; 
+        }
+
+        /* Sol Taraftaki Yazı Grubu */
+        .header-left-content {
+            font-family: var(--condensed-font);
+            color: white; 
+            -webkit-text-stroke: 5px var(--primary); 
+            paint-order: stroke fill; 
+            line-height: 1;
+            text-align: center;
+            transform: none; 
+        }
+
+        .h-number {
+            font-size: 3.8rem; 
+            font-weight: 800;
+            display: block;
+            line-height: 0.8;
+            letter-spacing: -1px;
+        }
+        
+        .h-text {
+            font-size: 1.6rem; 
+            font-weight: 800;
+            display: block;
+            margin-top: 12px; 
+            letter-spacing: 0px;
+        }
+
+        /* Sağ Taraftaki Yazı Grubu */
+        .header-right-content {
+            position: relative;
+            z-index: 3;
+            margin-left: 110px; 
+            width: calc(100% - 110px);
+            padding: 10px 15px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* 1. Satır: 12.SINIF... */
+        .header-line-1 {
+            font-family: var(--serif-font);
+            font-size: 1rem;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+            line-height: 1.2;
+        }
+        .header-line-1 span:first-child { 
+            font-weight: 800; 
+            letter-spacing: 0.5px;
+        }
+        .header-line-1 span:last-child {
+            font-weight: 600;
+            opacity: 0.95;
+        }
+
+        /* 2. Satır: KUDÜS... */
+        .header-line-2 {
+            font-family: var(--condensed-font);
+            font-size: 1.25rem; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+            margin-bottom: 6px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* 3. Satır: 1.Ünite... */
+        .header-line-3 {
+            font-family: var(--geometric-font);
+            font-size: 2rem;
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        /* --- İÇERİK ALANI --- */
+        .content-area { padding: 25px; }
+
+        /* --- KONTROL PANELİ --- */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .info-text { font-weight: 700; font-size: 1rem; color: var(--primary); }
+        .right-controls { display: flex; align-items: center; gap: 10px; }
+        .view-label { font-size: 0.9rem; color: #555; font-weight: 600; }
+        
+        .mode-toggle {
+            display: flex; gap: 5px; align-items: center;
+            background: #e9ecef; padding: 4px; border-radius: 20px;
+        }
+        .switch-btn {
+            background: transparent; border: none; padding: 6px 14px;
+            border-radius: 16px; cursor: pointer; transition: all 0.3s;
+            font-size: 0.85rem; font-family: var(--body-font);
+            font-weight: 600; color: #666;
+        }
+        .switch-btn.active {
+            background: var(--white); color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* --- SORU KARTLARI --- */
+        .question-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .question-card::after {
+            content: ''; position: absolute; left: 0; top: 15px; bottom: 15px;
+            width: 4px; background-color: var(--secondary); border-radius: 0 4px 4px 0;
+        }
+
+        .q-header {
+            display: flex; justify-content: space-between; margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 700; 
+            font-size: 1.1rem; letter-spacing: 0.5px;
+            border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;
+        }
+
+        .q-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #2c3e50;
+            letter-spacing: -0.1px;
+        }
+
+        /* Boşluk Doldurma Satırları */
+        .fill-blank-row {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .fill-blank-row:last-child { border-bottom: none; }
+
+        /* --- SEÇENEKLER --- */
+        .options-list { list-style: none; padding: 0; margin: 0; }
+        .option-item { margin-bottom: 10px; }
+        
+        .option-label {
+            display: flex; align-items: center; padding: 12px 15px;
+            border: 1px solid #d1d9e6; border-radius: 8px; cursor: pointer;
+            transition: 0.2s; background-color: #fff;
+            font-size: 0.95rem; 
+            color: #34495e;
+            font-weight: 600; 
+        }
+        .option-label:hover { 
+            border-color: var(--primary); 
+            background-color: #f0f7f9; 
+        }
+        
+        input[type="radio"] { margin-right: 15px; accent-color: var(--primary); transform: scale(1.3); }
+
+        /* --- D/Y TABLOSU --- */
+        .tf-container { margin-bottom: 15px; }
+        .tf-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #eee;
+        }
+        .tf-statement {
+            flex: 1; padding-right: 20px; font-size: 0.95rem;
+            font-weight: 600; color: #34495e;
+        }
+        .tf-options {
+            display: flex; gap: 20px; min-width: 150px; justify-content: flex-end;
+        }
+        .tf-option-label {
+            display: flex; align-items: center; font-size: 0.9rem;
+            font-weight: 600; color: #555; cursor: pointer;
+        }
+        .tf-option-label input { margin-right: 6px; transform: scale(1.2); accent-color: var(--primary); }
+
+        /* --- BOŞLUK DOLDURMA --- */
+        select {
+            padding: 8px 10px; border: 1px solid #aaa; border-radius: 4px;
+            font-family: var(--body-font); font-weight: 600; color: #333;
+            cursor: pointer; background: #fff; margin: 0 5px;
+        }
+
+        /* --- BUTONLAR --- */
+        .action-btn {
+            background-color: var(--secondary); color: white; border: none;
+            padding: 12px 30px; border-radius: 6px; font-size: 1.0rem;
+            cursor: pointer; font-weight: 700; font-family: var(--body-font);
+            margin-top: 15px; transition: 0.2s; box-shadow: 0 3px 6px rgba(236, 164, 24, 0.25);
+        }
+        .action-btn:hover { background-color: #d69212; transform: translateY(-2px); }
+        .action-btn:disabled { background-color: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .nav-container {
+            display: flex;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        #btn-prev { margin-right: auto; }
+        #btn-next { margin-left: auto; }
+
+        .nav-btn {
+            background-color: var(--text-color); color: white; border: none;
+            padding: 10px 25px; border-radius: 6px; cursor: pointer;
+            font-weight: 600; font-family: var(--body-font); font-size: 0.95rem;
+        }
+        .nav-btn:hover { opacity: 0.9; }
+
+        /* --- BİTİRME BUTONU --- */
+        .finish-btn-container {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 2px dashed #e0e0e0;
+        }
+        
+        .finish-btn {
+            background-color: var(--primary); /* Koyu Turkuaz */
+            color: var(--secondary);          /* Hardal */
+            font-size: 1.2rem;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 800;
+            font-family: var(--condensed-font);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(16, 124, 145, 0.3);
+        }
+
+        .finish-btn:disabled {
+            background-color: #95a5a6;
+            color: #ecf0f1;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+
+        .finish-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(16, 124, 145, 0.4);
+        }
+
+        /* --- GERİ BİLDİRİM KUTUSU GÜNCELLEMESİ --- */
+        .feedback {
+            margin-top: 25px; 
+            padding: 20px; 
+            border-radius: 8px; 
+            display: none;
+            font-family: 'Open Sans', sans-serif; 
+            font-size: 0.95rem; 
+            font-weight: 600;    
+            line-height: 1.6;
+        }
+        /* Başlık stili */
+        .feedback strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 4px; 
+            font-weight: 800; 
+        }
+
+        .feedback.correct { background-color: #e6ffed; color: #0d5a28; border: 1px solid #b7ebc7; }
+        .feedback.incorrect { background-color: #ffeef0; color: #8a1f2d; border: 1px solid #fadbd8; }
+
+        /* --- SONUÇ --- */
+        #result-screen { display: none; text-align: center; padding: 50px 20px; }
+        .score-circle {
+            width: 150px; height: 150px; border-radius: 50%; background: var(--primary);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 2.8rem; font-weight: 800; margin: 0 auto 25px;
+            border: 8px solid var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .hidden { display: none !important; }
+        
+        .progress-container {
+            width: 100%; background-color: #e0e0e0; height: 6px;
+            margin-top: 10px; border-radius: 3px; display: none; overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%; background-color: var(--secondary); width: 0%; transition: width 0.3s;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            header { height: auto; flex-direction: column; padding: 0; }
+            .header-shape-white, .header-shape-secondary { width: 100%; clip-path: none; position: relative; height: 100px; padding-right: 0;}
+            .header-right-content { width: 100%; margin: 0; background: var(--primary); padding: 20px; }
+            .header-shape-white { display: none; } 
+            .header-shape-secondary { width: 100%; clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%); }
+            
+            .content-area { padding: 15px; }
+            .view-label { display: none; }
+            .tf-row { flex-direction: column; align-items: flex-start; }
+            .tf-options { margin-top: 10px; width: 100%; justify-content: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-frame">
+        
+        <header>
+            <div class="header-shape-white"></div>
+            
+            <div class="header-shape-secondary">
+                <div class="header-left-content">
+                    <span class="h-number">1.</span>
+                    <span class="h-text">ÜNİTE</span>
+                </div>
+            </div>
+
+            <div class="header-right-content">
+                <div class="header-line-1">
+                    <span>12.SINIF</span>
+                    <span>Peygamberimizin Hayatı</span>
+                </div>
+                
+                <div class="header-line-2">
+                    PEYGAMBERİMİZİN HAYATINDA ÖNEMLİ BİR ŞEHİR: KUDÜS
+                </div>
+
+                <div class="header-line-3">
+                    1.Ünite Ölçme ve Değerlendirme
+                </div>
+            </div>
+        </header>
+        
+        <div class="header-sub-line"></div>
+
+        <div class="content-area">
+            
+            <div id="quiz-panel">
+                <div class="controls">
+                    <div class="info-text">
+                        Soru: <span id="progress-text">1/14</span>
+                    </div>
+                    
+                    <div class="right-controls">
+                        <span class="view-label">Sorular nasıl görüntülensin?</span>
+                        <div class="mode-toggle">
+                            <button class="switch-btn active" id="btn-scroll" onclick="setMode('scroll')">Liste</button>
+                            <button class="switch-btn" id="btn-slide" onclick="setMode('slide')">Tek tek</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-container" id="prog-bar-cont">
+                    <div class="progress-bar" id="prog-bar"></div>
+                </div>
+            </div>
+
+            <div id="questions-container"></div>
+
+            <div id="slide-nav" class="nav-container hidden">
+                <button id="btn-prev" class="nav-btn" onclick="prevSlide()">Önceki</button>
+                <button id="btn-next" class="nav-btn" style="background-color: var(--primary);" onclick="nextSlide()">Sonraki</button>
+            </div>
+
+            <div class="finish-btn-container">
+                <button id="finish-btn" class="finish-btn" onclick="showResults()" disabled>Sonuçlarımı Göreyim</button>
+            </div>
+
+            <div id="result-screen">
+                <h2 style="color: var(--text-color); margin-bottom: 15px;">Tüm Sorular Cevaplandı.</h2>
+                <p style="font-size: 1.2rem; font-weight: 600; color: #555; margin-bottom: 15px;">TOPLAM PUAN:</p>
+                <div class="score-circle" id="final-score">0</div>
+                <div id="final-details" style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">
+                    </div>
+                <button class="action-btn" onclick="location.reload()">Etkinliği Tekrarla</button>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+    const questions = [
+        { 
+            id: 2, 
+            type: "mcq", 
+            title: "SORU 1", 
+            text: "Hz. Musa (as) kavmini Mısır'dan çıkarıp Kudüs'e doğru götürdüğünde, İsrailoğulları'nın Kudüs'e girmekten geri durması üzerine onlara verilen ceza nedir?", 
+            options: [ "A) Mısır'a geri dönmeleri emredildi.", "B) Kırk yıl yeryüzünde şaşkın şaşkın dolaşmaya mahkûm edildiler.", "C) Mekke'ye sürgün edildiler.", "D) Kudüs'te köle olarak yaşamaya zorlandılar.", "E) On yıl çölde beklemeleri istendi." ], 
+            correctIndex: 1, 
+            explanation: "İsrailoğulları, Tih çölünde kırk yıl boyunca şaşkın bir halde dolaşmaya mahkûm edilmişlerdir." 
+        },
+        { 
+            id: 4, 
+            type: "true_false_multi", 
+            title: "SORU 2", 
+            text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", 
+            items: [ 
+                {txt: "Mescid-i Aksa, 'uzak mescit' anlamına gelir ve Mekke'ye uzak olması sebebiyle bu şekilde adlandırılmıştır.", ans: true}, 
+                {txt: "Mescid-i Aksa, Mescid-i Nebevi'den sonra yapılan ikinci mabettir.", ans: false}, 
+                {txt: "Beytü'l-Makdis'in en büyük yıkımı M.Ö. 586 yılında Babil Kralı Nabukadnezar zamanında yaşanmıştır.", ans: true}, 
+                {txt: "Romalılar, Mescid-i Aksa’ya tanrı heykelleri yerleştirerek mabedi bir dönem pagan tapınağı olarak kullanmışlardır.", ans: true} 
+            ], 
+            explanation: "Mescid-i Aksa, Mescid-i Haram'dan sonra inşa edilen yeryüzündeki ikinci mabettir." 
+        },
+        { 
+            id: 8, 
+            type: "mcq", 
+            title: "SORU 3", 
+            text: "Emeviler döneminde inşa edilen ve bugün hâlâ ayakta duran, İslam mimarisinin ilk abidevi eserlerinden biri olarak kabul edilen yapı aşağıdakilerden hangisidir?", 
+            options: [ "A) Mescid-i Nebevi", "B) Kıble Mescidi", "C) Kubbetü's-Sahra", "D) Kasımpasa Şadırvanı", "E) Kayıtbay Sebili" ], 
+            correctIndex: 2, 
+            explanation: "Kubbetü's-Sahra, Emeviler döneminde Abdülmelik b. Mervan tarafından yaptırılmıştır." 
+        },
+        { 
+            id: 9, 
+            type: "true_false_multi", 
+            title: "SORU 4", 
+            text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", 
+            items: [ 
+                {txt: "Müslümanlar, Medine'ye hicretten sonra yaklaşık on yedi ay boyunca namazlarını Mescid-i Aksa'ya dönerek kılmışlardır.", ans: true}, 
+                {txt: "Kâbe, Hz. İbrahim (as) ve Hz. İshak (as) tarafından inşa edilmiştir.", ans: false}, 
+                {txt: "Kudüs surları, Kanuni Sultan Süleyman zamanında yeniden inşa edilmiş ve bugün hâlâ ayaktadır.", ans: true}, 
+                {txt: "Haçlı işgali yaklaşık elli yıl sürmüştür.", ans: false} 
+            ], 
+            explanation: "Kâbe Hz. İbrahim ve Hz. İsmail tarafından inşa edilmiştir. Haçlı işgali yaklaşık 88 yıl sürmüştür." 
+        },
+        { 
+            id: 10, 
+            type: "mcq", 
+            title: "SORU 5", 
+            text: "\"Uzun bir kuşatmanın ardından Kudüs şehri, Müslüman ordusuna teslim oldu. Ancak halk, şehrin sadece belirli bir kişiye teslim edileceğini belirtti...\"<br><br>Metinde anlatılan olayda şehri teslim alan kişi ve bu olayın gösterdiği temel değer hangisidir?", 
+            options: [ "A) Hz. Ebu Bekir (ra) – Cesaret", "B) Hz. Ömer (ra) – Adalet ve hoşgörü", "C) Hz. Osman (ra) – Cömertlik", "D) Hz. Ali (ra) – Kahramanlık", "E) Selahaddin Eyyubi – Strateji" ], 
+            correctIndex: 1, 
+            explanation: "Şehri bizzat Hz. Ömer teslim almış ve halka can/mal güvenliği tanıyan bir emanname vererek adalet ve hoşgörü örneği sergilemiştir." 
+        },
+        { 
+            id: 11, 
+            type: "mcq", 
+            title: "SORU 6", 
+            text: "Haçlıların elindeki Kudüs'ü 1187 yılında geri alan komutan ve bu zaferin kazanıldığı savaş aşağıdakilerden hangisinde doğru verilmiştir?", 
+            options: [ "A) Nureddin Zengi – Ayn Calut Savaşı", "B) Selahaddin Eyyubi – Hıttin Savaşı", "C) Baybars – Moğol Savaşı", "D) Yavuz Sultan Selim – Mercidabık Savaşı", "E) Kanuni Sultan Süleyman – Mohaç Savaşı" ], 
+            correctIndex: 1, 
+            explanation: "Selahaddin Eyyubi, Hıttin Savaşı'nda Haçlıları mağlup ederek Kudüs'ü geri almıştır." 
+        },
+        { 
+            id: 12, 
+            type: "fill_blank", 
+            title: "SORU 7", 
+            text: ["a) {input0} yılında Kudüs'ün de içinde bulunduğu Filistin toprakları İngiliz egemenliğine girmiştir.", 
+                   "b) {input1} dışişleri bakanı Arthur James {input2}, Filistin'de bir Yahudi ulusal devletinin kurulmasını destekleyeceğini açıklamıştır.", 
+                   "c) {input3} yılında İsrail Devleti ilan edilmiş ve yüz binlerce Filistinli Müslüman topraklarından sürülmüştür. Bu olay Filistinlilerce {input4} (büyük felaket) olarak adlandırılır."], 
+            options: ["1917", "Nekbe", "Balfour", "1948", "İngiltere"], 
+            answers: ["1917", "İngiltere", "Balfour", "1948", "Nekbe"], 
+            explanation: "1917'de İngiliz işgali başlamış, 1948'de İsrail kurulmuş ve Filistinliler Nekbe'yi (Büyük Felaket) yaşamıştır." 
+        },
+        { 
+            id: 13, 
+            type: "mcq", 
+            title: "SORU 8", 
+            text: "Mescid-i Aksa içinde yer alan ve Peygamber Efendimizin (sav) Miraç Gecesi'nde Burak'ı bağladığına inanılan, Yahudiler tarafından ise \"Ağlama Duvarı\" olarak bilinen yapı aşağıdakilerden hangisidir?", 
+            options: [ "A) Silsile Kubbesi", "B) Nebi Kubbesi", "C) Miraç Kubbesi", "D) Burak Duvarı", "E) Kayıtbay Sebili" ], 
+            correctIndex: 3, 
+            explanation: "Müslümanlar için Burak Duvarı, Yahudiler için Ağlama Duvarı olarak bilinir." 
+        },
+        { 
+            id: 14, 
+            type: "true_false_multi", 
+            title: "SORU 9", 
+            text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", 
+            items: [ 
+                {txt: "Mescid-i Nebevi, sadece bir ibadethane olarak kullanılmış, başka işlevleri olmamıştır.", ans: false}, 
+                {txt: "Osmanlı padişahları, Hicaz bölgesinin fethinden sonra 'Hadimü'l-Haremeyn' (İki Kutsal Mekânın Hizmetkârı) unvanını kullanmışlardır.", ans: true}, 
+                {txt: "Hz. Yakup'un (as) bir diğer ismi 'İsrail'dir ve İsrailoğulları'nın atası olarak kabul edilir.", ans: true}, 
+                {txt: "Kudüs, Osmanlı döneminde yalnızca Müslümanların yaşadığı bir şehir olmuştur.", ans: false} 
+            ], 
+            explanation: "Mescid-i Nebevi eğitim, siyaset ve sosyal hayatın merkeziydi. Kudüs Osmanlı döneminde çok dinli bir yapıdaydı." 
+        },
+        { 
+            id: 15, 
+            type: "mcq", 
+            title: "SORU 10", 
+            text: "Aşağıdakilerden hangisi Mescid-i Nebevi'nin Medine döneminde üstlendiği işlevlerden biri değildir?", 
+            options: [ "A) Hutbelerin irat edildiği ve eğitim faaliyetlerinin yürütüldüğü bir merkez", "B) Devlet işlerinin konuşulduğu ve elçilerin kabul edildiği siyasi merkez", "C) Hac ibadetinin yerine getirildiği ana mekân", "D) Misafirlerin konaklayabileceği bir yer", "E) Savaş ve barışa dair stratejik kararların alındığı mekân" ], 
+            correctIndex: 2, 
+            explanation: "Hac ibadeti Mekke'de, Kâbe ve çevresindeki kutsal mekanlarda yerine getirilir." 
+        },
+        { 
+            id: 16, 
+            type: "fill_blank", 
+            title: "SORU 11", 
+            text: [
+                "Aşağıdaki mimari yapıları, verilen özelliklerden uygun olanlarla eşleştiriniz:",
+                "1. Kubbetü's-Sahra: {input0}", 
+                "2. Kasımpasa Şadırvanı: {input1}", 
+                "3. Kıble Mescidi: {input2}", 
+                "4. Kayıtbay Sebili: {input3}"
+            ], 
+            options: [ "A) Osmanlı Devleti'nin Kudüs'te yaptırdığı ilk hatırasıdır (1527)", "B) Memlük Sultanı Kayıtbey tarafından yaptırılmış, kubbe oymalarıyla ün kazanmıştır (1482)", "C) Emeviler Dönemi’nde inşa edilen, altın renkli kubbesi ile tanınan yapıdır.", "D) Kurşuni renkli kubbesiyle bilinen, Hz. Ömer mescidinin yerine inşa edilen camidir" ], 
+            answers: [ "C) Emeviler Dönemi’nde inşa edilen, altın renkli kubbesi ile tanınan yapıdır.", "A) Osmanlı Devleti'nin Kudüs'te yaptırdığı ilk hatırasıdır (1527)", "D) Kurşuni renkli kubbesiyle bilinen, Hz. Ömer mescidinin yerine inşa edilen camidir", "B) Memlük Sultanı Kayıtbey tarafından yaptırılmış, kubbe oymalarıyla ün kazanmıştır (1482)" ], 
+            explanation: "1-C, 2-A, 3-D, 4-B." 
+        },
+        { 
+            id: 18, 
+            type: "fill_blank", 
+            title: "SORU 12", 
+            text: [
+                "Aşağıdaki metinde boş bırakılan yerleri, verilen seçeneklerden uygun olanlarla tamamlayınız:",
+                "a) Hz. İbrahim'in (as) peygamberlik verilen büyük oğlu {input0}, küçük yaşta annesi Hacer ile birlikte {input1} 'ye götürülüp yerleştirilmiştir.", 
+                "b) Hz. İbrahim'in (as) diğer oğlu {input2} ise tevhit mücadelesini {input3} 'te sürdürmüştür.", 
+                "c) {input4} 'in soyu, Hz. İsmail üzerinden Hz. İbrahim'e dayanmaktadır."
+            ], 
+            options: ["Hz. İsmail", "Hz. İshak", "Mekke", "Kudüs", "Hz. Muhammed (sav)"], 
+            answers: ["Hz. İsmail", "Mekke", "Hz. İshak", "Kudüs", "Hz. Muhammed (sav)"], 
+            explanation: "Hz. İsmail Mekke'de, Hz. İshak Kudüs/Filistin bölgesinde yaşamıştır. Peygamberimiz Hz. İsmail soyundandır." 
+        },
+        { 
+            id: 19, 
+            type: "mcq", 
+            title: "SORU 13", 
+            text: "Kudüs'ü Osmanlı hâkimiyetine katan padişah ve bu olayın gerçekleştiği tarih aşağıdakilerden hangisinde doğru verilmiştir?", 
+            options: [ "A) Fatih Sultan Mehmet – 1453", "B) Yavuz Sultan Selim – 1517", "C) Kanuni Sultan Süleyman – 1520", "D) II. Selim – 1571", "E) II. Abdülhamid – 1876" ], 
+            correctIndex: 1, 
+            explanation: "Yavuz Sultan Selim, 1516 Mercidabık zaferinden sonra 1517'de Kudüs'ü Osmanlı topraklarına katmıştır." 
+        },
+        { 
+            id: 20, 
+            type: "true_false_multi", 
+            title: "SORU 14", 
+            text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", 
+            items: [ 
+                {txt: "Kudüs, üç semavi din (İslamiyet, Hristiyanlık, Yahudilik) için kutsal kabul edilen bir şehirdir.", ans: true}, 
+                {txt: "Hz. İsa (as), Kudüs'te doğmuş, tebliğ mücadelesini burada sürdürmüş ve Allah'ın katına buradan yükseltilmiştir.", ans: true}, 
+                {txt: "Mescid-i Aksa, 144 dönümlük bir alan olup tek bir cami değildir, içinde tarihî cami, medrese, kubbe ve sebil gibi yapılar bulunmaktadır.", ans: true}, 
+                {txt: "1967 Altı Gün Savaşı'nda İsrail, sadece Batı Kudüs'ü işgal etmiştir.", ans: false} 
+            ], 
+            explanation: "İsrail 1967'de Doğu Kudüs'ü de işgal etmiştir." 
+        }
+    ];
+
+    let currentMode = 'scroll'; 
+    let currentSlide = 0;
+    
+    // Puanlama Değişkenleri
+    let currentScore = 0;      // Toplam Puan
+    let earnedPoints = 0;      // O anki sorudan alınan puan
+    let maxPossibleScore = 0;  // O anki sorunun maksimum puanı
+
+    let answeredCount = 0;
+    
+    // İstatistikler (Sadece doğru/yanlış sayısı için)
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    // Sayfa yüklendiğinde direkt başla
+    window.onload = function() {
+        renderQuestions();
+        updateProgress();
+        if(currentMode === 'slide') updateNavVisibility();
+    };
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.getElementById('btn-scroll').classList.toggle('active', mode === 'scroll');
+        document.getElementById('btn-slide').classList.toggle('active', mode === 'slide');
+        
+        const cards = document.querySelectorAll('.question-card-item');
+        const slideNav = document.getElementById('slide-nav');
+        const progBarCont = document.getElementById('prog-bar-cont');
+
+        if (mode === 'scroll') {
+            cards.forEach(card => card.classList.remove('hidden'));
+            slideNav.classList.add('hidden');
+            progBarCont.style.display = 'none';
+        } else {
+            cards.forEach((card, index) => {
+                if(index === currentSlide) card.classList.remove('hidden');
+                else card.classList.add('hidden');
+            });
+            slideNav.classList.remove('hidden');
+            progBarCont.style.display = 'block';
+            updateNavVisibility();
+        }
+        updateProgress();
+    }
+
+    function updateNavVisibility() {
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        
+        if (!btnPrev || !btnNext) return;
+
+        if (currentSlide === 0) {
+            btnPrev.classList.add('hidden');
+        } else {
+            btnPrev.classList.remove('hidden');
+        }
+
+        if (currentSlide === questions.length - 1) {
+            btnNext.classList.add('hidden');
+        } else {
+            btnNext.classList.remove('hidden');
+        }
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questions-container');
+        container.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            let html = `<div class="question-card question-card-item" id="card-${index}">`;
+            html += `<div class="q-header">${q.title}</div>`;
+            
+            if (q.type === 'mcq') {
+                html += `<div class="q-text">${q.text}</div>`;
+                html += `<ul class="options-list">`;
+                q.options.forEach((opt, i) => {
+                    html += `<li class="option-item">
+                                <label class="option-label">
+                                    <input type="radio" name="q${index}" value="${i}">
+                                    ${opt}
+                                </label>
+                             </li>`;
+                });
+                html += `</ul>`;
+            } 
+            else if (q.type === 'fill_blank') {
+                let formattedText = '<div class="q-text">';
+                if(Array.isArray(q.text)) {
+                    q.text.forEach(line => {
+                        let lineHtml = line;
+                        lineHtml = lineHtml.replace(/{input(\d+)}/g, function(match, number) {
+                            let i = parseInt(number);
+                            let dropdown = `<select id="q${index}_sel${i}"><option value="">Seçiniz...</option>`;
+                            q.options.forEach(opt => {
+                                dropdown += `<option value="${opt}">${opt}</option>`;
+                            });
+                            dropdown += `</select>`;
+                            return dropdown;
+                        });
+                        formattedText += `<div class="fill-blank-row">${lineHtml}</div>`;
+                    });
+                } else {
+                    let tempText = q.text;
+                    q.answers.forEach((ans, i) => {
+                        let dropdown = `<select id="q${index}_sel${i}"><option value="">Seçiniz...</option>`;
+                        q.options.forEach(opt => {
+                            dropdown += `<option value="${opt}">${opt}</option>`;
+                        });
+                        dropdown += `</select>`;
+                        tempText = tempText.replace(`{input${i}}`, dropdown);
+                    });
+                    formattedText += tempText;
+                }
+                formattedText += '</div>';
+                html += formattedText;
+            }
+            else if (q.type === 'true_false_multi') {
+                html += `<div class="q-text">${q.text}</div>`;
+                html += `<div class="tf-container">`;
+                q.items.forEach((item, i) => {
+                    html += `<div class="tf-row">
+                                <div class="tf-statement">${item.txt}</div>
+                                <div class="tf-options">
+                                    <label class="tf-option-label">
+                                        <input type="radio" name="q${index}_row${i}" value="true"> Doğru
+                                    </label>
+                                    <label class="tf-option-label">
+                                        <input type="radio" name="q${index}_row${i}" value="false"> Yanlış
+                                    </label>
+                                </div>
+                             </div>`;
+                });
+                html += `</div>`;
+            }
+
+            html += `<button class="action-btn" onclick="checkAnswer(${index})">Kontrol Et</button>`;
+            html += `<div class="feedback" id="feedback-${index}"></div>`;
+            html += `</div>`;
+            
+            container.innerHTML += html;
+        });
+
+        setMode(currentMode);
+    }
+
+    function checkAnswer(index) {
+        const q = questions[index];
+        const feedbackEl = document.getElementById(`feedback-${index}`);
+        const btn = document.querySelector(`#card-${index} .action-btn`);
+        
+        let questionScore = 0;
+        let questionMaxScore = 0;
+        let isFullyCorrect = false; 
+        
+        // Hata Detaylarını Tutacak Değişken
+        let errorDetails = "";
+
+        // --- ÇOKTAN SEÇMELİ (6 PUAN) ---
+        if (q.type === 'mcq') {
+            questionMaxScore = 6; 
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            
+            if (!selected) { alert('Lütfen bir seçenek işaretleyiniz.'); return; }
+            
+            if (parseInt(selected.value) === q.correctIndex) {
+                questionScore = 6;
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+            }
+        } 
+        // --- BOŞLUK DOLDURMA & EŞLEŞTİRME (HER KUTU 3 PUAN) ---
+        else if (q.type === 'fill_blank') {
+            let totalBlanks = q.answers.length;
+            questionMaxScore = totalBlanks * 3;
+            let correctMatches = 0;
+            let errorList = [];
+
+            for(let i=0; i<totalBlanks; i++) {
+                let el = document.getElementById(`q${index}_sel${i}`);
+                if (!el) continue;
+                
+                let userVal = el.value;
+                let correctVal = q.answers[i];
+
+                if(userVal === correctVal) {
+                    correctMatches++;
+                } else {
+                    // Hatalı cevapları listeye ekle
+                    // Basit bir etiketleme mantığı (1., 2. veya a, b)
+                    let label = (i+1) + ". boşluk/eşleşme";
+                    if(Array.isArray(q.text) && q.text[i] && q.text[i].trim().startsWith("a)")) label = "a)";
+                    else if(Array.isArray(q.text) && q.text[i] && q.text[i].trim().startsWith("b)")) label = "b)";
+                    else if(Array.isArray(q.text) && q.text[i] && q.text[i].trim().startsWith("c)")) label = "c)";
+                    
+                    errorList.push(`<li><strong>${label}</strong> Sizin cevabınız: "${userVal || 'Boş'}" <br> &nbsp;&nbsp;&nbsp;-> Doğrusu: <strong>"${correctVal}"</strong></li>`);
+                }
+            }
+            
+            questionScore = correctMatches * 3;
+            
+            if(correctMatches === totalBlanks) {
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+                // Hata mesajını oluştur
+                if(errorList.length > 0) {
+                    errorDetails = `<div style="margin-top:10px; font-size:0.9rem; color:#8a1f2d;"><strong>Hatalı Eşleştirmeler/Boşluklar:</strong><ul style="margin-top:5px; padding-left:20px;">${errorList.join('')}</ul></div>`;
+                }
+            }
+        }
+        // --- DOĞRU / YANLIŞ (HER SATIR 1 PUAN) ---
+        else if (q.type === 'true_false_multi') {
+            let totalItems = q.items.length;
+            questionMaxScore = totalItems * 1;
+            let correctItems = 0;
+            let answeredAll = true;
+            let errorList = [];
+
+            for(let i=0; i<totalItems; i++) {
+                const radios = document.querySelectorAll(`input[name="q${index}_row${i}"]:checked`);
+                if (radios.length === 0) { answeredAll = false; break; }
+                
+                const val = radios[0].value; 
+                let expectedVal = q.items[i].ans.toString();
+
+                if(val === expectedVal) {
+                    correctItems++;
+                } else {
+                    // Yanlış yapılan maddeyi listeye ekle
+                    let correctLabel = q.items[i].ans ? "Doğru" : "Yanlış";
+                    // Metni çok uzunsa kısaltabiliriz ama şimdilik tam gösterelim veya ilk 50 karakter
+                    let shortText = q.items[i].txt.length > 60 ? q.items[i].txt.substring(0, 60) + "..." : q.items[i].txt;
+                    errorList.push(`<li>"${shortText}" <br> &nbsp;&nbsp;&nbsp;-> Bu ifade <strong>${correctLabel}</strong> olmalıydı.</li>`);
+                }
+            }
+
+            if(!answeredAll) { alert('Lütfen tüm satırları cevaplayınız.'); return; }
+
+            questionScore = correctItems * 1;
+
+            if(correctItems === totalItems) {
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+                // Hata mesajını oluştur
+                if(errorList.length > 0) {
+                    errorDetails = `<div style="margin-top:10px; font-size:0.9rem; color:#8a1f2d;"><strong>Hatalı İşaretlemeler:</strong><ul style="margin-top:5px; padding-left:20px;">${errorList.join('')}</ul></div>`;
+                }
+            }
+        }
+
+        // Puanları Güncelle
+        currentScore += questionScore;
+        answeredCount++;
+        
+        // Buton Kilitleme ve Renklendirme
+        btn.disabled = true;
+        btn.style.opacity = "0.6";
+        
+        if(isFullyCorrect) {
+            btn.innerText = `Tam Puan! (+${questionScore})`;
+            btn.style.backgroundColor = "#28a745"; // Yeşil
+        } else if (questionScore > 0) {
+            btn.innerText = `Kısmi Puan (+${questionScore})`;
+            btn.style.backgroundColor = "#ECA418"; // Hardal (Kısmi)
+        } else {
+            btn.innerText = "Yanlış Cevap (0)";
+            btn.style.backgroundColor = "#dc3545"; // Kırmızı
+        }
+        
+        questions[index].answered = true;
+
+        // Geri Bildirim Gösterimi
+        feedbackEl.style.display = "block";
+        
+        let resultText = "";
+        let scoreDetail = "";
+
+        // Başlık Metni
+        if (isFullyCorrect) {
+            resultText = "TEBRİKLER!"; 
+        } else if (questionScore > 0) {
+            resultText = "KISMEN DOĞRU.";
+        } else {
+            resultText = "YANLIŞ CEVAP!"; 
+        }
+
+        // Puan Detayı Metni (Sadece MCQ olmayanlar için)
+        if (q.type === 'mcq') {
+            scoreDetail = ""; 
+        } else {
+            scoreDetail = `<span style="font-size:0.9rem; color:#666; display:block; margin-top:5px;">Bu sorudan <strong>${questionMaxScore}</strong> üzerinden <strong>${questionScore}</strong> puan aldınız.</span>`;
+        }
+
+        // Detaylı Hata Raporunu (errorDetails) ekle
+        feedbackEl.innerHTML = `<strong>${resultText}</strong>${q.explanation} ${errorDetails} ${scoreDetail}`;
+        feedbackEl.className = `feedback ${isFullyCorrect ? 'correct' : 'incorrect'}`;
+
+        updateProgress();
+
+        // TÜM SORULAR CEVAPLANDI MI KONTROLÜ
+        if (answeredCount === questions.length) {
+            let finishBtn = document.getElementById('finish-btn');
+            finishBtn.disabled = false;
+            // Dikkati çekmek için ufak bir animasyon efekti verilebilir (isteğe bağlı)
+            finishBtn.style.transform = "scale(1.1)";
+            setTimeout(() => finishBtn.style.transform = "scale(1)", 300);
+        }
+    }
+
+    function updateProgress() {
+        document.getElementById('progress-text').innerText = `${answeredCount} / ${questions.length}`;
+        let percent = (answeredCount) / questions.length * 100;
+        
+        if (currentMode === 'slide') {
+             percent = (currentSlide + 1) / questions.length * 100;
+        }
+        document.getElementById('prog-bar').style.width = `${percent}%`;
+    }
+
+    function nextSlide() {
+        if (!questions[currentSlide].answered) {
+            alert('Bir sonraki sayfayı görmek için önce soruyu cevaplamalısınız.');
+            return;
+        }
+
+        if(currentSlide < questions.length - 1) {
+            currentSlide++;
+            setMode('slide');
+            updateNavVisibility();
+        } else {
+            // Son sorudaysak ve cevaplandıysa bir şey yapmaya gerek yok, 
+            // kullanıcı alttaki "Sonuçlarımı Göreyim" butonuna basacak.
+        }
+    }
+
+    function prevSlide() {
+        if(currentSlide > 0) {
+            currentSlide--;
+            setMode('slide');
+            updateNavVisibility();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('quiz-panel').classList.add('hidden');
+        document.getElementById('questions-container').classList.add('hidden');
+        document.getElementById('slide-nav').classList.add('hidden');
+        
+        // Buton kutusunu da gizle (Sonuç ekranında tekrar görünmesin)
+        document.querySelector('.finish-btn-container').classList.add('hidden');
+
+        const resultScreen = document.getElementById('result-screen');
+        resultScreen.style.display = 'block';
+        
+        // Puan Gösterimi
+        document.getElementById('final-score').innerText = `${currentScore}`;
+        
+        // Puanın rengini başarıya göre değiştir (50 PUAN SINIRI)
+        let finalCircle = document.getElementById('final-score');
+        if(currentScore >= 50) {
+            finalCircle.style.background = "#28a745"; // Yeşil
+        } else {
+            finalCircle.style.background = "#dc3545"; // Kırmızı
+        }
+
+        document.getElementById('final-details').innerHTML = `
+            Tam Doğru Sayısı: ${correctCount}<br>
+            Yanlış/Eksik Sayısı: ${wrongCount}
+        `;
+    }
+</script>
+
+</body>
+</html>
