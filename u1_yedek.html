@@ -320,6 +320,43 @@
         }
         .nav-btn:hover { opacity: 0.9; }
 
+        /* --- BİTİRME BUTONU --- */
+        .finish-btn-container {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 2px dashed #e0e0e0;
+        }
+        
+        .finish-btn {
+            background-color: var(--primary); /* Koyu Turkuaz */
+            color: var(--secondary);          /* Hardal */
+            font-size: 1.2rem;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 800;
+            font-family: var(--condensed-font);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(16, 124, 145, 0.3);
+        }
+
+        .finish-btn:disabled {
+            background-color: #95a5a6;
+            color: #ecf0f1;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+
+        .finish-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(16, 124, 145, 0.4);
+        }
+
         /* --- GERİ BİLDİRİM KUTUSU GÜNCELLEMESİ --- */
         .feedback {
             margin-top: 25px; 
@@ -328,7 +365,7 @@
             display: none;
             font-family: 'Open Sans', sans-serif; 
             font-size: 0.95rem; 
-            font-weight: 600;   
+            font-weight: 600;    
             line-height: 1.6;
         }
         /* Başlık stili */
@@ -413,7 +450,7 @@
             <div id="quiz-panel">
                 <div class="controls">
                     <div class="info-text">
-                        Soru: <span id="progress-text">1/15</span>
+                        Soru: <span id="progress-text">1/14</span>
                     </div>
                     
                     <div class="right-controls">
@@ -436,11 +473,16 @@
                 <button id="btn-next" class="nav-btn" style="background-color: var(--primary);" onclick="nextSlide()">Sonraki</button>
             </div>
 
+            <div class="finish-btn-container">
+                <button id="finish-btn" class="finish-btn" onclick="showResults()" disabled>Sonuçlarımı Göreyim</button>
+            </div>
+
             <div id="result-screen">
                 <h2 style="color: var(--text-color); margin-bottom: 15px;">Tüm Sorular Cevaplandı.</h2>
-                <p style="font-size: 1.2rem; font-weight: 600; color: #555; margin-bottom: 15px;">Başarı Oranınız:</p>
-                <div class="score-circle" id="final-score">0%</div>
-                <p id="final-details" style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">Doğru: 0 | Yanlış: 0</p>
+                <p style="font-size: 1.2rem; font-weight: 600; color: #555; margin-bottom: 15px;">TOPLAM PUAN:</p>
+                <div class="score-circle" id="final-score">0</div>
+                <div id="final-details" style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">
+                    </div>
                 <button class="action-btn" onclick="location.reload()">Etkinliği Tekrarla</button>
             </div>
 
@@ -449,36 +491,176 @@
 
 <script>
     const questions = [
-        { id: 2, type: "mcq", title: "SORU 1", text: "Hz. Musa (as) kavmini Mısır'dan çıkarıp Kudüs'e doğru götürdüğünde, İsrailoğulları'nın Kudüs'e girmekten geri durması üzerine onlara verilen ceza nedir?", options: [ "A) Mısır'a geri dönmeleri emredildi.", "B) Kırk yıl yeryüzünde şaşkın şaşkın dolaşmaya mahkûm edildiler.", "C) Mekke'ye sürgün edildiler.", "D) Kudüs'te köle olarak yaşamaya zorlandılar.", "E) On yıl çölde beklemeleri istendi." ], correctIndex: 1, explanation: "İsrailoğulları, Tih çölünde kırk yıl boyunca şaşkın bir halde dolaşmaya mahkûm edilmişlerdir." },
-        { id: 3, type: "mcq", title: "SORU 2", text: "Hz. Süleyman (as) döneminde Beytü'l-Makdis'in (Mescid-i Aksa) yapımına hangi yılda başlanmıştır?", options: [ "A) Hükümdarlığının birinci yılında", "B) Hükümdarlığının ikinci yılında", "C) Hükümdarlığının üçüncü yılında", "D) Hükümdarlığının dördüncü yılında", "E) Hükümdarlığının beşinci yılında" ], correctIndex: 3, explanation: "Hz. Süleyman (as), hükümdarlığının dördüncü yılında Beytü'l-Makdis'in yapımına başlamıştır." },
-        { id: 4, type: "true_false_multi", title: "SORU 3", text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", items: [ {txt: "Mescid-i Aksa, 'uzak mescit' anlamına gelir ve Mekke'ye uzak olması sebebiyle bu şekilde adlandırılmıştır.", ans: true}, {txt: "Mescid-i Aksa, Mescid-i Nebevi'den sonra yapılan ikinci mabettir.", ans: false}, {txt: "Beytü'l-Makdis'in en büyük yıkımı M.Ö. 586 yılında Babil Kralı Nabukadnezar zamanında yaşanmıştır.", ans: true}, {txt: "Hz. Meryem (ra), annesi tarafından Mescid-i Aksa'ya adanmış ve hayatının önemli bir bölümünü burada geçirmiştir.", ans: true} ], explanation: "Mescid-i Aksa, Mescid-i Haram'dan sonra inşa edilen yeryüzündeki ikinci mabettir." },
-        { id: 8, type: "mcq", title: "SORU 4", text: "Emeviler döneminde inşa edilen ve bugün hâlâ ayakta duran, İslam mimarisinin ilk abidevi eserlerinden biri olarak kabul edilen yapı aşağıdakilerden hangisidir?", options: [ "A) Mescid-i Nebevi", "B) Kıble Mescidi", "C) Kubbetü's-Sahra", "D) Kasımpasa Şadırvanı", "E) Kayıtbay Sebili" ], correctIndex: 2, explanation: "Kubbetü's-Sahra, Emeviler döneminde Abdülmelik b. Mervan tarafından yaptırılmıştır." },
-        { id: 9, type: "true_false_multi", title: "SORU 5", text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", items: [ {txt: "Müslümanlar, Medine'ye hicretten sonra yaklaşık on yedi ay boyunca namazlarını Mescid-i Aksa'ya dönerek kılmışlardır.", ans: true}, {txt: "Kâbe, Hz. İbrahim (as) ve Hz. İshak (as) tarafından inşa edilmiştir.", ans: false}, {txt: "Kudüs surları, Kanuni Sultan Süleyman zamanında yeniden inşa edilmiş ve bugün hâlâ ayaktadır.", ans: true}, {txt: "Haçlı işgali yaklaşık elli yıl sürmüştür.", ans: false} ], explanation: "Kâbe Hz. İbrahim ve Hz. İsmail tarafından inşa edilmiştir. Haçlı işgali yaklaşık 88 yıl sürmüştür." },
-        { id: 10, type: "mcq", title: "SORU 6", text: "\"Uzun bir kuşatmanın ardından şehir, Müslüman ordusuna teslim oldu. Ancak halk, şehrin sadece belirli bir kişiye teslim edileceğini belirtti...\"<br><br>Metinde anlatılan olayda şehri teslim alan kişi ve bu olayın gösterdiği temel değer hangisidir?", options: [ "A) Hz. Ebu Bekir (ra) – Cesaret", "B) Hz. Ömer (ra) – Adalet ve hoşgörü", "C) Hz. Osman (ra) – Cömertlik", "D) Hz. Ali (ra) – Kahramanlık", "E) Selahaddin Eyyubi – Strateji" ], correctIndex: 1, explanation: "Şehri bizzat Hz. Ömer teslim almış ve halka can/mal güvenliği tanıyan bir emanname vererek adalet ve hoşgörü örneği sergilemiştir." },
-        { id: 11, type: "mcq", title: "SORU 7", text: "Haçlıların elindeki Kudüs'ü 1187 yılında geri alan komutan ve bu zaferin kazanıldığı savaş aşağıdakilerden hangisinde doğru verilmiştir?", options: [ "A) Nureddin Zengi – Ayn Calut Savaşı", "B) Selahaddin Eyyubi – Hıttin Savaşı", "C) Baybars – Moğol Savaşı", "D) Yavuz Sultan Selim – Mercidabık Savaşı", "E) Kanuni Sultan Süleyman – Mohaç Savaşı" ], correctIndex: 1, explanation: "Selahaddin Eyyubi, Hıttin Savaşı'nda Haçlıları mağlup ederek Kudüs'ü geri almıştır." },
-        { id: 12, type: "fill_blank", title: "SORU 8", 
-          text: ["a) {input0} yılında Kudüs'ün de içinde bulunduğu Filistin toprakları İngiliz egemenliğine girmiştir.", 
-                 "b) {input1} dışişleri bakanı Arthur James {input2}, Filistin'de bir Yahudi ulusal devletinin kurulmasını destekleyeceğini açıklamıştır.", 
-                 "c) {input3} yılında İsrail Devleti ilan edilmiş ve yüz binlerce Filistinli Müslüman topraklarından sürülmüştür. Bu olay Filistinlilerce {input4} (büyük felaket) olarak adlandırılır."], 
-          options: ["1917", "Nekbe", "Balfour", "1948", "İngiltere"], answers: ["1917", "İngiltere", "Balfour", "1948", "Nekbe"], explanation: "1917'de İngiliz işgali başlamış, 1948'de İsrail kurulmuş ve Filistinliler Nekbe'yi (Büyük Felaket) yaşamıştır." },
-        { id: 13, type: "mcq", title: "SORU 9", text: "Mescid-i Aksa içinde yer alan ve Peygamber Efendimizin (sav) Miraç Gecesi'nde Burak'ı bağladığına inanılan, Yahudiler tarafından ise \"Ağlama Duvarı\" olarak bilinen yapı aşağıdakilerden hangisidir?", options: [ "A) Silsile Kubbesi", "B) Nebi Kubbesi", "C) Miraç Kubbesi", "D) Burak Duvarı", "E) Kayıtbay Sebili" ], correctIndex: 3, explanation: "Müslümanlar için Burak Duvarı, Yahudiler için Ağlama Duvarı olarak bilinir." },
-        { id: 14, type: "true_false_multi", title: "SORU 10", text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", items: [ {txt: "Mescid-i Nebevi, sadece bir ibadethane olarak kullanılmış, başka işlevleri olmamıştır.", ans: false}, {txt: "Osmanlı padişahları 'Hadimü'l-Haremeyn' (İki Kutsal Mekânın Hizmetkârı) unvanını kullanmışlardır.", ans: true}, {txt: "Hz. Yakup'un (as) bir diğer ismi 'İsrail'dir ve İsrailoğulları'nın atası olarak kabul edilir.", ans: true}, {txt: "Kudüs, Osmanlı döneminde yalnızca Müslümanların yaşadığı bir şehir olmuştur.", ans: false} ], explanation: "Mescid-i Nebevi eğitim, siyaset ve sosyal hayatın merkeziydi. Kudüs Osmanlı döneminde çok dinli bir yapıdaydı." },
-        { id: 15, type: "mcq", title: "SORU 11", text: "Aşağıdakilerden hangisi Mescid-i Nebevi'nin Medine döneminde üstlendiği işlevlerden biri değildir?", options: [ "A) Hutbelerin irat edildiği ve eğitim faaliyetlerinin yürütüldüğü bir merkez", "B) Devlet işlerinin konuşulduğu ve elçilerin kabul edildiği siyasi merkez", "C) Hac ibadetinin yerine getirildiği ana mekân", "D) Misafirlerin konaklayabileceği bir yer", "E) Savaş ve barışa dair stratejik kararların alındığı mekân" ], correctIndex: 2, explanation: "Hac ibadeti Mekke'de, Kâbe ve çevresindeki kutsal mekanlarda yerine getirilir." },
-        { id: 16, type: "fill_blank", title: "SORU 12", 
-          text: ["1. Kubbetü's-Sahra: {input0}", "2. Kasımpasa Şadırvanı: {input1}", "3. Kıble Mescidi: {input2}", "4. Kayıtbay Sebili: {input3}"], 
-          options: [ "A) Osmanlı Devleti'nin Kudüs'te yaptırdığı ilk hatırasıdır (1527)", "B) Memlük Sultanı Kayıtbey tarafından yaptırılmış, kubbe oymalarıyla ün kazanmıştır (1482)", "C) Muallak Taşı üzerine inşa edilmiş, Peygamberimizin (sav) göğe yükseldiğine inanılır", "D) Kurşuni renkli kubbesiyle bilinen, Hz. Ömer mescidinin yerine inşa edilen camidir" ], answers: [ "C) Muallak Taşı üzerine inşa edilmiş, Peygamberimizin (sav) göğe yükseldiğine inanılır", "A) Osmanlı Devleti'nin Kudüs'te yaptırdığı ilk hatırasıdır (1527)", "D) Kurşuni renkli kubbesiyle bilinen, Hz. Ömer mescidinin yerine inşa edilen camidir", "B) Memlük Sultanı Kayıtbey tarafından yaptırılmış, kubbe oymalarıyla ün kazanmıştır (1482)" ], explanation: "1-C, 2-A, 3-D, 4-B." },
-        { id: 18, type: "fill_blank", title: "SORU 13", 
-          text: ["a) Hz. İbrahim'in (as) peygamberlik verilen büyük oğlu {input0}, küçük yaşta annesi Hacer ile birlikte {input1} 'ye götürülüp yerleştirilmiştir.", "b) Hz. İbrahim'in (as) diğer oğlu {input2} ise tevhit mücadelesini {input3} 'te sürdürmüştür.", "c) {input4} 'in soyu, Hz. İsmail üzerinden Hz. İbrahim'e dayanmaktadır."], 
-          options: ["Hz. İsmail", "Hz. İshak", "Mekke", "Kudüs", "Hz. Muhammed (sav)"], answers: ["Hz. İsmail", "Mekke", "Hz. İshak", "Kudüs", "Hz. Muhammed (sav)"], explanation: "Hz. İsmail Mekke'de, Hz. İshak Kudüs/Filistin bölgesinde yaşamıştır. Peygamberimiz Hz. İsmail soyundandır." },
-        { id: 19, type: "mcq", title: "SORU 14", text: "Kudüs'ü Osmanlı hâkimiyetine katan padişah ve bu olayın gerçekleştiği tarih aşağıdakilerden hangisinde doğru verilmiştir?", options: [ "A) Fatih Sultan Mehmet – 1453", "B) Yavuz Sultan Selim – 1517", "C) Kanuni Sultan Süleyman – 1520", "D) II. Selim – 1571", "E) II. Abdülhamid – 1876" ], correctIndex: 1, explanation: "Yavuz Sultan Selim, 1516 Mercidabık zaferinden sonra 1517'de Kudüs'ü Osmanlı topraklarına katmıştır." },
-        { id: 20, type: "true_false_multi", title: "SORU 15", text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", items: [ {txt: "Kudüs, üç semavi din (İslamiyet, Hristiyanlık, Yahudilik) için kutsal kabul edilen bir şehirdir.", ans: true}, {txt: "Hz. İsa (as), Kudüs'te doğmuş, tebliğ mücadelesini burada sürdürmüş ve Allah'ın katına buradan yükseltilmiştir.", ans: true}, {txt: "Mescid-i Aksa, 144 dönümlük bir alan olup tek bir cami değildir, içinde tarihî cami, medrese, kubbe ve sebil gibi yapılar bulunmaktadır.", ans: true}, {txt: "1967 Altı Gün Savaşı'nda İsrail, sadece Batı Kudüs'ü işgal etmiştir.", ans: false} ], explanation: "İsrail 1967'de Doğu Kudüs'ü de işgal etmiştir." }
+        { 
+            id: 2, 
+            type: "mcq", 
+            title: "SORU 1", 
+            text: "Hz. Musa (as) kavmini Mısır'dan çıkarıp Kudüs'e doğru götürdüğünde, İsrailoğulları'nın Kudüs'e girmekten geri durması üzerine onlara verilen ceza nedir?", 
+            options: [ "A) Mısır'a geri dönmeleri emredildi.", "B) Kırk yıl yeryüzünde şaşkın şaşkın dolaşmaya mahkûm edildiler.", "C) Mekke'ye sürgün edildiler.", "D) Kudüs'te köle olarak yaşamaya zorlandılar.", "E) On yıl çölde beklemeleri istendi." ], 
+            correctIndex: 1, 
+            explanation: "İsrailoğulları, Tih çölünde kırk yıl boyunca şaşkın bir halde dolaşmaya mahkûm edilmişlerdir." 
+        },
+        { 
+            id: 4, 
+            type: "true_false_multi", 
+            title: "SORU 2", 
+            text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", 
+            items: [ 
+                {txt: "Mescid-i Aksa, 'uzak mescit' anlamına gelir ve Mekke'ye uzak olması sebebiyle bu şekilde adlandırılmıştır.", ans: true}, 
+                {txt: "Mescid-i Aksa, Mescid-i Nebevi'den sonra yapılan ikinci mabettir.", ans: false}, 
+                {txt: "Beytü'l-Makdis'in en büyük yıkımı M.Ö. 586 yılında Babil Kralı Nabukadnezar zamanında yaşanmıştır.", ans: true}, 
+                {txt: "Romalılar, Mescid-i Aksa’ya tanrı heykelleri yerleştirerek mabedi bir dönem pagan tapınağı olarak kullanmışlardır.", ans: true} 
+            ], 
+            explanation: "Mescid-i Aksa, Mescid-i Haram'dan sonra inşa edilen yeryüzündeki ikinci mabettir." 
+        },
+        { 
+            id: 8, 
+            type: "mcq", 
+            title: "SORU 3", 
+            text: "Emeviler döneminde inşa edilen ve bugün hâlâ ayakta duran, İslam mimarisinin ilk abidevi eserlerinden biri olarak kabul edilen yapı aşağıdakilerden hangisidir?", 
+            options: [ "A) Mescid-i Nebevi", "B) Kıble Mescidi", "C) Kubbetü's-Sahra", "D) Kasımpasa Şadırvanı", "E) Kayıtbay Sebili" ], 
+            correctIndex: 2, 
+            explanation: "Kubbetü's-Sahra, Emeviler döneminde Abdülmelik b. Mervan tarafından yaptırılmıştır." 
+        },
+        { 
+            id: 9, 
+            type: "true_false_multi", 
+            title: "SORU 4", 
+            text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", 
+            items: [ 
+                {txt: "Müslümanlar, Medine'ye hicretten sonra yaklaşık on yedi ay boyunca namazlarını Mescid-i Aksa'ya dönerek kılmışlardır.", ans: true}, 
+                {txt: "Kâbe, Hz. İbrahim (as) ve Hz. İshak (as) tarafından inşa edilmiştir.", ans: false}, 
+                {txt: "Kudüs surları, Kanuni Sultan Süleyman zamanında yeniden inşa edilmiş ve bugün hâlâ ayaktadır.", ans: true}, 
+                {txt: "Haçlı işgali yaklaşık elli yıl sürmüştür.", ans: false} 
+            ], 
+            explanation: "Kâbe Hz. İbrahim ve Hz. İsmail tarafından inşa edilmiştir. Haçlı işgali yaklaşık 88 yıl sürmüştür." 
+        },
+        { 
+            id: 10, 
+            type: "mcq", 
+            title: "SORU 5", 
+            text: "\"Uzun bir kuşatmanın ardından Kudüs şehri, Müslüman ordusuna teslim oldu. Ancak halk, şehrin sadece belirli bir kişiye teslim edileceğini belirtti...\"<br><br>Metinde anlatılan olayda şehri teslim alan kişi ve bu olayın gösterdiği temel değer hangisidir?", 
+            options: [ "A) Hz. Ebu Bekir (ra) – Cesaret", "B) Hz. Ömer (ra) – Adalet ve hoşgörü", "C) Hz. Osman (ra) – Cömertlik", "D) Hz. Ali (ra) – Kahramanlık", "E) Selahaddin Eyyubi – Strateji" ], 
+            correctIndex: 1, 
+            explanation: "Şehri bizzat Hz. Ömer teslim almış ve halka can/mal güvenliği tanıyan bir emanname vererek adalet ve hoşgörü örneği sergilemiştir." 
+        },
+        { 
+            id: 11, 
+            type: "mcq", 
+            title: "SORU 6", 
+            text: "Haçlıların elindeki Kudüs'ü 1187 yılında geri alan komutan ve bu zaferin kazanıldığı savaş aşağıdakilerden hangisinde doğru verilmiştir?", 
+            options: [ "A) Nureddin Zengi – Ayn Calut Savaşı", "B) Selahaddin Eyyubi – Hıttin Savaşı", "C) Baybars – Moğol Savaşı", "D) Yavuz Sultan Selim – Mercidabık Savaşı", "E) Kanuni Sultan Süleyman – Mohaç Savaşı" ], 
+            correctIndex: 1, 
+            explanation: "Selahaddin Eyyubi, Hıttin Savaşı'nda Haçlıları mağlup ederek Kudüs'ü geri almıştır." 
+        },
+        { 
+            id: 12, 
+            type: "fill_blank", 
+            title: "SORU 7", 
+            text: ["a) {input0} yılında Kudüs'ün de içinde bulunduğu Filistin toprakları İngiliz egemenliğine girmiştir.", 
+                   "b) {input1} dışişleri bakanı Arthur James {input2}, Filistin'de bir Yahudi ulusal devletinin kurulmasını destekleyeceğini açıklamıştır.", 
+                   "c) {input3} yılında İsrail Devleti ilan edilmiş ve yüz binlerce Filistinli Müslüman topraklarından sürülmüştür. Bu olay Filistinlilerce {input4} (büyük felaket) olarak adlandırılır."], 
+            options: ["1917", "Nekbe", "Balfour", "1948", "İngiltere"], 
+            answers: ["1917", "İngiltere", "Balfour", "1948", "Nekbe"], 
+            explanation: "1917'de İngiliz işgali başlamış, 1948'de İsrail kurulmuş ve Filistinliler Nekbe'yi (Büyük Felaket) yaşamıştır." 
+        },
+        { 
+            id: 13, 
+            type: "mcq", 
+            title: "SORU 8", 
+            text: "Mescid-i Aksa içinde yer alan ve Peygamber Efendimizin (sav) Miraç Gecesi'nde Burak'ı bağladığına inanılan, Yahudiler tarafından ise \"Ağlama Duvarı\" olarak bilinen yapı aşağıdakilerden hangisidir?", 
+            options: [ "A) Silsile Kubbesi", "B) Nebi Kubbesi", "C) Miraç Kubbesi", "D) Burak Duvarı", "E) Kayıtbay Sebili" ], 
+            correctIndex: 3, 
+            explanation: "Müslümanlar için Burak Duvarı, Yahudiler için Ağlama Duvarı olarak bilinir." 
+        },
+        { 
+            id: 14, 
+            type: "true_false_multi", 
+            title: "SORU 9", 
+            text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", 
+            items: [ 
+                {txt: "Mescid-i Nebevi, sadece bir ibadethane olarak kullanılmış, başka işlevleri olmamıştır.", ans: false}, 
+                {txt: "Osmanlı padişahları, Hicaz bölgesinin fethinden sonra 'Hadimü'l-Haremeyn' (İki Kutsal Mekânın Hizmetkârı) unvanını kullanmışlardır.", ans: true}, 
+                {txt: "Hz. Yakup'un (as) bir diğer ismi 'İsrail'dir ve İsrailoğulları'nın atası olarak kabul edilir.", ans: true}, 
+                {txt: "Kudüs, Osmanlı döneminde yalnızca Müslümanların yaşadığı bir şehir olmuştur.", ans: false} 
+            ], 
+            explanation: "Mescid-i Nebevi eğitim, siyaset ve sosyal hayatın merkeziydi. Kudüs Osmanlı döneminde çok dinli bir yapıdaydı." 
+        },
+        { 
+            id: 15, 
+            type: "mcq", 
+            title: "SORU 10", 
+            text: "Aşağıdakilerden hangisi Mescid-i Nebevi'nin Medine döneminde üstlendiği işlevlerden biri değildir?", 
+            options: [ "A) Hutbelerin irat edildiği ve eğitim faaliyetlerinin yürütüldüğü bir merkez", "B) Devlet işlerinin konuşulduğu ve elçilerin kabul edildiği siyasi merkez", "C) Hac ibadetinin yerine getirildiği ana mekân", "D) Misafirlerin konaklayabileceği bir yer", "E) Savaş ve barışa dair stratejik kararların alındığı mekân" ], 
+            correctIndex: 2, 
+            explanation: "Hac ibadeti Mekke'de, Kâbe ve çevresindeki kutsal mekanlarda yerine getirilir." 
+        },
+        { 
+            id: 16, 
+            type: "fill_blank", 
+            title: "SORU 11", 
+            text: [
+                "Aşağıdaki mimari yapıları, verilen özelliklerden uygun olanlarla eşleştiriniz:",
+                "1. Kubbetü's-Sahra: {input0}", 
+                "2. Kasımpasa Şadırvanı: {input1}", 
+                "3. Kıble Mescidi: {input2}", 
+                "4. Kayıtbay Sebili: {input3}"
+            ], 
+            options: [ "A) Osmanlı Devleti'nin Kudüs'te yaptırdığı ilk hatırasıdır (1527)", "B) Memlük Sultanı Kayıtbey tarafından yaptırılmış, kubbe oymalarıyla ün kazanmıştır (1482)", "C) Emeviler Dönemi’nde inşa edilen, altın renkli kubbesi ile tanınan yapıdır.", "D) Kurşuni renkli kubbesiyle bilinen, Hz. Ömer mescidinin yerine inşa edilen camidir" ], 
+            answers: [ "C) Emeviler Dönemi’nde inşa edilen, altın renkli kubbesi ile tanınan yapıdır.", "A) Osmanlı Devleti'nin Kudüs'te yaptırdığı ilk hatırasıdır (1527)", "D) Kurşuni renkli kubbesiyle bilinen, Hz. Ömer mescidinin yerine inşa edilen camidir", "B) Memlük Sultanı Kayıtbey tarafından yaptırılmış, kubbe oymalarıyla ün kazanmıştır (1482)" ], 
+            explanation: "1-C, 2-A, 3-D, 4-B." 
+        },
+        { 
+            id: 18, 
+            type: "fill_blank", 
+            title: "SORU 12", 
+            text: [
+                "Aşağıdaki metinde boş bırakılan yerleri, verilen seçeneklerden uygun olanlarla tamamlayınız:",
+                "a) Hz. İbrahim'in (as) peygamberlik verilen büyük oğlu {input0}, küçük yaşta annesi Hacer ile birlikte {input1} 'ye götürülüp yerleştirilmiştir.", 
+                "b) Hz. İbrahim'in (as) diğer oğlu {input2} ise tevhit mücadelesini {input3} 'te sürdürmüştür.", 
+                "c) {input4} 'in soyu, Hz. İsmail üzerinden Hz. İbrahim'e dayanmaktadır."
+            ], 
+            options: ["Hz. İsmail", "Hz. İshak", "Mekke", "Kudüs", "Hz. Muhammed (sav)"], 
+            answers: ["Hz. İsmail", "Mekke", "Hz. İshak", "Kudüs", "Hz. Muhammed (sav)"], 
+            explanation: "Hz. İsmail Mekke'de, Hz. İshak Kudüs/Filistin bölgesinde yaşamıştır. Peygamberimiz Hz. İsmail soyundandır." 
+        },
+        { 
+            id: 19, 
+            type: "mcq", 
+            title: "SORU 13", 
+            text: "Kudüs'ü Osmanlı hâkimiyetine katan padişah ve bu olayın gerçekleştiği tarih aşağıdakilerden hangisinde doğru verilmiştir?", 
+            options: [ "A) Fatih Sultan Mehmet – 1453", "B) Yavuz Sultan Selim – 1517", "C) Kanuni Sultan Süleyman – 1520", "D) II. Selim – 1571", "E) II. Abdülhamid – 1876" ], 
+            correctIndex: 1, 
+            explanation: "Yavuz Sultan Selim, 1516 Mercidabık zaferinden sonra 1517'de Kudüs'ü Osmanlı topraklarına katmıştır." 
+        },
+        { 
+            id: 20, 
+            type: "true_false_multi", 
+            title: "SORU 14", 
+            text: "Aşağıdaki ifadelerin doğruluğunu değerlendiriniz.", 
+            items: [ 
+                {txt: "Kudüs, üç semavi din (İslamiyet, Hristiyanlık, Yahudilik) için kutsal kabul edilen bir şehirdir.", ans: true}, 
+                {txt: "Hz. İsa (as), Kudüs'te doğmuş, tebliğ mücadelesini burada sürdürmüş ve Allah'ın katına buradan yükseltilmiştir.", ans: true}, 
+                {txt: "Mescid-i Aksa, 144 dönümlük bir alan olup tek bir cami değildir, içinde tarihî cami, medrese, kubbe ve sebil gibi yapılar bulunmaktadır.", ans: true}, 
+                {txt: "1967 Altı Gün Savaşı'nda İsrail, sadece Batı Kudüs'ü işgal etmiştir.", ans: false} 
+            ], 
+            explanation: "İsrail 1967'de Doğu Kudüs'ü de işgal etmiştir." 
+        }
     ];
 
     let currentMode = 'scroll'; 
     let currentSlide = 0;
-    let totalCorrect = 0;
-    let totalWrong = 0;
+    
+    // Puanlama Değişkenleri
+    let currentScore = 0;      // Toplam Puan
+    let earnedPoints = 0;      // O anki sorudan alınan puan
+    let maxPossibleScore = 0;  // O anki sorunun maksimum puanı
+
     let answeredCount = 0;
+    
+    // İstatistikler (Sadece doğru/yanlış sayısı için)
+    let correctCount = 0;
+    let wrongCount = 0;
 
     // Sayfa yüklendiğinde direkt başla
     window.onload = function() {
@@ -518,14 +700,12 @@
         
         if (!btnPrev || !btnNext) return;
 
-        // İlk sayfada önceki butonu gizle
         if (currentSlide === 0) {
             btnPrev.classList.add('hidden');
         } else {
             btnPrev.classList.remove('hidden');
         }
 
-        // Son sayfada sonraki butonu gizle
         if (currentSlide === questions.length - 1) {
             btnNext.classList.add('hidden');
         } else {
@@ -557,30 +737,30 @@
             else if (q.type === 'fill_blank') {
                 let formattedText = '<div class="q-text">';
                 if(Array.isArray(q.text)) {
-                   q.text.forEach(line => {
-                       let lineHtml = line;
-                       lineHtml = lineHtml.replace(/{input(\d+)}/g, function(match, number) {
-                           let i = parseInt(number);
-                           let dropdown = `<select id="q${index}_sel${i}"><option value="">Seçiniz...</option>`;
-                           q.options.forEach(opt => {
-                               dropdown += `<option value="${opt}">${opt}</option>`;
-                           });
-                           dropdown += `</select>`;
-                           return dropdown;
-                       });
-                       formattedText += `<div class="fill-blank-row">${lineHtml}</div>`;
-                   });
+                    q.text.forEach(line => {
+                        let lineHtml = line;
+                        lineHtml = lineHtml.replace(/{input(\d+)}/g, function(match, number) {
+                            let i = parseInt(number);
+                            let dropdown = `<select id="q${index}_sel${i}"><option value="">Seçiniz...</option>`;
+                            q.options.forEach(opt => {
+                                dropdown += `<option value="${opt}">${opt}</option>`;
+                            });
+                            dropdown += `</select>`;
+                            return dropdown;
+                        });
+                        formattedText += `<div class="fill-blank-row">${lineHtml}</div>`;
+                    });
                 } else {
-                   let tempText = q.text;
-                   q.answers.forEach((ans, i) => {
-                       let dropdown = `<select id="q${index}_sel${i}"><option value="">Seçiniz...</option>`;
-                       q.options.forEach(opt => {
-                           dropdown += `<option value="${opt}">${opt}</option>`;
-                       });
-                       dropdown += `</select>`;
-                       tempText = tempText.replace(`{input${i}}`, dropdown);
-                   });
-                   formattedText += tempText;
+                    let tempText = q.text;
+                    q.answers.forEach((ans, i) => {
+                        let dropdown = `<select id="q${index}_sel${i}"><option value="">Seçiniz...</option>`;
+                        q.options.forEach(opt => {
+                            dropdown += `<option value="${opt}">${opt}</option>`;
+                        });
+                        dropdown += `</select>`;
+                        tempText = tempText.replace(`{input${i}}`, dropdown);
+                    });
+                    formattedText += tempText;
                 }
                 formattedText += '</div>';
                 html += formattedText;
@@ -619,56 +799,167 @@
         const feedbackEl = document.getElementById(`feedback-${index}`);
         const btn = document.querySelector(`#card-${index} .action-btn`);
         
-        let isCorrect = false;
+        let questionScore = 0;
+        let questionMaxScore = 0;
+        let isFullyCorrect = false; 
+        
+        // Hata Detaylarını Tutacak Değişken
+        let errorDetails = "";
 
+        // --- ÇOKTAN SEÇMELİ (6 PUAN) ---
         if (q.type === 'mcq') {
+            questionMaxScore = 6; 
             const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            
             if (!selected) { alert('Lütfen bir seçenek işaretleyiniz.'); return; }
-            if (parseInt(selected.value) === q.correctIndex) isCorrect = true;
+            
+            if (parseInt(selected.value) === q.correctIndex) {
+                questionScore = 6;
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+            }
         } 
+        // --- BOŞLUK DOLDURMA & EŞLEŞTİRME (HER KUTU 3 PUAN) ---
         else if (q.type === 'fill_blank') {
-            let allCorrect = true;
-            for(let i=0; i<q.answers.length; i++) {
+            let totalBlanks = q.answers.length;
+            questionMaxScore = totalBlanks * 3;
+            let correctMatches = 0;
+            let errorList = [];
+
+            for(let i=0; i<totalBlanks; i++) {
                 let el = document.getElementById(`q${index}_sel${i}`);
                 if (!el) continue;
-                let val = el.value;
-                if(val !== q.answers[i]) allCorrect = false;
+                
+                let userVal = el.value;
+                let correctVal = q.answers[i];
+
+                if(userVal === correctVal) {
+                    correctMatches++;
+                } else {
+                    // Hatalı cevapları listeye ekle
+                    // Basit bir etiketleme mantığı (1., 2. veya a, b)
+                    let label = (i+1) + ". boşluk/eşleşme";
+                    if(Array.isArray(q.text) && q.text[i] && q.text[i].trim().startsWith("a)")) label = "a)";
+                    else if(Array.isArray(q.text) && q.text[i] && q.text[i].trim().startsWith("b)")) label = "b)";
+                    else if(Array.isArray(q.text) && q.text[i] && q.text[i].trim().startsWith("c)")) label = "c)";
+                    
+                    errorList.push(`<li><strong>${label}</strong> Sizin cevabınız: "${userVal || 'Boş'}" <br> &nbsp;&nbsp;&nbsp;-> Doğrusu: <strong>"${correctVal}"</strong></li>`);
+                }
             }
-            if(allCorrect) isCorrect = true;
+            
+            questionScore = correctMatches * 3;
+            
+            if(correctMatches === totalBlanks) {
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+                // Hata mesajını oluştur
+                if(errorList.length > 0) {
+                    errorDetails = `<div style="margin-top:10px; font-size:0.9rem; color:#8a1f2d;"><strong>Hatalı Eşleştirmeler/Boşluklar:</strong><ul style="margin-top:5px; padding-left:20px;">${errorList.join('')}</ul></div>`;
+                }
+            }
         }
+        // --- DOĞRU / YANLIŞ (HER SATIR 1 PUAN) ---
         else if (q.type === 'true_false_multi') {
-            let allCorrect = true;
+            let totalItems = q.items.length;
+            questionMaxScore = totalItems * 1;
+            let correctItems = 0;
             let answeredAll = true;
-            for(let i=0; i<q.items.length; i++) {
+            let errorList = [];
+
+            for(let i=0; i<totalItems; i++) {
                 const radios = document.querySelectorAll(`input[name="q${index}_row${i}"]:checked`);
                 if (radios.length === 0) { answeredAll = false; break; }
+                
                 const val = radios[0].value; 
-                if(val !== q.items[i].ans.toString()) allCorrect = false;
+                let expectedVal = q.items[i].ans.toString();
+
+                if(val === expectedVal) {
+                    correctItems++;
+                } else {
+                    // Yanlış yapılan maddeyi listeye ekle
+                    let correctLabel = q.items[i].ans ? "Doğru" : "Yanlış";
+                    // Metni çok uzunsa kısaltabiliriz ama şimdilik tam gösterelim veya ilk 50 karakter
+                    let shortText = q.items[i].txt.length > 60 ? q.items[i].txt.substring(0, 60) + "..." : q.items[i].txt;
+                    errorList.push(`<li>"${shortText}" <br> &nbsp;&nbsp;&nbsp;-> Bu ifade <strong>${correctLabel}</strong> olmalıydı.</li>`);
+                }
             }
+
             if(!answeredAll) { alert('Lütfen tüm satırları cevaplayınız.'); return; }
-            if(allCorrect) isCorrect = true;
+
+            questionScore = correctItems * 1;
+
+            if(correctItems === totalItems) {
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+                // Hata mesajını oluştur
+                if(errorList.length > 0) {
+                    errorDetails = `<div style="margin-top:10px; font-size:0.9rem; color:#8a1f2d;"><strong>Hatalı İşaretlemeler:</strong><ul style="margin-top:5px; padding-left:20px;">${errorList.join('')}</ul></div>`;
+                }
+            }
         }
 
+        // Puanları Güncelle
+        currentScore += questionScore;
         answeredCount++;
+        
+        // Buton Kilitleme ve Renklendirme
         btn.disabled = true;
         btn.style.opacity = "0.6";
-        btn.innerText = isCorrect ? "Doğru Cevap" : "Yanlış Cevap";
+        
+        if(isFullyCorrect) {
+            btn.innerText = `Tam Puan! (+${questionScore})`;
+            btn.style.backgroundColor = "#28a745"; // Yeşil
+        } else if (questionScore > 0) {
+            btn.innerText = `Kısmi Puan (+${questionScore})`;
+            btn.style.backgroundColor = "#ECA418"; // Hardal (Kısmi)
+        } else {
+            btn.innerText = "Yanlış Cevap (0)";
+            btn.style.backgroundColor = "#dc3545"; // Kırmızı
+        }
         
         questions[index].answered = true;
 
+        // Geri Bildirim Gösterimi
         feedbackEl.style.display = "block";
         
-        // DEĞİŞİKLİK: <br> kaldırıldı
-        feedbackEl.innerHTML = `<strong>${isCorrect ? 'TEBRİKLER!' : 'YANLIŞ CEVAP!'}</strong>${q.explanation}`;
-        feedbackEl.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+        let resultText = "";
+        let scoreDetail = "";
 
-        if(isCorrect) totalCorrect++;
-        else totalWrong++;
+        // Başlık Metni
+        if (isFullyCorrect) {
+            resultText = "TEBRİKLER!"; 
+        } else if (questionScore > 0) {
+            resultText = "KISMEN DOĞRU.";
+        } else {
+            resultText = "YANLIŞ CEVAP!"; 
+        }
+
+        // Puan Detayı Metni (Sadece MCQ olmayanlar için)
+        if (q.type === 'mcq') {
+            scoreDetail = ""; 
+        } else {
+            scoreDetail = `<span style="font-size:0.9rem; color:#666; display:block; margin-top:5px;">Bu sorudan <strong>${questionMaxScore}</strong> üzerinden <strong>${questionScore}</strong> puan aldınız.</span>`;
+        }
+
+        // Detaylı Hata Raporunu (errorDetails) ekle
+        feedbackEl.innerHTML = `<strong>${resultText}</strong>${q.explanation} ${errorDetails} ${scoreDetail}`;
+        feedbackEl.className = `feedback ${isFullyCorrect ? 'correct' : 'incorrect'}`;
 
         updateProgress();
 
-        if(answeredCount === questions.length) {
-            setTimeout(showResults, 1500);
+        // TÜM SORULAR CEVAPLANDI MI KONTROLÜ
+        if (answeredCount === questions.length) {
+            let finishBtn = document.getElementById('finish-btn');
+            finishBtn.disabled = false;
+            // Dikkati çekmek için ufak bir animasyon efekti verilebilir (isteğe bağlı)
+            finishBtn.style.transform = "scale(1.1)";
+            setTimeout(() => finishBtn.style.transform = "scale(1)", 300);
         }
     }
 
@@ -693,7 +984,8 @@
             setMode('slide');
             updateNavVisibility();
         } else {
-            if(answeredCount === questions.length) showResults();
+            // Son sorudaysak ve cevaplandıysa bir şey yapmaya gerek yok, 
+            // kullanıcı alttaki "Sonuçlarımı Göreyim" butonuna basacak.
         }
     }
 
@@ -710,12 +1002,27 @@
         document.getElementById('questions-container').classList.add('hidden');
         document.getElementById('slide-nav').classList.add('hidden');
         
+        // Buton kutusunu da gizle (Sonuç ekranında tekrar görünmesin)
+        document.querySelector('.finish-btn-container').classList.add('hidden');
+
         const resultScreen = document.getElementById('result-screen');
         resultScreen.style.display = 'block';
         
-        const percent = Math.round((totalCorrect / questions.length) * 100);
-        document.getElementById('final-score').innerText = `%${percent}`;
-        document.getElementById('final-details').innerText = `Doğru: ${totalCorrect} | Yanlış: ${totalWrong}`;
+        // Puan Gösterimi
+        document.getElementById('final-score').innerText = `${currentScore}`;
+        
+        // Puanın rengini başarıya göre değiştir (50 PUAN SINIRI)
+        let finalCircle = document.getElementById('final-score');
+        if(currentScore >= 50) {
+            finalCircle.style.background = "#28a745"; // Yeşil
+        } else {
+            finalCircle.style.background = "#dc3545"; // Kırmızı
+        }
+
+        document.getElementById('final-details').innerHTML = `
+            Tam Doğru Sayısı: ${correctCount}<br>
+            Yanlış/Eksik Sayısı: ${wrongCount}
+        `;
     }
 </script>
 
