@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12 Sınıf Peygamberimizin Hayatı-Bilgi Yarışması</title>
+    <style>
+        /* --- GENEL AYARLAR --- */
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #ecf0f1; display: flex; flex-direction: column; height: 100vh; }
+        h1, h2, h3, p { margin: 0; }
+        button { cursor: pointer; border: none; outline: none; transition: 0.2s; font-weight: bold; }
+
+        /* --- ÜST BAR (HEADER - ŞEFFAF CAM GÖRÜNÜMÜ) --- */
+        #header { 
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px); 
+            color: white; 
+            padding: 10px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: absolute; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        #header .left { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);}
+        #header .right { display: flex; align-items: center; gap: 10px; }
+        #header .menu-btn { background: rgba(255, 255, 255, 0.25); color: white; padding: 6px 15px; border-radius: 20px; font-size: 14px; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
+        #header .menu-btn:hover { background: rgba(255, 255, 255, 0.4); }
+        #header .fullscreen-btn { background: rgba(255, 255, 255, 0.25); color: white; padding: 6px 10px; border-radius: 20px; font-size: 14px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
+        #header .fullscreen-btn:hover { background: rgba(255, 255, 255, 0.4); }
+
+        /* --- EKRAN YÖNETİMİ --- */
+        .screen { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; } 
+        .screen.active { display: flex; }
+
+        /* --- AÇILIŞ MENÜSÜ EKRANI --- */
+        #menu-screen { background: radial-gradient(circle, #74b9ff, #0984e3); justify-content: center; align-items: center; z-index: 50;}
+        .menu-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; width: 380px; }
+        .menu-container h1 { color: #2c3e50; font-size: 28px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .menu-container p { color: #7f8c8d; font-size: 13px; margin-bottom: 25px; }
+        .menu-btn-choice { display: block; width: 100%; padding: 12px; background: #fafafa; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; font-weight: bold; color: #333; margin-bottom: 12px; position: relative;}
+        .menu-btn-choice:hover { background: #ecf0f1; transform: scale(1.02); border-color: #3498db;}
+        .menu-btn-choice::before { content: ''; position: absolute; left: 20px; top: 50%; transform: translateY(-50%); opacity: 0.6;}
+        
+        [data-mode="bot"]::before { content: '🤖'; }
+        [data-mode="1v1"]::before { 
+            content: 'VS'; 
+            color: #e74c3c; 
+            font-weight: 900; 
+            font-style: italic;
+            font-size: 1.1em;
+            text-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+            margin-right: 8px;
+        }
+        [data-mode="3team"]::before { content: '🏁'; }
+
+        /* --- OYUN EKRANI --- */
+        #game-screen { flex-direction: column; background: #ecf0f1; overflow: hidden; z-index: 10;}
+        
+        /* Yarış Pisti - GÖKYÜZÜ ALANI */
+        #track-area { height: 55vh; position: relative; width: 100%; background: linear-gradient(180deg, #3dc1f9 0%, #04e5ff 100%); overflow: hidden;}
+        
+        /* Bulutlar ve Animasyon */
+        .sky { position: relative; height: 100%; width: 100%; }
+        .cloud { background: white; border-radius: 50px; position: absolute; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .cloud::before, .cloud::after { content: ''; background: white; border-radius: 50px; position: absolute; }
+        
+        .cloud-1 { width: 120px; height: 40px; top: 20px; left: -150px; }
+        .cloud-1::after { width: 50px; height: 50px; top: -25px; left: 15px; }
+        .cloud-1::before { width: 40px; height: 40px; top: -15px; left: 60px; }
+
+        .cloud-2 { width: 150px; height: 50px; top: 50px; left: -200px; opacity: 0.8;}
+        .cloud-2::after { width: 70px; height: 70px; top: -35px; left: 20px; }
+        .cloud-2::before { width: 50px; height: 50px; top: -20px; left: 80px; }
+
+        .cloud-3 { width: 100px; height: 30px; top: 80px; left: -100px; opacity: 0.6;}
+        .cloud-3::after { width: 40px; height: 40px; top: -20px; left: 10px; }
+        .cloud-3::before { width: 30px; height: 30px; top: -10px; left: 50px; }
+
+        @keyframes moveClouds {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(100vw + 300px)); }
+        }
+
+        .animated-cloud { animation: moveClouds infinite linear; }
+        .cloud-1 { animation-duration: 25s; animation-delay: 2s;}
+        .cloud-2 { animation-duration: 35s; animation-delay: 8s;}
+        .cloud-3 { animation-duration: 20s; animation-delay: 15s;}
+
+        /* Yarış Pisti - YEŞİL ALAN (ÇİM) */
+        .grass { 
+            height: 35%; 
+            background: #8bc34a; 
+            background-image: repeating-linear-gradient(
+                90deg, 
+                transparent, 
+                transparent calc(95% / 29.5), 
+                rgba(0,0,0,0.04) calc(95% / 29.5), 
+                rgba(0,0,0,0.04) calc((95% / 29.5) * 2)
+            ); 
+            border-top: 3px solid #689f38; 
+            position: absolute; 
+            bottom: 0; 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .lane-divider { height: 1px; width: 100%; border-bottom: 2px dashed rgba(255,255,255,0.4); position: absolute; }
+        
+        /* Bitiş Çizgisi */
+        .finish-line { 
+            position: absolute; 
+            right: 5%; 
+            top: 0; 
+            width: 40px; 
+            height: 100%; 
+            background-color: #f2f6eb;
+            background-image: 
+                linear-gradient(45deg, #3c413e 25%, transparent 25%, transparent 75%, #3c413e 75%),
+                linear-gradient(-45deg, #3c413e 25%, transparent 25%, transparent 75%, #3c413e 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 0;
+            border-left: 2px solid #689f38; 
+            border-right: 2px solid #689f38; 
+            z-index: 2;
+        }
+
+        /* YUMURTA TAŞIYAN KARAKTERLER */
+        .player-track { 
+            position: relative; 
+            width: 100%; 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+        }
+        
+        .avatar { 
+            width: 80px; 
+            height: 70px; 
+            position: absolute; 
+            left: 2%; 
+            top: 50%; 
+            transition: left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            z-index: 5;
+        }
+        
+        /* Kafa Kısmı ve Yüz Detayları */
+        .avatar .head { width: 30px; height: 30px; background: #ffe0bd; border-radius: 50%; position: absolute; top: 0px; left: 10px; z-index: 2; border: 1px solid rgba(0,0,0,0.1); transition: transform 0.2s;}
+        .avatar .eye { position: absolute; width: 4px; height: 4px; background: #111; border-radius: 50%; top: 11px; right: 8px; z-index: 4; }
+        .avatar .eye::before { content: ''; position: absolute; width: 7px; height: 2px; background: #111; border-radius: 2px; top: -5px; left: -1px; transform: rotate(15deg); } /* Kaş */
+        .avatar .nose { position: absolute; width: 7px; height: 6px; background: #ffe0bd; border-radius: 0 4px 4px 0; top: 15px; right: -5px; z-index: 3; border-top: 1px solid rgba(0,0,0,0.05); border-right: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .avatar .mouth { position: absolute; width: 7px; height: 4px; border-bottom: 2px solid #111; border-radius: 0 0 10px 10px; top: 22px; right: 5px; transform: rotate(-5deg); z-index: 4; }
+        
+        /* Gövde Kısmı */
+        .avatar .body-part { width: 28px; height: 32px; border-radius: 12px 12px 5px 5px; position: absolute; bottom: 10px; left: 11px; z-index: 3; box-shadow: inset -3px -5px 10px rgba(0,0,0,0.2); transition: transform 0.2s;}
+        
+        /* Ayaklar */
+        .avatar .foot-1, .avatar .foot-2 { width: 12px; height: 6px; background: #333; position: absolute; bottom: 4px; border-radius: 3px; z-index: 2; transition: transform 0.2s;}
+        .avatar .foot-1 { left: 12px; }
+        .avatar .foot-2 { left: 26px; }
+
+        /* Kol ve Kaşık */
+        .avatar .arm { width: 20px; height: 6px; background: #ffe0bd; position: absolute; top: 40px; left: 30px; border-radius: 3px; z-index: 4; border: 1px solid rgba(0,0,0,0.1); transition: transform 0.2s;}
+        .avatar .spoon { width: 35px; height: 4px; background: #bdc3c7; position: absolute; top: 41px; left: 35px; z-index: 3; border-radius: 0 5px 5px 0; transition: transform 0.2s;}
+        .avatar .spoon::after { content: ''; width: 16px; height: 8px; background: #bdc3c7; border-radius: 0 0 10px 10px; position: absolute; right: -2px; top: 0; }
+
+        /* Yumurta */
+        .avatar .egg { width: 14px; height: 18px; background: #fffdf7; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; position: absolute; top: 25px; left: 55px; z-index: 5; box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1); transition: transform 0.2s;}
+
+        /* Yerdeki Gölge */
+        .avatar::after { content: ''; width: 34px; height: 6px; background: rgba(0,0,0,0.25); border-radius: 50%; position: absolute; bottom: 0; left: 8px; z-index: 1;}
+
+        /* Adım Atma (Yürüme) Animasyonu */
+        .avatar.moving .head, .avatar.moving .body-part, .avatar.moving .arm, .avatar.moving .spoon { transform: translateY(-4px); }
+        .avatar.moving .foot-1 { transform: translateY(-4px) rotate(-15deg); }
+        .avatar.moving .egg { transform: translateY(-8px) rotate(15deg); }
+
+        /* Karakter Renkleri (Saç/Şapka detayları eklendi) */
+        .p1-color .body-part { background: #3498db;}
+        .p1-color .head { box-shadow: inset 7px 7px 0 -1px #2980b9;} 
+        .p2-color .body-part { background: #e74c3c;}
+        .p2-color .head { box-shadow: inset 7px 7px 0 -1px #c0392b;} 
+        .p3-color .body-part { background: #2ecc71;}
+        .p3-color .head { box-shadow: inset 7px 7px 0 -1px #27ae60;} 
+
+        /* Soru Alanı */
+        #question-area { flex: 1; display: flex; gap: 8px; padding: 10px; background: #fafafa; overflow: hidden; }
+        .player-panel { flex: 1; background: white; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #ddd;}
+        .panel-header { padding: 8px; text-align: center; color: white; font-weight: bold; font-size: 16px;}
+        .p1-header { background: #3498db;}
+        .p2-header { background: #e74c3c;}
+        .p3-header { background: #2ecc71;}
+        
+        .panel-content { display: flex; flex-direction: column; flex: 1; height: 100%; overflow: hidden; }
+
+        .question-box { 
+            flex: 0 0 25%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            font-weight: 650; 
+            font-size: clamp(14px, 1.8vh, 18px); 
+            color: #2c3e50;
+            padding: 5px 15px;
+        }
+        
+        .options-grid { 
+            flex: 1; 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            grid-template-rows: repeat(3, 1fr); 
+            gap: 6px; 
+            padding: 5px 10px 10px; 
+            background: #fbfbfb;
+        }
+        .options-grid button:nth-child(5) { grid-column: span 2; } 
+
+        .option-btn { 
+            background: white; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            color: #333; 
+            transition: 0.1s; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100%; 
+            width: 100%;
+            padding: 2px 10px;
+            cursor: pointer;
+        }
+        .option-btn:hover:not(:disabled) { background: #e3f2fd; border-color: #2196f3;}
+        .option-btn:active:not(:disabled) { transform: scale(0.98); }
+        .option-btn.correct { background: #4caf50 !important; color: white !important; border-color: #4caf50 !important; }
+        .option-btn.wrong { background: #f44336 !important; color: white !important; border-color: #f44336 !important; opacity: 0.6; cursor: not-allowed;}
+        
+        /* Şık Metinleri ve Harfleri */
+        .opt-content { display: inline-flex; align-items: center; gap: 6px; text-align: left; } 
+        .opt-letter { font-weight: 650; font-size: clamp(12.5px, 1.6vh, 15.5px); color: #111; flex-shrink: 0; }
+        .opt-text { font-weight: 500; font-size: clamp(12px, 1.5vh, 15px); color: inherit; line-height: 1.2; word-break: break-word; }
+
+        /* Bot Bekleme Ekranı */
+        .bot-thinking { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; color: #999;}
+        .bot-thinking span { display: block; margin-top: 8px; font-weight: bold; font-size: 16px; animation: blink 1s infinite;}
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* --- KAZANAN EKRANLARI --- */
+        #winner-screen { background: #1a1a1a; flex-direction: column; justify-content: center; align-items: center; text-align: center; z-index: 200;}
+        .trophy { font-size: 70px; margin-bottom: 15px;}
+        .winner-title { font-size: 40px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; text-shadow: 0 0 20px currentColor;}
+        .winner-subtitle { color: #aaa; font-size: 18px; margin-bottom: 35px;}
+        .play-again-btn { background: #2ecc71; color: white; padding: 12px 30px; font-size: 18px; border-radius: 25px; box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);}
+        .play-again-btn:hover { background: #27ae60; transform: scale(1.05); }
+
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <div class="left">🏆 Bilgi Yarışması</div>
+        <div class="right">
+            <button class="menu-btn" onclick="showMenu()">🏠 Menü</button>
+            <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+        </div>
+    </div>
+
+    <div id="menu-screen" class="screen active">
+        <div class="menu-container">
+            <h1>YUMURTA TAŞIMA YARIŞI</h1><br>
+            <p>12.Sınıf Peygamberimizin Hayatı<br>Hz. Aişe'nin İlmi Yönü ve Kadınların Eğitimindeki Rolü</p>
+            <button class="menu-btn-choice" data-mode="bot" onclick="startGame('bot')">Bilgisayara Karşı</button>
+            <button class="menu-btn-choice" data-mode="1v1" onclick="startGame('1v1')">2 Kişilik (1 vs 1)</button>
+            <button class="menu-btn-choice" data-mode="3team" onclick="startGame('3team')">3 Takımlı Yarış</button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        
+        <div id="track-area">
+            <div class="sky" id="sky-clouds">
+                <div class="cloud cloud-1 animated-cloud"></div>
+                <div class="cloud cloud-2 animated-cloud"></div>
+                <div class="cloud cloud-3 animated-cloud"></div>
+            </div>
+            <div class="grass" id="track-lanes">
+                <div class="finish-line"></div>
+            </div>
+        </div>
+
+        <div id="question-area">
+            </div>
+
+    </div>
+
+    <div id="winner-screen" class="screen">
+        <div class="trophy">🏆</div>
+        <div class="winner-title" id="winner-name">SEN KAZANDIN!</div>
+        <div class="winner-subtitle">Tebrikler!</div>
+        <button class="play-again-btn" onclick="showMenu()">TEKRAR OYNA</button>
+    </div>
+
+    <script>
+        // --- SES MOTORU (Web Audio API) ---
+        let audioCtx;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        function playSound(type) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'click') {
+                osc.type = 'square'; 
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime); 
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                osc.start(); 
+                osc.stop(audioCtx.currentTime + 0.05);
+            } else if (type === 'correct') {
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'win') {
+                osc.type = 'square'; osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime + 0.2);
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.4);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.8);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.8);
+            }
+        }
+
+        // --- SORULAR ---
+        const rawQuestions = [
+            { q: "Hz. Aişe'nin \"muksirun\" olan sahabeden sayılmasının sebebi nedir?", options: ["A) Çok fetva vermesi", "B) Çok sayıda hadis rivayet etmesi", "C) Çok talebe yetiştirmesi", "D) Çok savaşa katılması", "E) Çok eser yazması"], answer: 1 },
+            { q: "Hz. Aişe’nin kurban etiyle ilgili hadisi yorumlarken yaklaşımı aşağıdakilerden hangisidir?", options: ["A) Sadakaların şartlarını dikkate alarak yorumlamıştır.", "B) Gelenekleri dikkate alarak yorumlamıştır.", "C) Hadisin hangi bağlama göre söylendiğini açıklamıştır.", "D) Başka hadislerle karşılaştırarak açıklamıştır.", "E) Bazı ayetlerle karşılaştırarak izah etmiştir."], answer: 2 },
+            { q: "Hz. Aişe Urve bin Zübeyr'in say konusundaki hükmünü nasıl tashih etmiştir?", options: ["A) Başka bir sahabinin sözüyle", "B) Ayetin iniş sebebini açıklayarak", "C) Hz. Ömer'in içtihadıyla", "D) Konuyla ilgili bir hadisle", "E) Yaşadığı bir olaydan bahsederek"], answer: 1 },
+            { q: "Hz. Aişe tıp bilgisini nasıl elde etmiştir?", options: ["A) Kitaplardan öğrenmiştir.", "B) Gözlem ve tecrübeyle öğrenmiştir.", "C) Mekke’de tıp eğitimi almıştır.", "D) Peygamberimizden ders almıştır.", "E) Bir seyahat esnasında öğrenmiştir."], answer: 1 },
+            { q: "Hz. Aişe'nin öncülük ettiği hadis tenkit metodu İslami ilimlere nasıl bir katkı sağlamıştır?", options: ["A) Ayetlerin hadislerle tefsir edilmesinin yolunu açmıştır.", "B) Hadislerin doğru anlaşılmasını sağlamıştır.", "C) Hadislerin senetleriyle rivayet edilmesini sağlamıştır.", "D) Fıkıhla ilgili hadislere daha çok ağırlık verilmesinin yolunu açmıştır.", "E) Hadislerden siyer ilminin temel esaslarını çıkarmıştır."], answer: 1 },
+            { q: "Hz. Aişe Medine dışından gelen mektuplara cevap vererek nasıl bir hizmet yapmıştır?", options: ["A) İnsanları dili doğru kullanma konusunda bilgilendirmiştir.", "B) İnsanların İslamiyet’i doğru öğrenmelerini sağlamıştır.", "C) Zorlukların sabır ve tecrübelerle aşılabileceğini öğretmiştir.", "D) Öğrenme ve sorumluluk alma cesareti kazandırmıştır.", "E) Yardımlaşma ve dayanışmanın önemine inandırmıştır."], answer: 1 },
+            { q: "Raşid halifelerin Hz. Aişe'ye danışması onun hangi özelliğini gösterir?", options: ["A) Siyasi ve sosyal konulara hâkim olduğunu", "B) Arap dilinin inceliklerini iyi bildiğini", "C) İçtihat yapabilecek ilmî bir seviyede olduğunu", "D) Tarihî olaylardan dersler çıkarabildiğini", "E) Hitabet ve şiir alanındaki yetkinliğini"], answer: 2 },
+            { q: "Hz. Aişe'nin yetiştirdiği talebelerin çoğunun kadın olması neyi gösterir?", options: ["A) Kadınların farklı karakter özelliklerini iyi bildiğini", "B) İslamiyet’te kadınların eğitiminin önemli olduğunu", "C) Kadınların ailedeki yeri ve önemini iyi anladığını", "D) Sorulan sorulara kolay anlaşılır cevaplar verdiğini", "E) Tecrübelerine dayanarak iyi empati yapabildiğini"], answer: 1 },
+            { q: "Hz. Aişe'nin “Çocuklarınıza şiir öğretin ki dilleri tatlansın.” sözü onun hangi yönünü yansıtır?", options: ["A) Siyasi kişiliğini", "B) Tarihî kişiliğini", "C) Edebî şahsiyetini", "D) Fıkıh anlayışını", "E) Ensap bilgisini"], answer: 2 },
+            { q: "Aşağıdakilerden hangisi Hz. Aişe'nin ilmî mirasından çıkarılacak en kapsamlı derstir?", options: ["A) Kadınlar fen ilimlerinden çok dinî ilimlerle ilgilenmelidir.", "B) İlim öğrenmeye çocukluk döneminde başlanmalıdır.", "C) İlim tahsil etmek kadın erkek herkes için değerlidir.", "D) İnsanlar hayatlarının bir bölümünü ilme ayırmalıdırlar.", "E) Onun ilmî birikimini yeni nesillere aktarmak gerekir."], answer: 2 }
+        ];
+
+        // --- OYUN DEĞİŞKENLERİ ---
+        const WIN_SCORE = 9; 
+        let players = [];
+        let gameMode = '';
+        let botInterval;
+        let isGameOver = false;
+
+        function shuffleArray(array) {
+            let curId = array.length;
+            while (0 !== curId) {
+                let randId = Math.floor(Math.random() * curId); curId -= 1;
+                let tmp = array[curId]; array[curId] = array[randId]; array[randId] = tmp;
+            }
+            return array;
+        }
+
+        // --- EKRAN GEÇİŞLERİ VE TAM EKRAN ---
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function showMenu() {
+            initAudio(); playSound('click');
+            clearInterval(botInterval);
+            switchScreen('menu-screen');
+        }
+
+        function toggleFullscreen() {
+            initAudio(); playSound('click'); 
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // --- OYUNU BAŞLATMA ---
+        function startGame(mode) {
+            initAudio(); playSound('click');
+            gameMode = mode;
+            isGameOver = false;
+            clearInterval(botInterval);
+            
+            // Oyuncuların sorularını karıştırıp farklı başlangıç noktalarından (offset) diziyoruz.
+            let baseShuffled = shuffleArray([...rawQuestions]);
+            let qs1 = [...baseShuffled];
+            let qs2 = [...baseShuffled.slice(3), ...baseShuffled.slice(0, 3)];
+            let qs3 = [...baseShuffled.slice(6), ...baseShuffled.slice(0, 6)];
+
+            if(mode === 'bot') {
+                players = [
+                    { id: 1, name: 'SEN', colorClass: 'p1-color', headerClass: 'p1-header', score: 0, qIndex: 0, qs: qs1 },
+                    { id: 2, name: 'ROBOT', colorClass: 'p2-color', headerClass: 'p2-header', score: 0, qIndex: 0, isBot: true }
+                ];
+            } else if (mode === '1v1') {
+                players = [
+                    { id: 1, name: 'OYUNCU 1', colorClass: 'p1-color', headerClass: 'p1-header', score: 0, qIndex: 0, qs: qs1 },
+                    { id: 2, name: 'OYUNCU 2', colorClass: 'p2-color', headerClass: 'p2-header', score: 0, qIndex: 0, qs: qs2 }
+                ];
+            } else if (mode === '3team') {
+                players = [
+                    { id: 1, name: 'TAKIM A', colorClass: 'p1-color', headerClass: 'p1-header', score: 0, qIndex: 0, qs: qs1 },
+                    { id: 2, name: 'TAKIM B', colorClass: 'p2-color', headerClass: 'p2-header', score: 0, qIndex: 0, qs: qs2 },
+                    { id: 3, name: 'TAKIM C', colorClass: 'p3-color', headerClass: 'p3-header', score: 0, qIndex: 0, qs: qs3 }
+                ];
+            }
+
+            buildTrack();
+            buildQuestionPanels();
+            switchScreen('game-screen');
+
+            // Bot 3.5 saniyede bir cevap verir
+            if (mode === 'bot') {
+                botInterval = setInterval(botPlay, 3500); 
+            }
+        }
+
+        // --- ARAYÜZ OLUŞTURMA ---
+        function buildTrack() {
+            const trackLanes = document.getElementById('track-lanes');
+            trackLanes.innerHTML = '<div class="finish-line"></div>'; 
+            
+            let avatarScale = players.length === 3 ? 0.85 : 1.15;
+
+            players.forEach((p, index) => {
+                if (index > 0) {
+                    let divider = document.createElement('div');
+                    divider.className = 'lane-divider';
+                    divider.style.top = `${(index / players.length) * 100}%`;
+                    trackLanes.appendChild(divider);
+                }
+
+                let track = document.createElement('div');
+                track.className = 'player-track';
+                
+                let avatar = document.createElement('div');
+                avatar.className = `avatar ${p.colorClass}`;
+                avatar.id = `avatar-${p.id}`;
+                
+                avatar.style.transform = `translateY(-90%) scale(${avatarScale})`;
+                
+                // Yüz detayları (göz, burun, ağız) HTML'e eklendi
+                avatar.innerHTML = `
+                    <div class="head">
+                        <div class="eye"></div>
+                        <div class="nose"></div>
+                        <div class="mouth"></div>
+                    </div>
+                    <div class="body-part"></div>
+                    <div class="foot-1"></div>
+                    <div class="foot-2"></div>
+                    <div class="arm"></div>
+                    <div class="spoon"></div>
+                    <div class="egg"></div>
+                `;
+                
+                track.appendChild(avatar);
+                trackLanes.appendChild(track);
+            });
+        }
+
+        function buildQuestionPanels() {
+            const qArea = document.getElementById('question-area');
+            qArea.innerHTML = '';
+
+            players.forEach(p => {
+                let panel = document.createElement('div');
+                panel.className = 'player-panel';
+                
+                let header = document.createElement('div');
+                header.className = `panel-header ${p.headerClass}`;
+                header.innerText = p.name;
+                panel.appendChild(header);
+
+                let contentBox = document.createElement('div');
+                contentBox.className = 'panel-content';
+                contentBox.id = `panel-content-${p.id}`;
+
+                if (p.isBot) {
+                    contentBox.innerHTML = `<div class="bot-thinking">⚙️<span>DÜŞÜNÜYOR...</span></div>`;
+                } else {
+                    renderQuestion(p, contentBox);
+                }
+                
+                panel.appendChild(contentBox);
+                qArea.appendChild(panel);
+            });
+        }
+
+        // Yeni Soru Çakışma Engelleyici Sistem
+        function renderQuestion(player, container) {
+            if (player.qIndex >= player.qs.length) player.qIndex = 0; 
+            
+            let currentQ = null;
+            let attempts = 0;
+
+            // Bu döngü, seçilen sorunun başka bir oyuncunun ekranında açık olup olmadığını kontrol eder.
+            while(attempts < player.qs.length) {
+                let candidate = player.qs[player.qIndex];
+                
+                let isVisible = players.some(p => p.id !== player.id && p.currentQ && p.currentQ.q === candidate.q);
+                
+                if (!isVisible) {
+                    currentQ = candidate;
+                    break;
+                }
+                
+                // Eğer soru başkasındaysa bir sonrakine atla
+                player.qIndex = (player.qIndex + 1) % player.qs.length;
+                attempts++;
+            }
+            
+            // Eğer inanılmaz bir ihtimalle hepsi doluysa mecburen baştakini al (Geriye düşmemek için)
+            if (!currentQ) {
+                currentQ = player.qs[player.qIndex];
+            }
+
+            // Seçilen soruyu, diğerlerinin kontrol edebilmesi için oyuncu objesine kaydet
+            player.currentQ = currentQ; 
+
+            let qBox = document.createElement('div');
+            qBox.className = 'question-box';
+            qBox.innerText = currentQ.q;
+
+            let optGrid = document.createElement('div');
+            optGrid.className = 'options-grid';
+
+            currentQ.options.forEach((optText, index) => {
+                let btn = document.createElement('button');
+                btn.className = 'option-btn';
+                
+                const parts = optText.match(/^([A-E]\))\s*(.*)$/);
+                if (parts) {
+                    btn.innerHTML = `<div class="opt-content"><span class="opt-letter">${parts[1]}</span><span class="opt-text">${parts[2]}</span></div>`;
+                } else {
+                    btn.innerText = optText; 
+                }
+                
+                btn.onclick = () => checkAnswer(player, index, currentQ.answer, btn, container);
+                optGrid.appendChild(btn);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(qBox);
+            container.appendChild(optGrid);
+        }
+
+        // --- YANLIŞTA AYNI SORUDA KALMA VE YANIP SÖNME ---
+        function checkAnswer(player, selectedIdx, correctIdx, btnElement, container) {
+            if (isGameOver) return;
+            
+            if (selectedIdx === correctIdx) {
+                let buttons = container.querySelectorAll('.option-btn');
+                buttons.forEach(b => b.disabled = true); 
+
+                btnElement.classList.add('correct'); 
+                playSound('correct'); 
+                movePlayer(player);
+                
+                player.qIndex++;
+                setTimeout(() => { if (!isGameOver) renderQuestion(player, container); }, 1000); 
+            } else {
+                btnElement.classList.add('wrong'); 
+                btnElement.disabled = true; // Kırmızı iken basılmasını engelle
+                playSound('wrong');
+                
+                // 0.5 saniye sonra butonu normal haline (beyaza) döndür ve tıklanabilir yap
+                setTimeout(() => {
+                    btnElement.classList.remove('wrong');
+                    btnElement.disabled = false;
+                }, 500);
+            }
+        }
+
+        function botPlay() {
+            if (isGameOver) return;
+            let botPlayer = players[1]; 
+            
+            let isCorrect = Math.random() < 0.50; 
+            
+            if (isCorrect) {
+                playSound('correct'); movePlayer(botPlayer);
+            } else {
+                playSound('wrong');
+            }
+        }
+
+        function movePlayer(player) {
+            player.score++;
+            let avatar = document.getElementById(`avatar-${player.id}`);
+            
+            // Adım atma animasyonu
+            avatar.classList.add('moving');
+            setTimeout(() => avatar.classList.remove('moving'), 200);
+
+            let progress = (player.score / WIN_SCORE) * 85; 
+            avatar.style.left = `${2 + progress}%`; 
+
+            if (player.score >= WIN_SCORE) endGame(player);
+        }
+
+        // --- KAZANMA EKRANI ---
+        function endGame(winner) {
+            isGameOver = true;
+            clearInterval(botInterval); playSound('win');
+            
+            setTimeout(() => {
+                const title = document.getElementById('winner-name');
+                const winnerScreen = document.getElementById('winner-screen');
+                
+                if (gameMode === 'bot' && winner.isBot) {
+                    title.innerText = "BOT KAZANDI!"; title.style.color = '#e74c3c';
+                } else if (gameMode === 'bot') {
+                    title.innerText = "SEN KAZANDIN!"; title.style.color = '#3498db';
+                } else if (gameMode === '1v1') {
+                    title.innerText = `${winner.name} KAZANDI!`; title.style.color = (winner.id === 1 ? '#3498db' : '#e74c3c');
+                } else {
+                    title.innerText = `${winner.name} KAZANDI!`; title.style.color = (winner.id === 1 ? '#3498db' : (winner.id === 2 ? '#e74c3c' : '#2ecc71'));
+                }
+                switchScreen('winner-screen');
+            }, 800); 
+        }
+
+    </script>
+</body>
+</html>
