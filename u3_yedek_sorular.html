@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12. Sınıf - 3. Ünite Değerlendirme: Veda Haccı</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Merriweather:wght@400;700;900&family=Oswald:wght@500;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Renk Paleti */
+            --primary: #107C91; /* Turkuaz */
+            --secondary: #ECA418; /* Hardal */
+            --bg-color: #eef2f5;
+            --text-color: #2c3e50;
+            --white: #ffffff;
+            
+            /* FONT AYARLARI */
+            --body-font: 'Open Sans', sans-serif;        
+            --serif-font: 'Merriweather', serif;        
+            --condensed-font: 'Oswald', sans-serif;     
+            --geometric-font: 'Jost', sans-serif;        
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--body-font);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* --- ANA ÇERÇEVE --- */
+        .main-frame {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid #d1d9e6;
+        }
+
+        /* --- HEADER TASARIMI --- */
+        header {
+            background-color: var(--primary);
+            height: 140px; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-bottom: 4px solid var(--secondary);
+        }
+
+        .header-sub-line {
+            width: 100%;
+            height: 1px; 
+            background-color: var(--primary);
+        }
+
+        /* 1. Katman: Beyaz Çizgi */
+        .header-shape-white {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 110px; 
+            background-color: white;
+            clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
+            z-index: 1;
+        }
+
+        /* 2. Katman: Hardal Alan */
+        .header-shape-secondary {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 102px; 
+            background-color: var(--secondary);
+            clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-right: 25px; 
+        }
+
+        /* Sol Taraftaki Yazı Grubu */
+        .header-left-content {
+            font-family: var(--condensed-font);
+            color: white; 
+            -webkit-text-stroke: 5px var(--primary); 
+            paint-order: stroke fill; 
+            line-height: 1;
+            text-align: center;
+            transform: none; 
+        }
+
+        .h-number {
+            font-size: 3.8rem; 
+            font-weight: 800;
+            display: block;
+            line-height: 0.8;
+            letter-spacing: -1px;
+        }
+        
+        .h-text {
+            font-size: 1.6rem; 
+            font-weight: 800;
+            display: block;
+            margin-top: 12px; 
+            letter-spacing: 0px;
+        }
+
+        /* Sağ Taraftaki Yazı Grubu */
+        .header-right-content {
+            position: relative;
+            z-index: 3;
+            margin-left: 110px; 
+            width: calc(100% - 110px);
+            padding: 10px 15px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* 1. Satır: 12.SINIF... */
+        .header-line-1 {
+            font-family: var(--serif-font);
+            font-size: 1rem;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+            line-height: 1.2;
+        }
+        .header-line-1 span:first-child { 
+            font-weight: 800; 
+            letter-spacing: 0.5px;
+        }
+        .header-line-1 span:last-child {
+            font-weight: 600;
+            opacity: 0.95;
+        }
+
+        /* 2. Satır: KUDÜS... */
+        .header-line-2 {
+            font-family: var(--condensed-font);
+            font-size: 1.25rem; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+            margin-bottom: 6px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* 3. Satır: 1.Ünite... */
+        .header-line-3 {
+            font-family: var(--geometric-font);
+            font-size: 2rem;
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        /* --- İÇERİK ALANI --- */
+        .content-area { padding: 25px; }
+
+        /* --- KONTROL PANELİ --- */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .info-text { font-weight: 700; font-size: 1rem; color: var(--primary); }
+        .right-controls { display: flex; align-items: center; gap: 10px; }
+        .view-label { font-size: 0.9rem; color: #555; font-weight: 600; }
+        
+        .mode-toggle {
+            display: flex; gap: 5px; align-items: center;
+            background: #e9ecef; padding: 4px; border-radius: 20px;
+        }
+        .switch-btn {
+            background: transparent; border: none; padding: 6px 14px;
+            border-radius: 16px; cursor: pointer; transition: all 0.3s;
+            font-size: 0.85rem; font-family: var(--body-font);
+            font-weight: 600; color: #666;
+        }
+        .switch-btn.active {
+            background: var(--white); color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* --- SORU KARTLARI --- */
+        .question-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .question-card::after {
+            content: ''; position: absolute; left: 0; top: 15px; bottom: 15px;
+            width: 4px; background-color: var(--secondary); border-radius: 0 4px 4px 0;
+        }
+
+        .q-header {
+            display: flex; justify-content: space-between; margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 700; 
+            font-size: 1.1rem; letter-spacing: 0.5px;
+            border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;
+        }
+
+        .q-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #2c3e50;
+            letter-spacing: -0.1px;
+        }
+
+        /* Boşluk Doldurma Satırları */
+        .fill-blank-row {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .fill-blank-row:last-child { border-bottom: none; }
+
+        /* --- SEÇENEKLER --- */
+        .options-list { list-style: none; padding: 0; margin: 0; }
+        .option-item { margin-bottom: 10px; }
+        
+        .option-label {
+            display: flex; align-items: center; padding: 12px 15px;
+            border: 1px solid #d1d9e6; border-radius: 8px; cursor: pointer;
+            transition: 0.2s; background-color: #fff;
+            font-size: 0.95rem; 
+            color: #34495e;
+            font-weight: 600; 
+        }
+        .option-label:hover { 
+            border-color: var(--primary); 
+            background-color: #f0f7f9; 
+        }
+        
+        input[type="radio"] { margin-right: 15px; accent-color: var(--primary); transform: scale(1.3); }
+
+        /* --- D/Y TABLOSU --- */
+        .tf-container { margin-bottom: 15px; }
+        .tf-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #eee;
+        }
+        .tf-statement {
+            flex: 1; padding-right: 20px; font-size: 0.95rem;
+            font-weight: 600; color: #34495e;
+        }
+        .tf-options {
+            display: flex; gap: 20px; min-width: 150px; justify-content: flex-end;
+        }
+        .tf-option-label {
+            display: flex; align-items: center; font-size: 0.9rem;
+            font-weight: 600; color: #555; cursor: pointer;
+        }
+        .tf-option-label input { margin-right: 6px; transform: scale(1.2); accent-color: var(--primary); }
+
+        /* --- BOŞLUK DOLDURMA (ComboBoxes) --- */
+        select {
+            padding: 8px 10px; border: 1px solid #aaa; border-radius: 4px;
+            font-family: var(--body-font); font-weight: 600; color: #333;
+            cursor: pointer; background: #fff; margin: 0 5px;
+        }
+
+        /* --- SÜRÜKLE BIRAK (DRAG & DROP) CSS EKLENTİSİ --- */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f7f9;
+            border: 2px dashed #b1d0d6;
+            border-radius: 8px;
+            min-height: 60px;
+            align-items: center;
+        }
+        .draggable-word {
+            background-color: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+        .draggable-word:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+        .draggable-word[draggable="false"] {
+            cursor: default;
+            opacity: 0.7;
+        }
+        .drop-zone {
+            display: inline-flex;
+            min-width: 160px;
+            height: 40px;
+            border: 2px dashed #aaa;
+            border-radius: 20px;
+            vertical-align: middle;
+            margin: 0 5px;
+            background-color: #fafafa;
+            transition: all 0.3s;
+            align-items: center;
+            justify-content: center;
+        }
+        .drop-zone.drag-over {
+            border-color: var(--secondary);
+            background-color: #fdf5e6;
+            transform: scale(1.05);
+        }
+        .drop-zone .draggable-word {
+            margin: 0;
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+        }
+
+        /* --- BUTONLAR --- */
+        .action-btn {
+            background-color: var(--secondary); color: white; border: none;
+            padding: 12px 30px; border-radius: 6px; font-size: 1.0rem;
+            cursor: pointer; font-weight: 700; font-family: var(--body-font);
+            margin-top: 15px; transition: 0.2s; box-shadow: 0 3px 6px rgba(236, 164, 24, 0.25);
+        }
+        .action-btn:hover { background-color: #d69212; transform: translateY(-2px); }
+        .action-btn:disabled { background-color: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .nav-container {
+            display: flex;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        #btn-prev { margin-right: auto; }
+        #btn-next { margin-left: auto; }
+
+        .nav-btn {
+            background-color: var(--text-color); color: white; border: none;
+            padding: 10px 25px; border-radius: 6px; cursor: pointer;
+            font-weight: 600; font-family: var(--body-font); font-size: 0.95rem;
+        }
+        .nav-btn:hover { opacity: 0.9; }
+
+        /* --- BİTİRME BUTONU --- */
+        .finish-btn-container {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 2px dashed #e0e0e0;
+        }
+        
+        .finish-btn {
+            background-color: var(--primary); /* Koyu Turkuaz */
+            color: var(--secondary);          /* Hardal */
+            font-size: 1.2rem;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 800;
+            font-family: var(--condensed-font);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(16, 124, 145, 0.3);
+        }
+
+        .finish-btn:disabled {
+            background-color: #95a5a6;
+            color: #ecf0f1;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+
+        .finish-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(16, 124, 145, 0.4);
+        }
+
+        /* --- GERİ BİLDİRİM KUTUSU --- */
+        .feedback {
+            margin-top: 25px; 
+            padding: 20px; 
+            border-radius: 8px; 
+            display: none;
+            font-family: 'Open Sans', sans-serif; 
+            font-size: 0.95rem; 
+            font-weight: 600;    
+            line-height: 1.6;
+        }
+        /* Başlıklar İçin Özel Sınıf */
+        .feedback .feedback-title {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 8px; 
+            font-weight: 800; 
+        }
+
+        .feedback.correct { background-color: #e6ffed; color: #0d5a28; border: 1px solid #b7ebc7; }
+        .feedback.incorrect { background-color: #ffeef0; color: #8a1f2d; border: 1px solid #fadbd8; }
+
+        /* --- SONUÇ --- */
+        #result-screen { display: none; text-align: center; padding: 50px 20px; }
+        .score-circle {
+            width: 150px; height: 150px; border-radius: 50%; background: var(--primary);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 2.8rem; font-weight: 800; margin: 0 auto 25px;
+            border: 8px solid var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .hidden { display: none !important; }
+        
+        .progress-container {
+            width: 100%; background-color: #e0e0e0; height: 6px;
+            margin-top: 10px; border-radius: 3px; display: none; overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%; background-color: var(--secondary); width: 0%; transition: width 0.3s;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            header { height: auto; flex-direction: column; padding: 0; }
+            .header-shape-white, .header-shape-secondary { width: 100%; clip-path: none; position: relative; height: 100px; padding-right: 0;}
+            .header-right-content { width: 100%; margin: 0; background: var(--primary); padding: 20px; }
+            .header-shape-white { display: none; } 
+            .header-shape-secondary { width: 100%; clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%); }
+            
+            .content-area { padding: 15px; }
+            .view-label { display: none; }
+            .tf-row { flex-direction: column; align-items: flex-start; }
+            .tf-options { margin-top: 10px; width: 100%; justify-content: flex-start; }
+            .drop-zone { min-width: 120px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-frame">
+        
+        <header>
+            <div class="header-shape-white"></div>
+            
+            <div class="header-shape-secondary">
+                <div class="header-left-content">
+                    <span class="h-number">3.</span>
+                    <span class="h-text">ÜNİTE</span>
+                </div>
+            </div>
+
+            <div class="header-right-content">
+                <div class="header-line-1">
+                    <span>Peygamberimizin Hayatı</span>
+                    <span>12. SINIF</span>
+                </div>
+                
+                <div class="header-line-2">
+                    PEYGAMBERİMİZİN HAYATINDA ÖNEMLİ BİR HADİSE: VEDA HACCI
+                </div>
+
+                <div class="header-line-3">
+                    3. Ünite Ölçme ve Değerlendirme
+                </div>
+            </div>
+        </header>
+        
+        <div class="header-sub-line"></div>
+
+        <div class="content-area">
+            
+            <div id="quiz-panel">
+                <div class="controls">
+                    <div class="info-text">
+                        Soru: <span id="progress-text">1/14</span>
+                    </div>
+                    
+                    <div class="right-controls">
+                        <span class="view-label">Sorular nasıl görüntülensin?</span>
+                        <div class="mode-toggle">
+                            <button class="switch-btn active" id="btn-scroll" onclick="setMode('scroll')">Liste</button>
+                            <button class="switch-btn" id="btn-slide" onclick="setMode('slide')">Tek tek</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-container" id="prog-bar-cont">
+                    <div class="progress-bar" id="prog-bar"></div>
+                </div>
+            </div>
+
+            <div id="questions-container"></div>
+
+            <div id="slide-nav" class="nav-container hidden">
+                <button id="btn-prev" class="nav-btn" onclick="prevSlide()">Önceki</button>
+                <button id="btn-next" class="nav-btn" style="background-color: var(--primary);" onclick="nextSlide()">Sonraki</button>
+            </div>
+
+            <div class="finish-btn-container">
+                <button id="finish-btn" class="finish-btn" onclick="showResults()" disabled>Sonuçlarımı Göreyim</button>
+            </div>
+
+            <div id="result-screen">
+                <h2 style="color: var(--text-color); margin-bottom: 15px;">Tüm Sorular Cevaplandı.</h2>
+                <p style="font-size: 1.2rem; font-weight: 600; color: #555; margin-bottom: 15px;">TOPLAM PUAN:</p>
+                <div class="score-circle" id="final-score">0</div>
+                <div id="final-details" style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">
+                    </div>
+                <button class="action-btn" onclick="location.reload()">Etkinliği Tekrarla</button>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+    // --- SÜRÜKLE BIRAK İŞLEVLERİ (GLOBAL) ---
+    function allowDrop(ev) {
+        ev.preventDefault();
+        if(ev.currentTarget.classList.contains('drop-zone')) {
+            ev.currentTarget.classList.add('drag-over');
+        }
+    }
+    
+    function dragLeave(ev) {
+        ev.currentTarget.classList.remove('drag-over');
+    }
+    
+    function drag(ev) {
+        ev.dataTransfer.setData("text/plain", ev.target.id);
+    }
+    
+    function drop(ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.remove('drag-over');
+        
+        var data = ev.dataTransfer.getData("text/plain");
+        var draggedElement = document.getElementById(data);
+        if (!draggedElement) return;
+
+        if (ev.currentTarget.classList.contains('drop-zone')) {
+            if (ev.currentTarget.children.length > 0) {
+                var existingWord = ev.currentTarget.children[0];
+                var qIndex = ev.currentTarget.getAttribute('data-qindex');
+                var wordBank = document.getElementById('word-bank-' + qIndex);
+                if(wordBank) wordBank.appendChild(existingWord);
+            }
+            ev.currentTarget.appendChild(draggedElement);
+        } 
+        else if (ev.currentTarget.classList.contains('word-bank')) {
+            ev.currentTarget.appendChild(draggedElement);
+        }
+    }
+
+    const questions = [
+        {
+            id: 1,
+            type: "mcq",
+            title: "SORU 1",
+            text: "Peygamber Efendimiz, Veda Haccı’na çıkmadan önce hazırlık yaparak Medine’de Müslümanlara hac yapacağını duyurmuş, isteyen herkesin kendisine katılabileceğini bildirmiştir. Güzergâhı belirlemiş, kafilelerin düzenli hareket etmesi için talimatlar vermiştir. Erzak, su kapları ve binek hayvanları hazırlatmış; Müslümanlara da aynı şekilde hazırlık yapmalarını tavsiye etmiştir. Medine’de yerine Ebu Dücane’yi bırakmış ve şehirde asayişi sağlayacak bazı görevlendirmeler yapmıştır.<br><br>Metne hareketle aşağıdaki yargılardan hangisine <u>ulaşılamaz</u>?",
+            options: [
+                "A) Lojistik hazırlıklar titizlikle yürütülmüştür.",
+                "B) Hac ibadeti için herkesin yola çıkması istenmiştir.",
+                "C) Medine’nin güvenliği için idari tedbirler alınmıştır.",
+                "D) Peygamber Efendimiz, ümmetine sorumluluk bilinci aşılamıştır.",
+                "E) Peygamberimiz, ibadet yolculuğunda planlı ve tertipli hareket etmiştir."
+            ],
+            correctIndex: 1,
+            explanation: "Metinde ‘isteyen herkesin katılabileceği’ ifadesi geçmektedir; bu durum zorunluluk değil, gönüllülük esasını gösterir. Herkesin yola çıkması mecburi tutulmamıştır."
+        },
+        {
+            id: 2,
+            type: "true_false_multi",
+            title: "SORU 2",
+            text: "Aşağıdaki ifadeleri doğru ya da yanlış olma durumlarına göre işaretleyiniz.",
+            items: [
+                {txt: "Peygamber Efendimiz, Veda Haccı’nda Zülhuleyfe’de ihrama girmiştir.", ans: true},
+                {txt: "Veda Hutbesi yalnızca Arafat’ta irat edilmiş, başka mekânlarda hutbe verilmemiştir.", ans: false},
+                {txt: "Peygamberimiz, ihrama girdikten sonra yüksek sesle telbiye getirmiştir.", ans: true},
+                {txt: "Veda Haccı’na yaklaşık yüz yirmi dört bin sahabe katılmıştır.", ans: true},
+                {txt: "Peygamberimiz, Mekke’ye varışında tavafı yaya olarak yapmıştır.", ans: false}
+            ],
+            explanation: "Peygamberimiz Arafat dışında Mina’da da birden fazla hutbe irat etmiştir. Tavafı ise yaya olarak değil devesi üzerinde yapmıştır."
+        },
+        {
+            id: 3,
+            type: "mcq",
+            title: "SORU 3",
+            text: "Peygamber Efendimiz, Veda Haccı sırasında, “Haccınızı benden öğrenin. Zira bilmiyorum, belki de bu haccımdan sonra bir daha haccedemem.” buyurmuştur.<br><br>Bu söz, en çok aşağıdakilerden hangisiyle ilişkilendirilebilir?",
+            options: [
+                "A) Haccın gücü yeten her Müslümana farz olması",
+                "B) Hac ibadetinin bir kez yapılması gerektiği",
+                "C) Peygamber Efendimizin vefatının yaklaştığı",
+                "D) Hac yolculuğunun Müslümanlar için öğretici olması",
+                "E) Sahabenin hac konusunda yeterli bilgiye sahip olması"
+            ],
+            correctIndex: 2,
+            explanation: "Bu ifade, Peygamberimizin ümmetiyle vedalaşma niteliğinde olup vefatının yaklaştığına işaret etmektedir."
+        },
+        {
+            id: 4,
+            type: "drag_drop", 
+            title: "SORU 4",
+            text: [
+                "Aşağıdaki cümlelerde boş bırakılan yerleri uygun kelimeleri <strong>sürükleyip bırakarak</strong> tamamlayınız.",
+                "1. Farz kılınışından sonra Peygamberimizin ilk eda ettiği hac olduğu için {input0} olarak adlandırılmaktadır.",
+                "2. Peygamberimiz, Arife Günü {input1} denilen yerde kurulan çadırında dinlenmiştir.",
+                "3. Peygamberimizin hac yolculuğundaki devesinin adı {input2} idi.",
+                "4. Peygamberimizin tebliğ görevini tamamlayarak ümmetine son kez hitap etmesi sebebiyle {input3} olarak da nitelendirilmiştir.",
+                "5. Mina günlerinde {input4} suresi nazil olmuş ve Peygamberimiz bu sureyle vedasının yaklaştığını anlamıştır."
+            ],
+            options: ["Nasr", "Haccetü’l-İslam", "Nemire", "Ebtah", "Haccetü’l-Belâğ", "Kasva", "Cemel", "Fetih"],
+            answers: ["Haccetü’l-İslam", "Nemire", "Kasva", "Haccetü’l-Belâğ", "Nasr"],
+            explanation: "Peygamberimizin bu haccına Haccetü'l-İslam veya Haccetü'l-Belağ gibi isimler verilir. Devesinin adı Kasva idi ve çadırı Nemire'de kurulmuştu."
+        },
+        {
+            id: 5,
+            type: "mcq",
+            title: "SORU 5",
+            text: "Veda Hutbesi’nde Peygamber Efendimiz şöyle buyurmuştur: “Ey insanlar! Biliniz ki Rabbiniz birdir, atanız da birdir. Bütün insanlar Âdem’den gelmiş, Âdem de topraktan yaratılmıştır. Arap’ın Arap olmayana, Arap olmayanın Arap’a; beyazın siyaha, siyahın da beyaza hiçbir üstünlüğü yoktur. Allah katında üstünlük ancak takva iledir.”<br><br>Bu sözlerin ardından hutbesinin sonunda sahabilere dönerek tebliğ görevini yerine getirip getirmediğini sormuş, onların “Evet, tebliğ ettin.” cevabı üzerine “Allah’ım, şahit ol!” buyurmuştur.<br><br>Peygamber Efendimiz, Veda hutbesinin sonunda sahabileri şahit tutması, aşağıdaki kavramlardan hangisiyle ilişkilendirilebilir?",
+            options: [
+                "A) Emanet ve sorumluluk bilinci",
+                "B) Kadın haklarının açıklanması",
+                "C) Kan davalarının kaldırılması",
+                "D) Soy üstünlüğünün yasaklanması",
+                "E) Miras hukukunun düzenlenmesi"
+            ],
+            correctIndex: 0,
+            explanation: "Peygamberimizin sahabileri şahit tutması, tebliğ emanetinin yerine getirildiğini tescil ettirme ve bu sorumluluğu ümmete devretme bilincini yansıtmaktadır."
+        },
+        {
+            id: 6,
+            type: "mcq",
+            title: "SORU 6",
+            text: "Veda Hutbesi'nde Peygamber Efendimiz’in, “Siz kadınları Allah'ın emaneti olarak aldınız. Onların namus ve iffetini Allah adına söz vererek helal edindiniz. Sizin onlar üzerinde hakkınız olduğu gibi onların da sizin üzerinizde hakları vardır.”<br>sözlerinden aşağıdakilerden hangisi <u>çıkarılamaz</u>?",
+            options: [
+                "A) Evlilik, Allah adına yapılan bir sözleşmedir.",
+                "B) Kadınların hakları güvence altına alınmıştır.",
+                "C) Kadınların Allah'ın emaneti olarak korunması gerekir.",
+                "D) Aile içi ilişkilerde tek taraflı bir anlayış benimsenmiştir.",
+                "E) Evlilik karşılıklı hak ve sorumluluklar üzerine kurulmuştur."
+            ],
+            correctIndex: 3,
+            explanation: "Metinde 'sizin onlar üzerinde hakkınız olduğu gibi onların da sizin üzerinizde hakları vardır' buyrularak tek taraflı değil, karşılıklı hak ve sorumluluk anlayışı vurgulanmıştır."
+        },
+        {
+            id: 7,
+            type: "true_false_multi",
+            title: "SORU 7",
+            text: "Aşağıdaki ifadeleri doğru ya da yanlış olma durumlarına göre işaretleyiniz.",
+            items: [
+                {txt: "Cahiliye Dönemi’ne ait faiz yasaklanmış, ilk olarak Abbas bin Abdülmuttalib’in faizi kaldırılmıştır.", ans: true},
+                {txt: "Çocukların babalarından başkasına nispet edilemeyeceği belirtilmiştir.", ans: true},
+                {txt: "Yöneticilere her durumda itaat edilmesi emredilmiştir.", ans: false},
+                {txt: "Müslümanların birbirine zulmetmemesi gerektiği vurgulanmıştır.", ans: true},
+                {txt: "Miras hukukuyla ilgili herhangi bir konuya değinilmemiştir.", ans: false}
+            ],
+            explanation: "Yöneticilere itaat 'Allah’ın kitabına uydukları sürece' şartına bağlanmıştır. Miras konusunda ise 'Allah her varisin mirastan payını tayin etmiştir' buyurularak konuya değinilmiştir."
+        },
+        {
+            id: 8,
+            type: "mcq",
+            title: "SORU 8",
+            text: "Peygamber Efendimiz’in Müzdelife’de akşam namazını geciktirerek yatsı namazıyla birlikte kılması aşağıdaki kavramlardan hangisiyle ifade edilir?",
+            options: [
+                "A) Cem-i takdim",
+                "B) Cem-i tehir",
+                "C) Kaza namazı",
+                "D) Nafile namaz",
+                "E) Duha namazı"
+            ],
+            correctIndex: 1,
+            explanation: "Akşam namazının yatsı vaktine ertelenerek birlikte kılınmasına cem-i tehir denir."
+        },
+        {
+            id: 9,
+            type: "mcq",
+            title: "SORU 9",
+            text: "Peygamber Efendimiz Veda Hutbesi’nde, “Burada bulunanlar, bulunmayanlara anlatsın.” ifadesiyle aşağıdakilerden hangisini vurgulamaktadır?",
+            options: [
+                "A) Hac ibadetinin öğretilmesi",
+                "B) Siyasi istikrarın sağlanması",
+                "C) Ticarette dürüst davranılması",
+                "D) İnsan haklarının korunması",
+                "E) İslam’ı tebliğ etme sorumluluğu"
+            ],
+            correctIndex: 4,
+            explanation: "Bu söz, sahabeye ve bütün Müslümanlara İslam’ı tebliğ etme (başkalarına ulaştırma) mesuliyetini hatırlatmaktadır."
+        },
+        {
+            id: 10,
+            type: "drag_drop",
+            title: "SORU 10",
+            text: [
+                "Aşağıdaki cümlelerde boş bırakılan yerleri uygun kelimeleri <strong>sürükleyip bırakarak</strong> tamamlayınız.",
+                "1. Peygamberimiz Medine’den ayrılmadan önce yerine {input0} olarak Ebu Dücane’yi bırakmıştır.",
+                "2. Arafat’ta {input1} sırasında Peygamberimiz Cebel-i Rahme’nin eteğinde durmuştur.",
+                "3. Peygamberimiz Kâbe’yi deve üzerinde tavaf ederken Hacerülesved’i {input2} denilen değnekle selamlamıştır.",
+                "4. Arafat vakfesi sırasında dinî hükümlerin kemale erdiğini bildiren {input3} suresinin 3. ayeti nazil olmuştur."
+            ],
+            options: ["vekil", "vakfe", "Meşar-ı Haram", "Nasr", "halife", "mihcen", "Maide"],
+            answers: ["vekil", "vakfe", "mihcen", "Maide"],
+            explanation: "Medine'de yerine vekil olarak Ebu Dücane'yi bırakmış, Arafat'ta vakfe yapmış, Hacerülesved'i mihcen ile selamlamış ve Maide suresi 3. ayet inmiştir."
+        },
+        {
+            id: 11,
+            type: "mcq",
+            title: "SORU 11",
+            text: "Veda Hutbesi’nde, “Ödünç alınan şeyler sahibine geri verilmelidir. Borçlar ödenmelidir. Kimin yanında bir emanet varsa onu sahibine iade etsin.”<br>ifadeleri aşağıdaki temel ilkelerden hangisiyle doğrudan ilişkilidir?",
+            options: [
+                "A) Sorumluluk",
+                "B) Merhamet",
+                "C) Cömertlik",
+                "D) Diğerkâmlık",
+                "E) Yardımlaşma"
+            ],
+            correctIndex: 0,
+            explanation: "Borç ödeme, emanet iade etme ve ödünç alınan şeyleri geri verme, kişinin üzerindeki emanet ve sosyal haklara dair 'sorumluluk' bilincinin temel ilkeleridir."
+        },
+        {
+            id: 12,
+            type: "mcq",
+            title: "SORU 12",
+            text: "Peygamber Efendimiz, bayramın birinci günü Mina’da verdiği hutbede aşırılıklardan kaçınmayı tavsiye etmiş, dengeli bir hayatın önemine dikkat çekmiştir. Geçmiş ümmetlerin aşırılıklar yüzünden helak olduklarını hatırlatarak Müslümanların her konuda itidalli davranmaları gerektiğini vurgulamıştır. Yine bu hutbede, “Benden gördüğünüz gibi yapın.” buyurarak ibadetin öğrettiği şekilde ifa edilmesi gerektiğini belirtmiştir.<br><br>Peygamber Efendimiz’in bu mesajlarından aşağıdakilerden hangisi <u>çıkarılamaz</u>?",
+            options: [
+                "A) İbadette sünnetin esas alınması",
+                "B) İfrat ve tefritten uzak durulması",
+                "C) Haccın nasıl yapıldığının gösterilmesi",
+                "D) Önceki toplumların akıbetinden ibret alınması",
+                "E) Dengeli bir hayatın İslam’ın temel hedeflerinden biri olması"
+            ],
+            correctIndex: 3,
+            explanation: "Metinde geçmiş ümmetlerin helak oluşundan aşırılığa karşı bir uyarı olarak bahsedilmektedir. Ancak hutbenin asıl odak noktası önceki toplumların akıbetini detaylıca incelemekten (sırf ibret almak gayesi gütmekten) ziyade, Müslümanların kendi hayatlarında aşırılıktan uzak (itidalli) durmaları ve ibadetlerde doğrudan Peygamberimizi örnek almalarıdır."
+        },
+        {
+            id: 13,
+            type: "true_false_multi",
+            title: "SORU 13",
+            text: "Aşağıdaki ifadeleri doğru ya da yanlış olma durumlarına göre işaretleyiniz.",
+            items: [
+                {txt: "Peygamberimiz, ikindi namazını Arafat vakfesinde öğle namazının hemen ardından cem-i takdimle kılmıştır.", ans: true},
+                {txt: "Peygamberimiz, kurbanlar kesildikten sonra saçını tıraş ettirmiş fakat ihramdan çıkmamıştır.", ans: false},
+                {txt: "Veda tavafı, Mekke’den ayrılmadan önce yapılan son tavaftır.", ans: true},
+                {txt: "Peygamberimiz, Veda Haccı’ndan altı ay sonra vefat etmiştir.", ans: false},
+                {txt: "Peygamberimiz, Safa Tepesi’nde Bakara suresinin 158. ayetini okumuştur.", ans: true}
+            ],
+            explanation: "Peygamberimiz Veda Haccı’ndan yaklaşık üç ay sonra vefat etmiştir. Ayrıca kurban kesip saçını tıraş ettirdikten sonra ihramdan çıkmıştır."
+        },
+        {
+            id: 14,
+            type: "mcq",
+            title: "SORU 14",
+            text: "Veda Hutbesi’nde “Herkes ancak kendi işlediği suçtan sorumludur. Baba oğlunun, oğul da babasının suçundan sorumlu tutulamaz.”<br><br>ifadesi aşağıdakilerden hangisiyle doğrudan ilgilidir?",
+            options: [
+                "A) Ailenin korunması",
+                "B) Cezaların şahsiliği",
+                "C) Suçların doğru sınıflandırılması",
+                "D) Kamu hukukunun gözetilmesi",
+                "E) Miras hukukuna riayet edilmesi"
+            ],
+            correctIndex: 1,
+            explanation: "Bu ifade, suç ve cezanın şahsi olduğunu, bir kişinin başkasının suçundan sorumlu tutulamayacağını belirtir; bu da modern hukuktaki ‘cezaların şahsiliği’ ilkesidir."
+        }
+    ];
+
+    let currentMode = 'scroll'; 
+    let currentSlide = 0;
+    
+    // Puanlama Değişkenleri
+    let currentScore = 0;      
+    let answeredCount = 0;
+    
+    // İstatistikler 
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    window.onload = function() {
+        renderQuestions();
+        updateProgress();
+        if(currentMode === 'slide') updateNavVisibility();
+    };
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.getElementById('btn-scroll').classList.toggle('active', mode === 'scroll');
+        document.getElementById('btn-slide').classList.toggle('active', mode === 'slide');
+        
+        const cards = document.querySelectorAll('.question-card-item');
+        const slideNav = document.getElementById('slide-nav');
+        const progBarCont = document.getElementById('prog-bar-cont');
+
+        if (mode === 'scroll') {
+            cards.forEach(card => card.classList.remove('hidden'));
+            slideNav.classList.add('hidden');
+            progBarCont.style.display = 'none';
+        } else {
+            cards.forEach((card, index) => {
+                if(index === currentSlide) card.classList.remove('hidden');
+                else card.classList.add('hidden');
+            });
+            slideNav.classList.remove('hidden');
+            progBarCont.style.display = 'block';
+            updateNavVisibility();
+        }
+        updateProgress();
+    }
+
+    function updateNavVisibility() {
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        
+        if (!btnPrev || !btnNext) return;
+
+        if (currentSlide === 0) {
+            btnPrev.classList.add('hidden');
+        } else {
+            btnPrev.classList.remove('hidden');
+        }
+
+        if (currentSlide === questions.length - 1) {
+            btnNext.classList.add('hidden');
+        } else {
+            btnNext.classList.remove('hidden');
+        }
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questions-container');
+        container.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            let html = `<div class="question-card question-card-item" id="card-${index}">`;
+            html += `<div class="q-header">${q.title}</div>`;
+            
+            if (q.type === 'mcq') {
+                html += `<div class="q-text">${q.text}</div>`;
+                html += `<ul class="options-list">`;
+                q.options.forEach((opt, i) => {
+                    html += `<li class="option-item">
+                                <label class="option-label">
+                                    <input type="radio" name="q${index}" value="${i}">
+                                    ${opt}
+                                </label>
+                             </li>`;
+                });
+                html += `</ul>`;
+            } 
+            else if (q.type === 'drag_drop') {
+                let formattedText = '<div class="q-text">';
+                
+                if(Array.isArray(q.text) && q.text.length > 0) {
+                    formattedText += `<p>${q.text[0]}</p>`;
+                }
+                
+                formattedText += `<div class="word-bank" id="word-bank-${index}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">`;
+                q.options.forEach((opt, optIndex) => {
+                    formattedText += `<div class="draggable-word" draggable="true" ondragstart="drag(event)" id="drag-${index}-${optIndex}" data-value="${opt}">${opt}</div>`;
+                });
+                formattedText += `</div>`;
+
+                if(Array.isArray(q.text)) {
+                    for(let i = 1; i < q.text.length; i++) { 
+                        let lineHtml = q.text[i];
+                        lineHtml = lineHtml.replace(/{input(\d+)}/g, function(match, number) {
+                            let inputIndex = parseInt(number);
+                            return `<div class="drop-zone" id="q${index}_drop${inputIndex}" data-qindex="${index}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>`;
+                        });
+                        formattedText += `<div class="fill-blank-row">${lineHtml}</div>`;
+                    }
+                }
+                formattedText += '</div>';
+                html += formattedText;
+            }
+            else if (q.type === 'fill_blank') {
+                let formattedText = '<div class="q-text">';
+                if(Array.isArray(q.text)) {
+                    q.text.forEach(line => {
+                        let lineHtml = line;
+                        lineHtml = lineHtml.replace(/{input(\d+)}/g, function(match, number) {
+                            let i = parseInt(number);
+                            let dropdown = `<select id="q${index}_sel${i}"><option value="">Seçiniz...</option>`;
+                            q.options.forEach(opt => {
+                                dropdown += `<option value="${opt}">${opt}</option>`;
+                            });
+                            dropdown += `</select>`;
+                            return dropdown;
+                        });
+                        formattedText += `<div class="fill-blank-row">${lineHtml}</div>`;
+                    });
+                } else {
+                    let tempText = q.text;
+                    q.answers.forEach((ans, i) => {
+                        let dropdown = `<select id="q${index}_sel${i}"><option value="">Seçiniz...</option>`;
+                        q.options.forEach(opt => {
+                            dropdown += `<option value="${opt}">${opt}</option>`;
+                        });
+                        dropdown += `</select>`;
+                        tempText = tempText.replace(`{input${i}}`, dropdown);
+                    });
+                    formattedText += tempText;
+                }
+                formattedText += '</div>';
+                html += formattedText;
+            }
+            else if (q.type === 'true_false_multi') {
+                html += `<div class="q-text">${q.text}</div>`;
+                html += `<div class="tf-container">`;
+                q.items.forEach((item, i) => {
+                    html += `<div class="tf-row">
+                                <div class="tf-statement">${item.txt}</div>
+                                <div class="tf-options">
+                                    <label class="tf-option-label">
+                                        <input type="radio" name="q${index}_row${i}" value="true"> Doğru
+                                    </label>
+                                    <label class="tf-option-label">
+                                        <input type="radio" name="q${index}_row${i}" value="false"> Yanlış
+                                    </label>
+                                </div>
+                             </div>`;
+                });
+                html += `</div>`;
+            }
+
+            html += `<button class="action-btn" onclick="checkAnswer(${index})">Kontrol Et</button>`;
+            html += `<div class="feedback" id="feedback-${index}"></div>`;
+            html += `</div>`;
+            
+            container.innerHTML += html;
+        });
+
+        setMode(currentMode);
+    }
+
+    function checkAnswer(index) {
+        const q = questions[index];
+        const feedbackEl = document.getElementById(`feedback-${index}`);
+        const btn = document.querySelector(`#card-${index} .action-btn`);
+        
+        let questionScore = 0;
+        let questionMaxScore = 0;
+        let isFullyCorrect = false; 
+        
+        let errorDetails = "";
+
+        // --- ÇOKTAN SEÇMELİ (7 veya 8 PUAN) ---
+        if (q.type === 'mcq') {
+            let mcqScore = (["SORU 5", "SORU 6", "SORU 8", "SORU 9", "SORU 11"].includes(q.title)) ? 7 : 8;
+            questionMaxScore = mcqScore; 
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            
+            if (!selected) { alert('Lütfen bir seçenek işaretleyiniz.'); return; }
+            
+            if (parseInt(selected.value) === q.correctIndex) {
+                questionScore = mcqScore;
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+            }
+        } 
+        // --- SÜRÜKLE BIRAK DEĞERLENDİRMESİ (HER BOŞLUK 2 PUAN) ---
+        else if (q.type === 'drag_drop') {
+            let totalBlanks = q.answers.length;
+            let pointsPerBlank = 2; 
+            questionMaxScore = totalBlanks * pointsPerBlank;
+            
+            let correctMatches = 0;
+            let errorList = [];
+
+            for(let i=0; i < totalBlanks; i++) {
+                let dropZone = document.getElementById(`q${index}_drop${i}`);
+                if (!dropZone) continue;
+                
+                let userVal = "";
+                if (dropZone.children.length > 0) {
+                    userVal = dropZone.children[0].getAttribute('data-value');
+                }
+                
+                let correctVal = q.answers[i];
+
+                if(userVal === correctVal) {
+                    correctMatches++;
+                } else {
+                    let label = (i+1) + ". boşluk";
+                    if (Array.isArray(q.text) && q.text[i+1]) {
+                        let textLine = q.text[i+1].trim();
+                        if(textLine.startsWith("1.")) label = "1)";
+                        else if(textLine.startsWith("2.")) label = "2)";
+                        else if(textLine.startsWith("3.")) label = "3)";
+                        else if(textLine.startsWith("4.")) label = "4)";
+                        else if(textLine.startsWith("5.")) label = "5)";
+                    }
+                    
+                    errorList.push(`<li><strong>${label}</strong> Sizin cevabınız: "${userVal || 'Boş bırakıldı'}" <br> &nbsp;&nbsp;&nbsp;-> Doğrusu: <strong>"${correctVal}"</strong></li>`);
+                }
+                
+                if (dropZone.children.length > 0) {
+                    dropZone.children[0].setAttribute('draggable', 'false');
+                }
+            }
+            
+            let wordBankItems = document.querySelectorAll(`#word-bank-${index} .draggable-word`);
+            wordBankItems.forEach(item => item.setAttribute('draggable', 'false'));
+            
+            questionScore = correctMatches * pointsPerBlank;
+            
+            if(correctMatches === totalBlanks) {
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+                if(errorList.length > 0) {
+                    errorDetails = `<div style="margin-top:10px; font-size:0.9rem; color:#8a1f2d;"><strong>Hatalı Yerleştirmeler / Boş Bırakılanlar:</strong><ul style="margin-top:5px; padding-left:20px;">${errorList.join('')}</ul></div>`;
+                }
+            }
+        }
+        // --- BOŞLUK DOLDURMA (ComboBox) (HER BOŞLUK 2 PUAN) ---
+        else if (q.type === 'fill_blank') {
+            let totalBlanks = q.answers.length;
+            let pointsPerBlank = 2;
+            questionMaxScore = totalBlanks * pointsPerBlank;
+            let correctMatches = 0;
+            let errorList = [];
+
+            for(let i=0; i<totalBlanks; i++) {
+                let el = document.getElementById(`q${index}_sel${i}`);
+                if (!el) continue;
+                
+                let userVal = el.value;
+                let correctVal = q.answers[i];
+
+                if(userVal === correctVal) {
+                    correctMatches++;
+                } else {
+                    let label = (i+1) + ". boşluk/eşleşme";
+                    errorList.push(`<li><strong>${label}</strong> Sizin cevabınız: "${userVal || 'Boş'}" <br> &nbsp;&nbsp;&nbsp;-> Doğrusu: <strong>"${correctVal}"</strong></li>`);
+                }
+            }
+            
+            questionScore = correctMatches * pointsPerBlank;
+            
+            if(correctMatches === totalBlanks) {
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+                if(errorList.length > 0) {
+                    errorDetails = `<div style="margin-top:10px; font-size:0.9rem; color:#8a1f2d;"><strong>Hatalı Eşleştirmeler/Boşluklar:</strong><ul style="margin-top:5px; padding-left:20px;">${errorList.join('')}</ul></div>`;
+                }
+            }
+        }
+        // --- DOĞRU / YANLIŞ (HER SATIR 1 PUAN) ---
+        else if (q.type === 'true_false_multi') {
+            let totalItems = q.items.length;
+            let pointsPerItem = 1; 
+            questionMaxScore = totalItems * pointsPerItem;
+            
+            let correctItems = 0;
+            let answeredAll = true;
+            let errorList = [];
+
+            for(let i=0; i<totalItems; i++) {
+                const radios = document.querySelectorAll(`input[name="q${index}_row${i}"]:checked`);
+                if (radios.length === 0) { answeredAll = false; break; }
+                
+                const val = radios[0].value; 
+                let expectedVal = q.items[i].ans.toString();
+
+                if(val === expectedVal) {
+                    correctItems++;
+                } else {
+                    let correctLabel = q.items[i].ans ? "Doğru" : "Yanlış";
+                    let shortText = q.items[i].txt.length > 60 ? q.items[i].txt.substring(0, 60) + "..." : q.items[i].txt;
+                    errorList.push(`<li>"${shortText}" <br> &nbsp;&nbsp;&nbsp;-> Bu ifade <strong>${correctLabel}</strong> olmalıydı.</li>`);
+                }
+            }
+
+            if(!answeredAll) { alert('Lütfen tüm satırları cevaplayınız.'); return; }
+
+            questionScore = correctItems * pointsPerItem;
+
+            if(correctItems === totalItems) {
+                isFullyCorrect = true;
+                correctCount++;
+            } else {
+                wrongCount++;
+                if(errorList.length > 0) {
+                    errorDetails = `<div style="margin-top:10px; font-size:0.9rem; color:#8a1f2d;"><strong>Hatalı İşaretlemeler:</strong><ul style="margin-top:5px; padding-left:20px;">${errorList.join('')}</ul></div>`;
+                }
+            }
+        }
+
+        currentScore += questionScore;
+        answeredCount++;
+        
+        btn.disabled = true;
+        btn.style.opacity = "0.6";
+        
+        if(isFullyCorrect) {
+            btn.innerText = `Tam Puan! (+${questionScore})`;
+            btn.style.backgroundColor = "#28a745"; 
+        } else if (questionScore > 0) {
+            btn.innerText = `Kısmi Puan (+${questionScore})`;
+            btn.style.backgroundColor = "#ECA418"; 
+        } else {
+            btn.innerText = "Yanlış Cevap (0)";
+            btn.style.backgroundColor = "#dc3545"; 
+        }
+        
+        questions[index].answered = true;
+
+        feedbackEl.style.display = "block";
+        
+        let resultText = "";
+        let scoreDetail = "";
+
+        if (isFullyCorrect) {
+            resultText = "TEBRİKLER!"; 
+        } else if (questionScore > 0) {
+            resultText = "KISMEN DOĞRU.";
+        } else {
+            resultText = "YANLIŞ CEVAP!"; 
+        }
+
+        // Puan Durumunu Doğru Şekilde Belirleme Kısmı 
+        if (q.type !== 'mcq') {
+            scoreDetail = `
+                <div style="font-size:0.95rem; color:#555; display:block; margin-top:15px; line-height: 1.5;">
+                    Bu sorudan<br>
+                    <strong style="font-size:1.4rem; color:#333; display:block; margin:2px 0;">${questionMaxScore}</strong>
+                    üzerinden<br>
+                    <strong style="font-size:1.4rem; color:#333; display:block; margin:2px 0;">${questionScore}</strong>
+                    puan aldınız.
+                </div>
+            `;
+        }
+
+        let explanationText = q.explanation;
+        if (q.type === 'mcq' && !isFullyCorrect) {
+          let correctOpt = q.options[q.correctIndex].split(' ')[0].replace(')', '.');
+            explanationText = `<div style="margin-bottom: 8px;">Doğru Cevap: <strong>${correctOpt}</strong></div>` + explanationText;
+        }
+
+        feedbackEl.innerHTML = `<span class="feedback-title">${resultText}</span>${explanationText} ${errorDetails} ${scoreDetail}`;
+        feedbackEl.className = `feedback ${isFullyCorrect ? 'correct' : 'incorrect'}`;
+
+        updateProgress();
+
+        if (answeredCount === questions.length) {
+            let finishBtn = document.getElementById('finish-btn');
+            finishBtn.disabled = false;
+            finishBtn.style.transform = "scale(1.1)";
+            setTimeout(() => finishBtn.style.transform = "scale(1)", 300);
+        }
+    }
+
+    function updateProgress() {
+        document.getElementById('progress-text').innerText = `${answeredCount} / ${questions.length}`;
+        let percent = (answeredCount) / questions.length * 100;
+        
+        if (currentMode === 'slide') {
+             percent = (currentSlide + 1) / questions.length * 100;
+        }
+        document.getElementById('prog-bar').style.width = `${percent}%`;
+    }
+
+    function nextSlide() {
+        if (!questions[currentSlide].answered) {
+            alert('Bir sonraki sayfayı görmek için önce soruyu cevaplamalısınız.');
+            return;
+        }
+
+        if(currentSlide < questions.length - 1) {
+            currentSlide++;
+            setMode('slide');
+            updateNavVisibility();
+        } 
+    }
+
+    function prevSlide() {
+        if(currentSlide > 0) {
+            currentSlide--;
+            setMode('slide');
+            updateNavVisibility();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('quiz-panel').classList.add('hidden');
+        document.getElementById('questions-container').classList.add('hidden');
+        document.getElementById('slide-nav').classList.add('hidden');
+        
+        document.querySelector('.finish-btn-container').classList.add('hidden');
+
+        const resultScreen = document.getElementById('result-screen');
+        resultScreen.style.display = 'block';
+        
+        document.getElementById('final-score').innerText = `${currentScore}`;
+        
+        let finalCircle = document.getElementById('final-score');
+        if(currentScore >= 50) {
+            finalCircle.style.background = "#28a745"; 
+        } else {
+            finalCircle.style.background = "#dc3545"; 
+        }
+
+        document.getElementById('final-details').innerHTML = `
+            Tam Doğru Sayısı: ${correctCount}<br>
+            Yanlış/Eksik Sayısı: ${wrongCount}
+        `;
+    }
+</script>
+
+</body>
+</html>
